@@ -222,11 +222,9 @@ The object of the patching is to repair the problem closest to it to minimize an
 \subsection{Data from Stack overflow posts}
 \label{subsec:stackoverflow}
 
-We have analyzed data from stack overflow. From the stack overflow data dump, we
-look for java runtime exception which are discussed most frequently.
-
 \begin{table}[h]
 \caption{Most frequent java rumtime exceptions from stack overflow data}
+\label{tab:stackoverlow}
 \begin{tabular}{|c|c|c|}
 \hline
 \textbf{Runtime Exception Type} & \textbf{Occurrences} & \textbf{Percentage}\\
@@ -270,6 +268,14 @@ MirroredTypesException & $1$ & $0.0015\%$ \\ \hline
 
 \end{tabular}
 \end{table}
+
+
+
+We have analyzed data from stack overflow. From the stack overflow data dump, we
+look for java runtime exception which are discussed most frequently. In the
+table~\ref{tab:stackoverlow}, the dta we find is tabulated along with their
+occurrences and percentages.
+
 
 
 %marker
@@ -761,11 +767,30 @@ void foo()
 \end{lstlisting}
   \item \textbf{Case IV} Accessing or modifying the slots of null as if it were
   an array.
+ \textbf{Patch :} The patching mechanism is exactly same as before.
  
   \item \textbf{Case V} Throwing null as if it were a Throwable value.
 \end{itemize}
 
 
+\section{Design of the Repairing Framework}
+\label{sec:Design}
+
+
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=3.0in]{images/OverallDesign.pdf}
+\caption{Overall Design}
+\label{fig:overallDesign}
+\end{figure}
+
+The overall design of the repairing framework is illustrated in
+Figure~\ref{fig:overallDesign}. The framework consists of two basic modules.
+
+\begin{enumerate}
+  \item \textbf{Taint analysis module :}
+  \item \textbf{Repairing Module : }
+\end{enumerate}
 
 \section{Benchmark Results}
 \label{sec:bench}
