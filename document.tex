@@ -219,8 +219,61 @@ The object of the patching is to repair the problem closest to it to minimize an
 \section{Motivation and Challenges}
 \label{sec:mot}
 
+\subsection{Data from Stack overflow posts}
+\label{subsec:stackoverflow}
+
+We have analyzed data from stack overflow. From the stack overflow data dump, we
+look for java runtime exception which are discussed most frequently.
+
+\begin{table}[h]
+\caption{Most frequent java rumtime exceptions from stack overflow data}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Runtime Exception Type} & \textbf{Occurrences} & \textbf{Percentage}\\
+\hline NullPointerException & $34912$ & $54.94\%$ \\ \hline
+
+ClassCastException & $7504$ & $11.81\%$ \\ \hline
+
+IndexOutOfBoundsException & $6637$ & $10.44\%$ \\ \hline
+
+SecurityException  & $5818$ & $9.15\%$ \\  \hline
+
+NoSuchElementException & $2392$ & $3.76\%$ \\ \hline
+
+ArithmeticException & $2338$ & $3.67\%$ \\ \hline
+
+ConcurrentModificationExceptio & $1889$ & $2.97\%$ \\ \hline
+
+DOMException & $1024$ & $1.61\%$ \\ \hline
+
+ArrayStoreException & $279$ & $0.43\%$ \\ \hline
+
+MissingResourceException & $277$ & $0.43\%$ \\ \hline
+
+BufferOverFlowException & $161$ & $0.25\%$ \\ \hline
+
+NegativeArraySizeException & $122$ & $0.19\%$ \\ \hline
+
+BufferUnderFlowException & $66$ & $0.1\%$ \\ \hline
+
+LSException & $64$ &  $0.1\%$ \\ \hline
+
+MalformedParameterizedTypeExce & $38$ & $0.05\%$ \\ \hline
+
+CMMException  & $8$ & $0.01\%$ \\ \hline
+
+FileSystemNotFoundException & $6$ & $0.009\%$ \\ \hline
+
+NoSuchMechanismException & $3$ & $0.0045\%$ \\ \hline
+
+MirroredTypesException & $1$ & $0.0015\%$ \\ \hline
+
+\end{tabular}
+\end{table}
+
+
 %marker
-\textcolor{red}{\textbf{To Do}}\newline
+%\textcolor{red}{\textbf{To Do}}\newline
 
 
 \section{Problem Formulation}
@@ -240,7 +293,9 @@ We formulate the problem in following way
 \end{figure}
 
 
-We can visualize all runtime exceptions as finite state machine (FSM). When a program violates such sequence, it throws runtime exception. In Figure~\ref{fig:array}, array index out of bound (java.lang. ArrayIndexOutOfBoundException) exception is described as a FSM. Here, a program will be in safe bound as long as the $array\_index \geq 0$ or $array\_index \leq max\_array\_size - 1$
+We can visualize all runtime exceptions as finite state machine (FSM). When a program violates such sequence, it throws runtime exception. 
+In Figure~\ref{fig:array}, array index out of bound (java.lang. ArrayIndexOutOfBoundException) exception is described as a FSM. 
+Here, a program will be in safe bound as long as the $array\_index \geq 0$ or $array\_index \leq max\_array\_size - 1$
 
 
 \section{Repairing Strategy:Exception Type}
@@ -465,7 +520,8 @@ We will only monitor these entities until all of them flushed from the program a
 \subsection{General Structure}
 \label{subsec:generalCA}
 
-\emph{Constraint automata} is a formalism to describe the behavior and possible data flow in coordination models. Mostly used for model checking. We have used it for the purpose of program repairing technique. Here we define the finite state automata as follows :
+\emph{Constraint automata} is a formalism to describe the behavior and possible data flow in coordination models. 
+Mostly used for model checking. We have used it for the purpose of program repairing technique. Here we define the finite state automata as follows :
 
 $$(Q, \Sigma, \delta, q_0, F)$$
 \begin{itemize}
@@ -483,7 +539,8 @@ $$(Q, \Sigma, \delta, q_0, F)$$
 \label{fig:automata}
 \end{figure}
 
-According to the Figure~\ref{fig:automata}, the repairing mechanism will only trigger when we have a transition from init state to error state due to invariant violation.
+According to the Figure~\ref{fig:automata}, the repairing mechanism will only trigger when we have a transition from 
+init state to error state due to invariant violation.
 
 \subsection{Patching Techniques}
 \label{subsec:patchCA}
@@ -492,7 +549,9 @@ The patching technique is based on the exception type.
 
 \subsubsection{Array index out of bound exception}
 
-Array index out of bound exception happen when one tries to access the array with a index which is more than the size of the array or less than zero i.e. with some negative value. We did the patching based on these two scenario. When the index is more than the array size, we patch it by assigning $array.length - 1$.
+Array index out of bound exception happen when one tries to access the array with a index which is more than the size of the array or 
+less than zero i.e. with some negative value. We did the patching based on these two scenario. When the index is more than the array size, 
+we patch it by assigning $array.length - 1$.
 
 \lstset{language=Java, caption=array index out of bound patching, label=patchingexample2}
 
