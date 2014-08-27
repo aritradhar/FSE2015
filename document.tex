@@ -115,11 +115,17 @@
 %marker
 \textcolor{red}{\textbf{Changes done}}\newline
 
-Runtime Exceptions are common types of exceptions which may lead to system crash which leads to shutdown or restart. For may critical application such scenario is unacceptable due to their nature which requires availability of the service. 
+Runtime Exceptions are common types of exceptions which may lead to system crash which leads to shutdown or restart. 
+For may critical application such scenario is unacceptable due to their nature which requires availability of the service. 
 %Runtime exceptions may even leads to inconsistency of data in the system which may leads to further complications and expensive fixes.
-Program bugs which causes runtime exceptions often go unnoticed at the time of development as these exceptions are unchecked exceptions. The key issue is to guide the program through some exception suppression procedure which will leads the program to a consistent state hence improve the chance of surviving a fatal crash. Here we consider such programs for which restart is not an option.
+Program bugs which causes runtime exceptions often go unnoticed at the time of development as these exceptions are unchecked exceptions. 
+The key issue is to guide the program through some exception suppression procedure which will leads the program to a consistent state 
+hence improve the chance of surviving a fatal crash. Here we consider such programs for which restart is not an option.
 
-In this paper, we present a novel technique to recover from unexpected runtime exceptions. We have used hybrid of two techniques for efficient detection of potential point of failure and patch it closest to that to minimize the damage. One technique uses type of runtime exception to apply appropriate patch.  The other technique will provides typestate analysis technique which will detect typestate violations to apply the right patch.
+In this paper, we present a novel technique to recover from unexpected runtime exceptions.
+ We have used hybrid of two techniques for efficient detection of potential point of failure and patch it closest to that to minimize the damage. 
+ One technique uses type of runtime exception to apply appropriate patch.  
+ The other technique will provides typestate analysis technique which will detect typestate violations to apply the right patch.
 %The developer will flag a specific portion of the program to be eligible for repairing and patching.
 
 \end{abstract}
@@ -141,31 +147,69 @@ program repair, runtime exception, software patching, symbolic execution, static
 %marker
 \textcolor{red}{\textbf{Changes done}}\newline
 
-Exception handling attributes to the response of program during runtime to some exceptional condition encounter. Most of the time it changes normal flow of program. In many cases exception handling is natural part of software execution due to the nature of the software. An application which constantly accesses I/O which also includes share resources may throw exception if another application blocks it. Here in this paper we discuss and analyze java exceptions and produce repair patch based on that. Java supports two types of exceptions : 
+Exception handling attributes to the response of program during runtime to some exceptional condition encounter. 
+Most of the time it changes normal flow of program. In many cases exception handling is natural part of software execution 
+due to the nature of the software. 
+An application which constantly accesses I/O which also includes share resources may throw exception if another application blocks it. 
+Here in this paper we discuss and analyze java exceptions and produce repair patch based on that. Java supports two types of exceptions : 
 \begin{itemize}
 	
-	\item \textbf{Checked exception} which requires explicit \emph{throws} declaration at the method declaration or \emph{try-catch} block by the developers. Such exceptions are handled carefully as they often involves accessing resources like network, database, file system, I/O etc. 
+	\item \textbf{Checked exception} which requires explicit \emph{throws} declaration at the method declaration or \emph{try-catch} 
+	block by the developers. Such exceptions are handled carefully as they often involves accessing resources like network, database, 
+	file system, I/O etc. 
 	
-	\item \textbf{Unchecked exception} which does not enforce similar handing mechanism as the former one. \emph{java.lang.RuntimeException} and its subclasses and \emph{java.lang.Error} are types of unchecked exceptions. \emph{NullPointerException}, \emph{ArrayIndexOutOfBound}, \emph{ArithmeticException} are examples of common java runtime exceptions.
+	\item \textbf{Unchecked exception} which does not enforce similar handing mechanism as the former one. \emph{java.lang.RuntimeException} 
+	and its subclasses and \emph{java.lang.Error} are types of unchecked exceptions. \emph{NullPointerException}, \emph{ArrayIndexOutOfBound}, 
+	\emph{ArithmeticException} are examples of common java runtime exceptions.
 
 \end{itemize}
 
-Oracle official documentation says that ``\emph{Here's the bottom line guideline: If a client can reasonably be expected to recover from an exception, make it a checked exception. If a client cannot do anything to recover from the exception, make it an unchecked exception}".  Unchecked exception, particularly runtime exceptions can be thrown from any point in the program making them quite unpredictable in nature. Due to this extensive testing phase is required to eliminate any bugs and solve corner cases. Yet many applications suffer unexpected runtime exception causing system crash which leads to shutdown or restart.
+Oracle official documentation says that ``\emph{Here's the bottom line guideline: If a client can reasonably be expected to recover from an exception,
+ make it a checked exception. If a client cannot do anything to recover from the exception, make it an unchecked exception}".  
+ Unchecked exception, particularly runtime exceptions can be thrown from any point in the program making them quite unpredictable in nature. 
+ Due to this extensive testing phase is required to eliminate any bugs and solve corner cases. 
+ Yet many applications suffer unexpected runtime exception causing system crash which leads to shutdown or restart.
 
-We find out many applications where system shutdown/restart is expensive due to their nature. Notable examples are air traffic control, auto pilot, life support system, smart power grids, telephone networks, robots like UAV and rovers deployed for surveillance, reconnaissance and knowledge acquisition in remote locations etc. These applications are real-time sensitive and there is no room for exception handling in such system. Sudden crash involves risk of human life, expensive equipments and critical services. Other example includes web applications which uses scrips to dynamically generate websites and interfaces as per customer preferences. Many E-commerce websites handles queries, access and process customer and shopping items data and commits large amount of transactions. Sudden system crash may result in loss of precious time and data which eventually may result in a frustrated customers move to other websites. Many time bad or malicious code leads to some vulnerability to critical applications and website which can be exploited by attack to orchestrate system crash. Thought these examples cover a large variety of applications, all of them point to some concern of \emph{availability}.
+We find out many applications where system shutdown/restart is expensive due to their nature. 
+Notable examples are air traffic control, auto pilot, life support system, smart power grids, telephone networks, 
+robots like UAV and rovers deployed for surveillance, reconnaissance and knowledge acquisition in remote locations etc. 
+These applications are real-time sensitive and there is no room for exception handling in such system. 
+Sudden crash involves risk of human life, expensive equipments and critical services. 
+Other example includes web applications which uses scrips to dynamically generate websites and interfaces as per customer preferences. 
+Many E-commerce websites handles queries, access and process customer and shopping items data and commits large amount of transactions. 
+Sudden system crash may result in loss of precious time and data which eventually may result in a frustrated customers move to other websites. 
+Many time bad or malicious code leads to some vulnerability to critical applications and website which can be exploited by attack to orchestrate 
+system crash. Thought these examples cover a large variety of applications, all of them point to some concern of \emph{availability}.
 
-Usually, developers tests their code in series of verifications which involves code review, static and dynamic analysis of the code, generate test cases to cover as much potential input .Yet may corner cases can be left overlooked which can cause runtime exceptions. Multi-threaded applications are also susceptible to erroneous thread interleaving. One such exception is \emph{java.lang.IllegalMonitorStateException}, when a thread has attempted to wait on an object's monitor or to notify other threads waiting on an object's monitor without owning the specified monitor.Applications under adversarial situation should be considered where deliberate malicious input may cause it to fail. To recover from such situation, a mechanism is needed which can predict failure by doing invariant and symbolic analysis. Invariant analysis will detect particular variables outside legal/safe bound. Symbolic analysis will indicate to the potential point of failure. 
+Usually, developers tests their code in series of verifications which involves code review, static and dynamic analysis of the code, 
+generate test cases to cover as much potential input .Yet may corner cases can be left overlooked which can cause runtime exceptions. 
+Multi-threaded applications are also susceptible to erroneous thread interleaving. One such exception is \emph{java.lang.IllegalMonitorStateException},
+ when a thread has attempted to wait on an object's monitor or to notify other threads waiting on an object's monitor 
+ without owning the specified monitor.Applications under adversarial situation should be considered where deliberate malicious input may cause it to fail. 
+ To recover from such situation, a mechanism is needed which can predict failure by doing invariant and symbolic analysis. 
+ Invariant analysis will detect particular variables outside legal/safe bound. Symbolic analysis will indicate to the potential point of failure. 
 
 In this paper we proposed two solution to suppress runtime example and ensure system survivability. The approach consists of four primary phases
 
 \begin{itemize}
-	\item \textbf{Generate input data-set} : We index user input along with the global variables and method arguments of successful runs. The local variables are not indexed as they can be re-generated. These data-set is used as a reference to later executions which encounters runtime exceptions. Appropriate user input of previous successful run is chosen in terms of correlation coefficient. 
+	\item \textbf{Generate input data-set} : We index user input along with the global variables and method arguments of successful runs. 
+	The local variables are not indexed as they can be re-generated. 
+	These data-set is used as a reference to later executions which encounters runtime exceptions. 
+	Appropriate user input of previous successful run is chosen in terms of correlation coefficient. 
 	
-	\item \textbf{Program slice for patching} : We perform static analysis prior to running the program to determine data dependencies of the variables. The analysis yields a dependency graph which is used to determine optimal slice to be used as patch. This patch is placed in catch block and executed with the values of previous successful run while the original code is wrapped in try block.
+	\item \textbf{Program slice for patching} : We perform static analysis prior to running the program to determine data dependencies of the variables. 
+	The analysis yields a dependency graph which is used to determine optimal slice to be used as patch. 
+	This patch is placed in catch block and executed with the values of previous successful run while the original code is wrapped in try block.
 	
-	\item \textbf{Determine type of exception and patching} : The characteristics of patching is dependent on the type of runtime exception encountered by the program. A piece of code may throws multiple types of exceptions and all of them are handled at the time of patching by instrumenting multiple catch blocks.
+	\item \textbf{Determine type of exception and patching} : The characteristics of patching is dependent on the type of runtime exception 
+	encountered by the program. A piece of code may throws multiple types of exceptions and all of them are handled at the time of patching by 
+	instrumenting multiple catch blocks.
 	
-	\item \textbf{Use typestate for repairing} : Typestate analysis, sometimes called protocol analysis defines valid sequences of operations that can be typically modeled using Finite State Machine (FSM) where the states represent abstract state of the program and the symbols are certain method invocations to perform state transition. Typestates are capable of representing behavioral type refinements like Iterators, where \emph{hasNext()} method should be called before the \emph{next()} method call. Typestate analysis is widely used as a safety feature to ensure a certain sequence of operations maintains proper protocol or not. 
+	\item \textbf{Use typestate for repairing} : Typestate analysis, sometimes called protocol analysis defines valid sequences of operations 
+	that can be typically modeled using Finite State Machine (FSM) where the states represent abstract state of the program and the symbols are 
+	certain method invocations to perform state transition. Typestates are capable of representing behavioral type refinements like Iterators, 
+	where \emph{hasNext()} method should be called before the \emph{next()} method call. 
+	Typestate analysis is widely used as a safety feature to ensure a certain sequence of operations maintains proper protocol or not. 
 %But this method is unconventional and investigated in the field of program repairing.
 The documentations of the API used in the application will define the valid typestate for repairing.
 \end{itemize}
@@ -259,7 +303,9 @@ public class MainClass
 }
 \end{lstlisting}
 
-In the Example~\ref{example1}, we have given a piece of java code which shows multiple lines can throw several runtime exceptions. In this example we consider three very common runtime exceptions: NullPointerException, ArrayIndexOutOfBoundExcepltion, NegetiveIndexException, ArithmeticException (i.e. divide-by-zero). In rest of this section, this particular example will be used to demonstrate the repairing strategy.
+In the Example~\ref{example1}, we have given a piece of java code which shows multiple lines can throw several runtime exceptions. 
+In this example we consider three very common runtime exceptions: NullPointerException, ArrayIndexOutOfBoundExcepltion, NegetiveIndexException, 
+ArithmeticException (i.e. divide-by-zero). In rest of this section, this particular example will be used to demonstrate the repairing strategy.
 
 \subsection{Symbolic Analysis}
 \label{subsec:symb}
@@ -274,10 +320,13 @@ In the Example~\ref{example1}, we have given a piece of java code which shows mu
 
 We have done several  static analysis a priori  over the Java source code to discover :
 \begin{enumerate}
-	\item Critical section of the code which are not eligible for patching. Eg. banking or any financial transaction which should be crashed in case of exception as suboptimal solution due to patching will led it to inconsistent state.
+	\item Critical section of the code which are not eligible for patching. Eg. banking or any financial transaction which should be crashed in case of 
+	exception as suboptimal solution due to patching will led it to inconsistent state.
 	\item Symbolic analysis of the program to discover potential points of failure and mark them.
-	\item Build data dependency graph which will be used to generate appropriate code slice to be used as patch. In Figure~\ref{fig:datadep}, the data dependency graph of the example code~\ref{example1} is presented.
-	\item The symbolic analysis will also reveal which kind of exception is likely to happened at the time of execution. This information is necessary at the time of instrumenting the patch as it will determine the catch block.
+	\item Build data dependency graph which will be used to generate appropriate code slice to be used as patch. 
+	In Figure~\ref{fig:datadep}, the data dependency graph of the example code~\ref{example1} is presented.
+	\item The symbolic analysis will also reveal which kind of exception is likely to happened at the time of execution. 
+	This information is necessary at the time of instrumenting the patch as it will determine the catch block.
 	
 \end{enumerate}
 
@@ -292,7 +341,9 @@ Here we will store all the traces of successful program runs.
 \label{fig:succrun}
 \end{figure}
 
-Figure~\ref{fig:succrun} shows such indexed traces of all the global variables and method arguments. We store the snapshots of these objects. We won't store local variables as they can always be regenerated. As it is required to capture the snapshot of all these variable, we made deep cone of all of these objects and variables. 
+Figure~\ref{fig:succrun} shows such indexed traces of all the global variables and method arguments. 
+We store the snapshots of these objects. We won't store local variables as they can always be regenerated. 
+As it is required to capture the snapshot of all these variable, we made deep cone of all of these objects and variables. 
 
 %begin{table}[htb]
 %\begin{tabular}{|c|c|c|c|c|c|c|}
@@ -314,15 +365,21 @@ Figure~\ref{fig:succrun} shows such indexed traces of all the global variables a
 \subsection{Instrumenting Patching}
 \label{subsec:patchinstru}
 
-We have used Soot framework which is a Java byte code manipulator to instrument patch. The patching technique is divided into two phases
+We have used Soot framework which is a Java byte code manipulator to instrument patch. 
+The patching technique is divided into two phases
 
 \subsubsection{Determine Exception Type} 
 
-At the time of execution, the exception may happened due to some specific values of some variables. We will catch the exception. Here the type of runtime exception is $java.lang.ArrayIndexOutOfBound$. This will be used to produce the try-catch block.
+At the time of execution, the exception may happened due to some specific values of some variables. We will catch the exception. Here the type of 
+runtime exception is $java.lang.ArrayIndexOutOfBound$. This will be used to produce the try-catch block.
  
 \subsubsection{Determine Optimal Code Slice}
 
-The optimal code slice will be determined from the data dependency graph which was rendered at the time of static analysis mentioned in Section~\ref{subsec:symb}. In the Listing~\ref{patchingexample1}, the example code snippet shows such code slice inside the catch block. As the error occurred at the line $int\ temp5\ =\ this.arr3[temp3];$ the statements which produces the temp3 and the statement which also involves $temp3$ or any other variables derived from $temp3$, would be included in the catch block for re-execution with the valued of the same from the data table of previous successful runs.
+The optimal code slice will be determined from the data dependency graph which was rendered at the time of static analysis mentioned in 
+Section~\ref{subsec:symb}. In the Listing~\ref{patchingexample1}, the example code snippet shows such code slice inside the catch block. 
+As the error occurred at the line $int\ temp5\ =\ this.arr3[temp3];$ the statements which produces the temp3 and the statement which also 
+involves $temp3$ or any other variables derived from $temp3$, would be included in the catch block for re-execution with the valued of the 
+same from the data table of previous successful runs.
 
  
 
@@ -395,7 +452,12 @@ public class MainClass
 \textcolor{red}{\textbf{I have added standard taint analysis technique here as an example. We can change it later}}\newline
 
 
-Here we used taint analysis technique to tag variables and objects of our interest to monitor them. This steps are necessary as the values of the variables used during the instrumentation may cause further runtime exceptions. We used bit-vector which is an efficient technique to taint a object/variable. It requires maintain a single dimension byte array where each bit correspond to a single object/variable of our interest. The bit values will be flipped when it is required to taint ($1$) or untaint ($1$) an object/variable. We will only monitor these entities until all of them flushed from the program and the entire program reached to a stable state.
+Here we used taint analysis technique to tag variables and objects of our interest to monitor them. 
+This steps are necessary as the values of the variables used during the instrumentation may cause further runtime exceptions. 
+We used bit-vector which is an efficient technique to taint a object/variable. 
+It requires maintain a single dimension byte array where each bit correspond to a single object/variable of our interest. 
+The bit values will be flipped when it is required to taint ($1$) or untaint ($1$) an object/variable. 
+We will only monitor these entities until all of them flushed from the program and the entire program reached to a stable state.
 
 \section{Repairing Strategy : Constraint Automata}
 \label{sec:strgCA}
@@ -459,7 +521,9 @@ void foo()
 
 \subsubsection{Negative Array Size Exception}
 
-Negative array size exception occurs when one tries to create a array with a negative size. The patching is done based on data flow analysis. Suitable index size is determined by looking at the successive statement dependent on the array. To take a safe bound, we took maximum index size and set as the array size in the new array statement.
+Negative array size exception occurs when one tries to create a array with a negative size. 
+The patching is done based on data flow analysis. Suitable index size is determined by looking at the successive statement dependent on the array. 
+To take a safe bound, we took maximum index size and set as the array size in the new array statement.
 
 
 \lstset{language=Java, caption=arr index out of bound patching, label=patchingexample2}
@@ -491,7 +555,8 @@ void foo()
 
 Division by zero causes arithmetic exception. There are two different cases which were considered here. 
 \begin{itemize}
-	\item \textbf{Case I :} The denominator is going to the taint sink but the left hand side is not going to any taint sink. Here we will not manipulate the denominator as we are not manipulating any variable which are going to any taint sink.
+	\item \textbf{Case I :} The denominator is going to the taint sink but the left hand side is not going to any taint sink. 
+	Here we will not manipulate the denominator as we are not manipulating any variable which are going to any taint sink.
 	\item \textbf{Case II :} The denominator and the left hand side, both are not going to any taint sink. So they are safe to patch.
 \end{itemize}
 
@@ -523,6 +588,124 @@ void foo()
   }
 }
 \end{lstlisting}
+
+\subsubsection{Null Pointer Exception}
+
+Null pointer exception in Java is the most common runtime exception encountered. 
+Thrown when an application attempts to use null in a case where an object is
+required. There exists various scenarios where null pointer exception can
+happen. These different scenario requires different patching techniques. Bellow
+we enlist all cases and corresponding patching techniques.
+
+
+\begin{itemize}
+  \item \textbf{Case I} Calling the instance method of a null object. \newline
+  \textbf{Patch :} This is patched by calling the constructor. In case there
+  exists more than one constructor then we need to find most appropriate
+  constructor. This is done by using data flow analysis in the successive
+  statement to see which fields/methods been accessed and according to that
+  most suitable constructor should be picked up, this will ensure safest way to
+  deal with the later method calls/field accesses.
+  
+  \lstset{language=Java, caption=appropriate constructor, label=patchingexample2}
+
+\begin{lstlisting}
+class MyClass
+{
+ Integer field1;
+ String field2;
+ Double field3;
+
+ public MyClass()
+ {
+  this.field1 = 1;
+  this.field2 = null;
+  this.field3 = null;
+ } 
+ public MyClass(Integer field1, String field2)
+ {
+  this.field1 = field1;
+  this.field2 = field2;
+  this.field3 = null;
+ } 
+ public MyClass(Integer field1, String field2, Double field3)
+ {
+  this.field1 = field1;
+  this.field2 = field2;
+  this.field3 = field3;
+ }
+ public Double getfield3()
+ {
+  return this.field3;
+ }
+}
+
+class main
+{
+ Myclass mclass = null;
+ Double a = null;
+ try
+ {
+  //original code
+  a = mclass.getfiled3() + 5.0;
+ }
+ //instrumentation
+ catch(NullPointerException ex)
+ {
+  //choose appropriate constructor
+  mlass = new MyClass(1, "a", 1.0); 
+  a = mclass.getfiled3();
+ }
+}
+\end{lstlisting}
+  \item 
+  
+  \item \textbf{Case II} Possible Accessing or modifying the field of a null
+  object.\newline
+  \textbf{Patch :} The patch is same as the previous one.
+  
+  \item \textbf{Case III} Taking the length of null as if it were an
+  array.\newline
+  \textbf{Patch :}The patch for this situation is very much similar to the
+  negative array size exception. Here we will do a data-flow analysis to see all
+  the successive statements where the array object has been used (read or
+  write). For safety we will take the maximum index from those statements and
+  reinitialize the array object with the size.
+    
+  \lstset{language=Java, caption=array null pointer exception,
+  label=patchingexample2}
+
+\begin{lstlisting}
+int[] bar(int a)
+{
+ int []arr = new int[a];
+ int []b = (a > 10) ? arr:null;
+ return b; 
+}
+void foo()
+{
+ int[] arr;
+ int []arr = bar(5);
+ try
+ {
+  //access or modify any field of arr
+  //this will throw a null pointer exception
+ }
+ //instrumented code
+ catch
+ {
+  int ARRAY_SIZE = 11;
+  int []arr = new int[ARRAY_SIZE];
+  //access or modify any field of arr
+ }
+}
+\end{lstlisting}
+  \item \textbf{Case IV} Accessing or modifying the slots of null as if it were
+  an array.
+ 
+  \item \textbf{Case V} Throwing null as if it were a Throwable value.
+\end{itemize}
+
 
 
 \section{Benchmark Results}
