@@ -183,11 +183,17 @@ system crash. Thought these examples cover a large variety of applications, all 
 
 Usually, developers tests their code in series of verifications which involves code review, static and dynamic analysis of the code, 
 generate test cases to cover as much potential input .Yet may corner cases can be left overlooked which can cause runtime exceptions. 
-Multi-threaded applications are also susceptible to erroneous thread interleaving. One such exception is \emph{java.lang.IllegalMonitorStateException},
- when a thread has attempted to wait on an object's monitor or to notify other threads waiting on an object's monitor 
- without owning the specified monitor.Applications under adversarial situation should be considered where deliberate malicious input may cause it to fail. 
- To recover from such situation, a mechanism is needed which can predict failure by doing invariant and symbolic analysis. 
- Invariant analysis will detect particular variables outside legal/safe bound. Symbolic analysis will indicate to the potential point of failure. 
+Multi-threaded applications are also susceptible to erroneous thread
+interleaving. One such exception is
+\emph{java.lang.IllegalMonitorStateException}, when a thread has attempted to
+wait on an object's monitor or to notify other threads waiting on an object's
+monitor without owning the specified monitor. Applications under adversarial
+situation should be considered where deliberate malicious input may cause it to
+fail. To recover from such situation, a mechanism is needed which can predict
+failure by doing invariant and symbolic analysis. Invariant analysis will detect
+particular variables outside legal/safe bound. Symbolic analysis will indicate
+to the potential point of failure.
+
 
 In this paper we proposed two solution to suppress runtime example and ensure system survivability. The approach consists of four primary phases
 
@@ -782,6 +788,14 @@ void foo()
 \includegraphics[width=3.0in]{images/OverallDesign.pdf}
 \caption{Overall Design}
 \label{fig:overallDesign}
+\end{figure}
+
+
+\begin{figure}[!htb]
+\centering
+\includegraphics[width=3.5in]{images/TaintModule.pdf}
+\caption{Overall Design}
+\label{fig:TaintModule}
 \end{figure}
 
 The overall design of the repairing framework is illustrated in
