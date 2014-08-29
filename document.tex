@@ -18,7 +18,20 @@
 % Created:      15 February 2005
 %
 %-----------------------------------------------------------------------------
-
+% //*************************************************************************************
+% //***********************************************************************************
+% //author Aritra Dhar																  * *
+% //MT12004																			  * *
+% //M.TECH CSE																		  * * 
+% //INFORMATION SECURITY															  * *
+% //IIIT-Delhi																		  * *	 
+%
+% //--------------------------------------------------------------------------------- * *																				* * /////////////////////////////////////////////////									* *
+% //Paper Draft							       //									  * *
+% /////////////////////////////////////////////////									  * *
+% //version 1.0																		  * *
+% //*********************************************************************************** * 
+% //*************************************************************************************
 
 \documentclass{sigplanconf}
 
@@ -47,6 +60,8 @@
 \usepackage{color}
 \usepackage{xcolor}
 \usepackage[]{datetime}
+%\usepackage{lipsum}
+\usepackage{graphicx}
 
 
 \definecolor{dkgreen}{rgb}{0,0.6,0}
@@ -791,20 +806,46 @@ void foo()
 \end{figure}
 
 
-\begin{figure}[!htb]
+% \begin{figure}[!htb]
+% \centering
+% \includegraphics[width=3.5in]{images/TaintModule.pdf}
+% \caption{Overall Design}
+% \label{fig:TaintModule}
+% \end{figure}
+% 
+% \begin{figure*}
+%   \includegraphics[width=\textwidth,height=5cm]{images/TaintModule.pdf}
+%   \caption{Design of the Taint Module}
+% \end{figure*}
+
+
+\begin{figure*}
 \centering
-\includegraphics[width=3.5in]{images/TaintModule.pdf}
-\caption{Overall Design}
-\label{fig:TaintModule}
-\end{figure}
+  \includegraphics[width= 7.0in]{images/TaintModule.pdf}
+  \caption{Design of the Taint Module}
+  \labelP{fig:TaintModule}
+\end{figure*}
+
 
 The overall design of the repairing framework is illustrated in
 Figure~\ref{fig:overallDesign}. The framework consists of two basic modules.
 
-\begin{enumerate}
-  \item \textbf{Taint analysis module :}
-  \item \textbf{Repairing Module : }
-\end{enumerate}
+
+\subsection{Taint analysis module}
+\label{subsec:TaintModule}
+
+Figure~\ref{fig:TaintModule}
+
+
+\subsection{Repairing Module}
+\label{subsec:RepairingModule}
+
+% \begin{enumerate}
+%   \item \textbf{Taint analysis module :}
+%   \item \textbf{Repairing Module : }
+% \end{enumerate}
+
+
 
 \section{Benchmark Results}
 \label{sec:bench}
