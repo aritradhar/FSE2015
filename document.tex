@@ -692,6 +692,7 @@ we enlist all cases and corresponding patching techniques.
   statement to see which fields/methods been accessed and according to that
   most suitable constructor should be picked up, this will ensure safest way to
   deal with the later method calls/field accesses.
+  \item 
   
   \lstset{language=Java, caption=appropriate constructor, label=patchingexample2}
 
@@ -794,13 +795,14 @@ void foo()
 \end{itemize}
 
 
-\section{Design of the Repairing Framework}
-\label{sec:Design}
+\section{Design of the System}
+\label{sec:SystemDesign}
 
 
+%later convert this pdf
 \begin{figure}[!htb]
 \centering
-\includegraphics[width=3.0in]{images/OverallDesign.pdf}
+\includegraphics[width=3.2in]{images/OverallDesign.png}
 \caption{Overall Design}
 \label{fig:overallDesign}
 \end{figure}
@@ -813,17 +815,17 @@ void foo()
 % \label{fig:TaintModule}
 % \end{figure}
 % 
-% \begin{figure*}
+% \begin{figure*
 %   \includegraphics[width=\textwidth,height=5cm]{images/TaintModule.pdf}
 %   \caption{Design of the Taint Module}
 % \end{figure*}
 
-
+%later covert this to pdf
 \begin{figure*}
 \centering
-  \includegraphics[width= 7.0in]{images/TaintModule.pdf}
+  \includegraphics[width= 7.0in]{images/TaintModule.png}
   \caption{Design of the Taint Module}
-  \labelP{fig:TaintModule}
+  \label{fig:TaintModule}
 \end{figure*}
 
 
@@ -831,10 +833,41 @@ The overall design of the repairing framework is illustrated in
 Figure~\ref{fig:overallDesign}. The framework consists of two basic modules.
 
 
-\subsection{Taint analysis module}
+\subsection{Taint analysis Module}
 \label{subsec:TaintModule}
 
-Figure~\ref{fig:TaintModule}
+The main purpose of the taint analysis module is to classify which of the
+statements are safe to patch or not. Based on the analysis result in this
+module, the tagged statement will be passed to the repairing module.
+
+
+We have specify the list of source, sink and derivation methods in a
+cofiguration file befor the analysis. The source methods includes mehods which
+take input from user from console or web application forms like text box. The
+sink methods are sensitive data storage which are unsfae to maniputae such as
+database, console print or methods to send a text file to printer etc. The
+overview of the taint analysis module is illustrated in the
+Figure~\ref{fig:TaintModule}.  The input for the module is the compiled byte
+code intended to be repaired. Here we have generated a control flow graph (CFG)
+from the class file to get all the possible program paths. Here a point to be
+noted that any modification along the path going to the tainted sink is unsafe
+to patch.
+
+\subsubsection{Tainting Rules}
+\textcolor{red}{\textbf{TODO}}\newline
+
+
+\subsection{Partching Module}
+\label{subsec:PatchModule}
+
+%later covert this to pdf
+\begin{figure*}
+\centering
+  \includegraphics[width= 3.0in]{images/PatchModule.pdf}
+  \caption{Design of the Patching Module}
+  \label{fig:PatchModule}
+\end{figure*}
+
 
 
 \subsection{Repairing Module}
