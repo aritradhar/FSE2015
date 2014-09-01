@@ -465,7 +465,8 @@ same from the data table of previous successful runs.
 
  
 
-\lstset{language=Java, caption=patching code slice based on exception type, label=patchingexample1}
+\lstset{language=Java, caption=patching code slice based on exception type,
+label=patchingexample1}
 
 \begin{lstlisting}
 
@@ -692,7 +693,6 @@ we enlist all cases and corresponding patching techniques.
   statement to see which fields/methods been accessed and according to that
   most suitable constructor should be picked up, this will ensure safest way to
   deal with the later method calls/field accesses.
-  \item 
   
   \lstset{language=Java, caption=appropriate constructor, label=patchingexample2}
 
@@ -787,6 +787,7 @@ void foo()
  }
 }
 \end{lstlisting}
+
   \item \textbf{Case IV} Accessing or modifying the slots of null as if it were
   an array.
  \textbf{Patch :} The patching mechanism is exactly same as before.
@@ -842,9 +843,9 @@ module, the tagged statement will be passed to the repairing module.
 
 
 We have specify the list of source, sink and derivation methods in a
-cofiguration file befor the analysis. The source methods includes mehods which
+configuration file before the analysis. The source methods includes methods which
 take input from user from console or web application forms like text box. The
-sink methods are sensitive data storage which are unsfae to maniputae such as
+sink methods are sensitive data storage which are unsafe to manipulate such as
 database, console print or methods to send a text file to printer etc. The
 overview of the taint analysis module is illustrated in the
 Figure~\ref{fig:TaintModule}.  The input for the module is the compiled byte
@@ -853,25 +854,170 @@ from the class file to get all the possible program paths. Here a point to be
 noted that any modification along the path going to the tainted sink is unsafe
 to patch.
 
+
 \subsubsection{Tainting Rules}
-\textcolor{red}{\textbf{TODO}}\newline
+\label{subsubsec:TaintingRule}
+\textcolor{red}{\textbf{Needs Revision}}\newline
 
-
-\subsection{Partching Module}
-\label{subsec:PatchModule}
-
-%later covert this to pdf
-\begin{figure*}
+\begin{table}[!htb]
 \centering
-  \includegraphics[width= 3.0in]{images/PatchModule.pdf}
-  \caption{Design of the Patching Module}
-  \label{fig:PatchModule}
-\end{figure*}
+\caption{Common Java libray taint source functions}
+\label{tab:TaintSources}
+\begin{tabular}{|c|c|}
+\hline
 
+ \textbf{Java Class} & \textbf{Source Method Name}\\
+ \hline java.io.InputStream & read()\\ \hline
+ java.io.BufferedReader & readLine()\\ \hline
+ java.net.URL & openConnection()\\ \hline
+ org.apache.http.HttpResponse & getEntity()\\ \hline
+ org.apache.http.util.EntityUtils & toString()\\ \hline
+ org.apache.http.util.EntityUtils & toByteArray()\\ \hline 
+ org.apache.http.util.EntityUtils & getContentCharSet()\\ \hline 
+ javax.servlet.http.HttpServletRequest & getParameter()\\ \hline
+ javax.servlet.ServletRequest & getParameter()\\ \hline
+ java.Util.Scanner & next()\\ \hline
+
+\end{tabular}
+\end{table}
+
+
+
+\begin{table}[!htb]
+\centering
+\caption{Common Java libray taint sink functions}
+\label{tab:TaintSinks}
+\begin{tabular}{|c|c|}
+\hline
+
+ \textbf{Java Class} & \textbf{Sink Method Name}\\
+ \hline java.io.PrintStream & printf()\\ \hline
+ java.io.OutputStream & write()\\ \hline
+ java.io.FileOutputStream & write()\\ \hline
+ java.io.Writer & write()\\ \hline
+ java.net.Socket & connect()\\ \hline
+ %org.apache.http.impl.client.DefaultHttpClient & execute\\ \hline
+
+\end{tabular}
+\end{table}
+
+
+We have used extended InFlow framework for the taint analysis module. The steps
+are
+
+\begin{enumerate}
+  \item We defined list of source and sink tait methods listed in
+  Table~\ref{tab:TaintSources} and \ref{tab:TaintSinks}. We are only tainting
+  the variables which are coming from the listed taint source methods.
+  \item We have also listed all taint propagation methods. The assignment ($=$)
+  is the basic taint propagator. But there are other methods like \emph{append}
+  in \emph{java.lang.StringBuffer} and \emph{java.lang.StringBuilder} which are
+  taint propagator.
+  \item All the variable which are referred to tainted variables/ objects or
+  output of taint propagator over tainted variable/objects are also considered
+  as tainted.
+  \item For all the program patch we see if such tainted variables are reaching
+  the tainted sink or not. If they are reaching to some tainted sink then all
+  the statements along that particular program path to which the tainted
+  variables are assigned are marked as unsafe otherwise safe.
+\end{enumerate}
 
 
 \subsection{Repairing Module}
 \label{subsec:RepairingModule}
+
+%later covert this to pdf
+\begin{figure}
+\centering
+  \includegraphics[width= 2.0in]{images/PatchModule.png}
+  \caption{Design of the Patching Module}
+  \label{fig:PatchModule}
+\end{figure}
+
+The repairing module is consisted of three phases. All these three phases
+requires three sequential passes over the input bytecodes to produce the final
+patched result.
+
+
+\subsubsection{Method Shilding}
+\label{MethodShilding}
+
+
+When we are shielding a method, we also looked to the calling context of that
+particular method. The method can be called from a path which leads to some
+tainted sink and it can also be called from such path which does not contain
+any taint sink. In such cases, we have taken special care about the callee. The
+path to the tainted sink should not call a patched method as it can influence
+data which are leaving the system. So, we also maintained two different version of
+the method and instrument the calling site so that appropriate method is called.
+
+\lstset{language=Java, caption = Same method calling in different scenario,
+label=callingContext}
+\begin{lstlisting}
+int bar(int a, int b)
+{
+ return a/b;
+}
+void foo()
+{
+ int a = 10, b = 0, c = 15;
+ int out = bar(a, b);
+ TaintSink(out);
+ int out1 = bar(c, b);
+ NonTaintSink(out1);
+}
+\end{lstlisting}
+
+
+\lstset{language=Java, caption = Mehod name modification for different calling
+context, label=callingContextPatch}
+
+\begin{lstlisting}
+int bar(int a, int b)
+{
+ return a/b;
+}
+
+int bar_untainted_fa844d57(int a, int b)
+{
+ int out;
+ try
+ {
+  out = a/b;
+ }
+ catch(ArithmeticException ex)
+ {
+  b = 1;
+  out = a/b;
+ }
+ return out;
+}
+
+void foo()
+{
+ int a = 10, b = 0, c = 15;
+ 
+ //no modification in the call where the result can go to a tainted sink method
+ int out = bar(a, b);
+ TaintSink(out);
+ 
+ //Modify the method call to the shielded method as the result is not going to
+ //any tainted sink method 
+ int out1 = bar_untainted_fa844d57(c, b);
+ NonTaintSink(out1);
+}
+
+\end{lstlisting}
+
+In the Listing~\ref{callingContext} and \ref{callingContextPatch} we have
+defined an example code snippet of the original code and the patched code where
+we have renamed the method \emph{bar} to \emph{bar\_untainted\_fa844d57}
+before instrumenting any patching code in it. The variable \emph{out} goes to a
+tainted sink while \emph{out1} does not. So the we have done modification in the
+line where \emph{out1} is defined. As \emph{out} is going to a tainted sink
+method, we did not do any modification to it.
+
+
 
 % \begin{enumerate}
 %   \item \textbf{Taint analysis module :}
