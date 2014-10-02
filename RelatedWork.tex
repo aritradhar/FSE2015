@@ -1,0 +1,62 @@
+
+
+\section{Related Works}
+\label{sec:relatedWorks}
+
+\subsection{Recent Works on Data Structure Repairing}
+\label{subsec:RecWorksDataStructure}
+
+Automated data-structure repairing techniques are there in the litarature for a
+while. In the papers~\cite{DBLP:conf/oopsla/DemskyR03},
+\cite{Demsky03automaticdata},~\cite{DBLP:conf/icse/DemskyR05},
+\cite{DBLP:conf/issre/DemskyR03},~\cite{DBLP:conf/issta/DemskyEGMPR06} the
+authors mostly concentrated on specific data-structures like \emph{FAT-32},
+\emph{ext2}, \emph{CTAS} (a set of air-traffic control tools developed at the
+NASA Ames research center) and repairing them. The authors represented a
+specification language by which they able to see consistency property these
+data-structure. Given the specification, they able to detect the inconsistency
+of these data-structures and repair them.
+The repairing strategy involves detecting the consistency constraints for the
+particular data structure, for the violation, they replace the error condition
+with correct proposition. In the paper~\cite{DBLP:conf/icse/DemskyR05}, the
+authors proposed repair strategy by goal-directed reasoning. This involves
+translating the data-structure to a abstract model by a set of model definition
+rules. The actual repair involves model reconstruction and statically mapped it
+to a data structure update. In their paper~\cite{DBLP:conf/oopsla/2007} authors
+Elkarablieh et al. proposed the idea to statically analyze the data structure to
+access the information like recurrent fields and local fields. They used their
+technique to some well known data structures like singly linked list, sorted
+list, doubly liked list, N-ary tree, AVL tree, binary search tree, disjoint set,
+red-black tree, Fibonacci heap etc.
+
+\subsection{Works on Software Patching}
+\label{subsec:RecWorksSoftPatch}
+
+In their paper~\cite{DBLP:conf/sosp/PerkinsKLABCPSSSWZER09}, authors Jeff H.
+Perkins et al. presented their \emph{Clear view} system which works on windows
+x86 binaries without requiring any source code. They used invariants analysis for
+which they used Daikon~\cite{DBLP:journals/scp/ErnstPGMPTX07}. They mostly
+patched security vulnerabilities by some candidate repair patches.
+
+Fan Lon et al in their paper~\cite{DBLP:conf/pldi/LongSR14} presented their new
+system \emph{RCV} which recovers applications from divide-by-zero and
+null-deference error. Their tool replaces \emph{SIGFPE} and \emph{SIGSEGV}
+signal handler with its own handler. The approach simply works by assigning
+zero at the time of divide-by-zero error, read zero and ignores write at the time
+of null-deference error. Their implementation was on $x86$ and $x86-64$
+binaries and they also implemented a dynamic taint analysis to see the effect of their
+patching until the program stabilizes which they called as \emph{error
+shepherding}.
+
+\subsection{Genetic Programming, Evolutionary Computation}
+\label{subsec:RecWorksGeneric}
+
+Reserch works on program repair based on genetic programming and evolutionary
+computation can be found in the paper of Stephanie Forrest et
+al.~\cite{DBLP:conf/gecco/2009g} and Westley Weimer et
+al~\cite{DBLP:journals/cacm/WeimerFGN10} respectively. In the papers, the
+authors used genetic programming to generate and evaluate test cases. They used
+their technique on the well known Microsoft Zune media player bug causing tme
+to freeze up.
+
+
