@@ -1,0 +1,198 @@
+\usepackage{color}
+
+\newcommand{\subparagraph}{}
+
+% You can tweak clickable link colors here:
+\definecolor{linkcol}{rgb}{0,0,1}
+\definecolor{citecol}{rgb}{0,0.5,0}
+\definecolor{urlcol}{rgb}{0.3,0,0}
+
+% Make pdflatex use letter size --md
+\setlength{\pdfpagewidth}{8.5in}
+\setlength{\pdfpageheight}{11in}
+
+\usepackage{amsmath}
+\usepackage{ragged2e}
+\usepackage{cite}
+\usepackage{txfonts}
+\usepackage{fancyhdr}
+\usepackage{amssymb}
+\usepackage{fancyvrb}
+\usepackage{graphicx}
+\usepackage{times}
+\usepackage{pifont}
+\usepackage[hyphens]{url}
+\usepackage{xspace}
+\usepackage{algorithm2e}
+%%\usepackage[belowskip=-10pt,aboveskip=5pt,small,labelfont=bf]{caption}
+\usepackage[aboveskip=5pt,small,labelfont=bf]{caption}
+\DeclareCaptionType{copyrightbox}
+\usepackage[bookmarks=true,%
+bookmarksnumbered=true,%
+colorlinks=true,%
+linkcolor=linkcol,%
+citecolor=citecol,%
+urlcolor=urlcol,%
+hypertexnames=true,%
+pdfpagelabels]{hyperref}
+
+\usepackage{multirow}
+\usepackage{flushend}
+\usepackage{epstopdf}
+%%\usepackage[small,compact]{titlesec}
+\usepackage[font=scriptsize]{subfig}
+\usepackage{wrapfig}
+
+\SetAlFnt{\small}
+\SetAlCapFnt{\small}
+\SetAlCapNameFnt{\small}
+\SetVlineSkip{0pt}
+
+\setlength\floatsep{5pt}
+\setlength\textfloatsep{5pt}
+\setlength\intextsep{5pt}
+
+\hypersetup{
+pdfauthor = {},
+pdftitle = {\papertitle},
+pdfkeywords = {\paperkeywords},
+pdfcreator = {LaTeX with hyperref package},
+pdfproducer = {pdflatex}}
+
+% Use a smaller font size for URLs:
+\makeatletter
+\def\url@myurlstyle{%
+   \@ifundefined{selectfont}{\def\UrlFont{\small}}{\def\UrlFont{\small}}}
+   \makeatother
+\urlstyle{myurl}
+
+% This adds ':' to the characters after which not to break URLs, and
+% defines a smaller typewriter font. --cpk
+% changed small to sf -- md
+\def\UrlNoBreaks{\do:\do\(\do\[\do\{\do\<}%
+\def\UrlFont{\small\ttfamily}
+\def\UrlOrds{\do\*\do\~}%
+
+% For referencing sections, Vern-style
+\newcommand\xref[1]{\S~\ref{#1}}
+
+% Black filled circles with white number on it
+% See Comprehensive LaTeX Symbol List --cpk
+\def\blackI{\ding{182}}
+\def\blackII{\ding{183}}
+\def\blackIII{\ding{184}}
+\def\blackIV{\ding{185}}
+\def\blackV{\ding{186}}
+\def\blackVI{\ding{187}}
+
+\def\first{({\it i})\xspace }
+\def\second{({\it ii})\xspace }
+\def\third{({\it iii})\xspace }
+\def\fourth{({\it iv})\xspace }
+\def\fifth{({\it v})\xspace }
+
+% For notes to authors:
+\newcommand{\note}[1]{{\textcolor{red}{[\textit{#1}]}}}
+
+% Fine-tuning for table spacing. --cpk
+\def\TblSpT{\rule[-1ex]{0pt}{0pt}}
+\def\TblSpB{\rule{0pt}{2.5ex}}
+
+% Squeezing out some space. --cpk
+% http://www-h.eng.cam.ac.uk/help/tpl/textprocessing/squeeze.html
+%
+%\renewcommand\subfigtopskip{0pt}
+%\renewcommand\subfigbottomskip{5pt}
+%\renewcommand\subfigcapskip{0pt}
+%\renewcommand\floatpagefraction{.9}
+%\renewcommand\topfraction{.9}
+%\renewcommand\bottomfraction{.9}
+%\renewcommand\textfraction{.1}
+%\setlength{\parskip}{0em}
+%\frenchspacing
+
+\sloppy
+
+\newcommand{\code}[1]{\texttt{\scriptsize{#1}}}
+\newcommand{\mycomment}[1]{}
+\newcommand{\todo}[1]{\textbf{TODO: #1}}
+\newcommand{\mytab}{~~~~}
+\newcommand{\sspace}{~}
+\newcommand{\etal}{\textit{et al.}}
+\newcommand{\eg}{{e.g.,}}
+\newcommand{\ie}{{i.e.,}}
+\newcommand{\lno}[1]{{\tiny{\textbf{(#1)~~}}}}
+
+\newcommand{\sdn}{{SDN}}
+\newcommand{\verifier}{\textsc{Verifier}}
+\newcommand{\validator}{\textsc{Flow\_Consistency\_ Validator}}
+\newcommand{\outputs}{{\mathbb O}}
+\newcommand{\stream}{{\mathbb S}}
+\SetEndCharOfAlgoLine{}
+
+%% for IEEEtran
+\def\tablename{Table}
+
+\renewcommand{\thetable}{\arabic{table}}
+
+%\newcommand*{\refname}{Bibliography}
+
+\def\yes{\ding{51}}
+\def\no{\ding{55}}
+
+%------------------------------------------------------------------------------
+%                                Space savers.
+%------------------------------------------------------------------------------
+% This mylist environment indents items, and saves less space than the above.
+\newcounter{myctr}
+\newenvironment{mylist}{\begin{list}{(\textbf{\arabic{myctr}})}
+{\usecounter{myctr}
+\setlength{\topsep}{1mm}\setlength{\itemsep}{0.5mm}
+\setlength{\parsep}{0.5mm}
+\setlength{\itemindent}{0mm}\setlength{\partopsep}{0mm}
+\setlength{\labelwidth}{-2mm}
+\setlength{\leftmargin}{0mm}}}{\end{list}}
+
+% Space saving List environment for itemizing.
+\newenvironment{mybullet}{\begin{list}{$\bullet$}
+{\setlength{\topsep}{1mm}\setlength{\itemsep}{0.5mm}
+\setlength{\parsep}{0.5mm}
+\setlength{\itemindent}{0mm}\setlength{\partopsep}{0mm}
+\setlength{\labelwidth}{-2mm}
+\setlength{\leftmargin}{0mm}}}{\end{list}}
+
+\newcommand{\myparagraph}[1]{\noindent{\scshape \bfseries #1.}}
+
+%% added to remove indentation in susbsubsection for IEEEtran
+\makeatletter
+\def\subsubsection{\@startsection{subsubsection}% name
+      {3}% level
+      {\z@}% indent (formerly \parindent)
+      {0ex plus 0.1ex minus 0.1ex}% before skip
+      {0ex}% after skip
+      {\normalfont\normalsize\textbf}}% style
+\makeatother
+
+%------------------------------------------------------------------------------
+%                               Fancy header setup.
+%------------------------------------------------------------------------------
+%
+\pagestyle{fancyplain}
+\lhead{}
+\lfoot{}
+\chead{}
+\rhead{}
+\cfoot{\thepage}
+%%\rfoot{{\scriptsize \today}}
+\renewcommand{\headrulewidth}{0pt}
+
+%\setlength{\intextsep}{10pt plus 2pt minus 2pt}
+
+%% Reducing margins further -- md
+%%\addtolength{\hoffset}{-0.25in}
+%%\addtolength{\textwidth}{0.5in}
+%%\addtolength{\voffset}{-0.25in}
+%%\addtolength{\textheight}{0.4in}
+
+% The space-saving sledgehammer. -- md
+%\renewcommand{\baselinestretch}{0.95}
