@@ -1,65 +1,21 @@
-%-----------------------------------------------------------------------------
-%
-%               Template for sigplanconf LaTeX Class
-%
-% Name:         sigplanconf-template.tex
-%
-% Purpose:      A template for sigplanconf.cls, which is a LaTeX 2e class
-%               file for SIGPLAN conference proceedings.
-%
-% Guide:        Refer to "Author's Guide to the ACM SIGPLAN Class,"
-%               sigplanconf-guide.pdf
-%
-% Author:       Paul C. Anagnostopoulos
-%               Windfall Software
-%               978 371-2316
-%               paul@windfall.com
-%
-% Created:      15 February 2005
-%
-%-----------------------------------------------------------------------------
-% //*************************************************************************************
-% //***********************************************************************************
-% //author Aritra Dhar																  * *
-% //MT12004																			  * *
-% //M.TECH CSE																		  * * 
-% //INFORMATION SECURITY															  * *
-% //IIIT-Delhi																		  * *	 
-%
-% //--------------------------------------------------------------------------------- * *																				* * /////////////////////////////////////////////////									* *
-% //Paper Draft							       //									  * *
-% /////////////////////////////////////////////////									  * *
-% //version 1.0																		  * *
-% //*********************************************************************************** * 
-% //*************************************************************************************
-
 \documentclass{sigplanconf}
-
-
-% The following \documentclass options may be useful:
-
-% preprint      Remove this option only once the paper is in final form.
-% 10pt          To set in 10-point type instead of 9-point.
-% 11pt          To set in 11-point type instead of 9-point.
-% authoryear    To obtain author/year citation style instead of numeric.
 
 \usepackage{amsmath}
 \usepackage{graphicx}        % standard LaTeX graphics tool
-\usepackage{subfigure}
 \usepackage{epstopdf}
 \usepackage{url}
-\usepackage{algorithmic} 
+%\usepackage{algorithmic} 
 \usepackage{algorithm2e}
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{fancybox}
 
-\usepackage{subfigure}
+%\usepackage{subfigure}
 \usepackage{fancyvrb}
 \usepackage{listings}
 \usepackage{color}
 \usepackage{xcolor}
-\usepackage[]{datetime}
+%\usepackage[]{datetime}
 %\usepackage{lipsum}
 \usepackage{graphicx}
 
@@ -113,7 +69,8 @@
 \titlebanner{banner above paper title}        % These are ignored unless
 \preprintfooter{short description of paper}   % 'preprint' option specified.
 
-\title{Program Repairing using Exception Types, Constraint Automata and Typestate}
+\title{Program Repairing using Exception Types, Constraint Automata and
+Typestate}
 %\subtitle{Subtitle Text, if any}
 
 \authorinfo{Draft 4.0}
@@ -130,18 +87,25 @@
 %marker
 \textcolor{red}{\textbf{Changes done}}\newline
 
-Runtime Exceptions are common types of exceptions which may lead to system crash which leads to shutdown or restart. 
-For may critical application such scenario is unacceptable due to their nature which requires availability of the service. 
-%Runtime exceptions may even leads to inconsistency of data in the system which may leads to further complications and expensive fixes.
-Program bugs which causes runtime exceptions often go unnoticed at the time of development as these exceptions are unchecked exceptions. 
-The key issue is to guide the program through some exception suppression procedure which will leads the program to a consistent state 
-hence improve the chance of surviving a fatal crash. Here we consider such programs for which restart is not an option.
+Runtime Exceptions are common types of exceptions which may lead to system crash
+which leads to shutdown or restart. For may critical application such scenario
+is unacceptable due to their nature which requires availability of the service. 
+%Runtime exceptions may even leads to inconsistency of data in the system which
+%may leads to further complications and expensive fixes.
+Program bugs which causes runtime exceptions often go unnoticed at the time of
+development as these exceptions are unchecked exceptions. The key issue is to
+guide the program through some exception suppression procedure which will leads
+the program to a consistent state hence improve the chance of surviving a fatal
+crash. Here we consider such programs for which restart is not an option.
 
-In this paper, we present a novel technique to recover from unexpected runtime exceptions.
- We have used hybrid of two techniques for efficient detection of potential point of failure and patch it closest to that to minimize the damage. 
- One technique uses type of runtime exception to apply appropriate patch.  
- The other technique will provides typestate analysis technique which will detect typestate violations to apply the right patch.
-%The developer will flag a specific portion of the program to be eligible for repairing and patching.
+In this paper, we present a novel technique to recover from unexpected runtime
+exceptions. We have used hybrid of two techniques for efficient detection of
+potential point of failure and patch it closest to that to minimize the damage. 
+One technique uses type of runtime exception to apply appropriate patch. The
+other technique will provides typestate analysis technique which will detect
+typestate violations to apply the right patch.
+%The developer will flag a specific portion of the program to be eligible for
+%repairing and patching.
 
 \end{abstract}
 
@@ -154,65 +118,23 @@ In this paper, we present a novel technique to recover from unexpected runtime e
 Reliability, Languages 
 
 \keywords
-program repair, runtime exception, software patching, symbolic execution, static analysis, type-state
+program repair, runtime exception, software patching, symbolic execution, static
+analysis, type-state
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%Introduction
-\input{Introduction}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%Motivation and Challenges
-\input{Motivation}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%Problem Formulation
-\input{ProblemFormulation}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%Repairing Strategy:Exception Type
-\input{RepairingStrategyExceptionType}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%Repairing Strategy : Constraint Automata
-\input{RepairingStrategyConstrainAutomata}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%Design of the System
-\input{Design}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%Benchmark Results
-\input{BenchmarkResults}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%Related Work
-\input{RelatedWork}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%Conclusion and Future Works
-\input{Conclusion}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\appendix
-%\section{Appendix Title}
+\input{sections/Introduction}
+\input{sections/Motivation}
+\input{sections/ProblemFormulation}
+\input{sections/RepairingStrategyExceptionType}
+\input{sections/RepairingStrategyConstrainAutomata}
+\input{sections/Design}
+\input{sections/BenchmarkResults}
+\input{sections/RelatedWork}
+\input{sections/Conclusion}
 
 \acks
 
-
-% We recommend abbrvnat bibliography style.
-
 \bibliographystyle{abbrvnat}
-
-% The bibliography should be embedded for final submission.
-\bibliography{Aritrabib}
+\bibliography{paper}
 
 
 %\begin{thebibliography}{}
@@ -222,11 +144,3 @@ program repair, runtime exception, software patching, symbolic execution, static
 %\end{thebibliography}
 
 \end{document}
-
-%                       Revision History
-%                       -------- -------
-%  Date         Person  Ver.    Change
-%  ----         ------  ----    ------
-
-%  2013.06.29   TU      0.1--4  comments on permission/copyright notices
-
