@@ -4,14 +4,18 @@
 \subsection{General Structure}
 \label{subsec:generalCA}
 
-\emph{Constraint automata} is a formalism to describe the behavior and possible data flow in coordination models. 
-Mostly used for model checking. We have used it for the purpose of program repairing technique. Here we define the finite state automata as follows :
+\emph{Constraint automata} is a formalism to describe the behavior and possible
+data flow in coordination models. 
+Mostly used for model checking. We have used it for the purpose of program
+repairing technique. Here we define the finite state automata as follows :
 
 $$(Q, \Sigma, \delta, q_0, F)$$
 \begin{itemize}
-	\item $Q$: set of state where $|Q| = 2$, \emph{legal state}(init) and \emph{illegal state} (error).
+	\item $Q$: set of state where $|Q| = 2$, \emph{legal state}(init) and
+\emph{illegal state} (error).
 	\item $\Sigma$: symbols, invariants based on exception type.
-	\item $\delta$: transition function. $init \rightarrow init$ is safe transition and $init \rightarrow error$ is the invariant violation.
+	\item $\delta$: transition function. $init \rightarrow init$ is safe
+transition and $init \rightarrow error$ is the invariant violation.
 	\item $q_0$: starting state, here $q_0 = init$.
 	\item $F$: end state, here it same as $q_0$.
 \end{itemize}
@@ -23,7 +27,8 @@ $$(Q, \Sigma, \delta, q_0, F)$$
 \label{fig:automata}
 \end{figure}
 
-According to the Figure~\ref{fig:automata}, the repairing mechanism will only trigger when we have a transition from 
+According to the Figure~\ref{fig:automata}, the repairing mechanism will only
+trigger when we have a transition from 
 init state to error state due to invariant violation.
 
 \subsection{Patching Techniques}
@@ -33,11 +38,14 @@ The patching technique is based on the exception type.
 
 \subsubsection{Array index out of bound exception}
 
-Array index out of bound exception happen when one tries to access the array with a index which is more than the size of the array or 
-less than zero i.e. with some negative value. We did the patching based on these two scenario. When the index is more than the array size, 
+Array index out of bound exception happen when one tries to access the array
+with a index which is more than the size of the array or 
+less than zero i.e. with some negative value. We did the patching based on these
+two scenario. When the index is more than the array size, 
 we patch it by assigning $array.length - 1$.
 
-\lstset{language=Java, caption=array index out of bound patching, label=patchingexample2}
+\lstset{language=Java, caption=array index out of bound patching,
+label=patchingexample2}
 
 \begin{lstlisting}
 void foo()
@@ -64,12 +72,16 @@ void foo()
 
 \subsubsection{Negative Array Size Exception}
 
-Negative array size exception occurs when one tries to create a array with a negative size. 
-The patching is done based on data flow analysis. Suitable index size is determined by looking at the successive statement dependent on the array. 
-To take a safe bound, we took maximum index size and set as the array size in the new array statement.
+Negative array size exception occurs when one tries to create a array with a
+negative size. 
+The patching is done based on data flow analysis. Suitable index size is
+determined by looking at the successive statement dependent on the array. 
+To take a safe bound, we took maximum index size and set as the array size in
+the new array statement.
 
 
-\lstset{language=Java, caption=arr index out of bound patching, label=patchingexample2}
+\lstset{language=Java, caption=arr index out of bound patching,
+label=patchingexample2}
 
 \begin{lstlisting}
 void foo()
@@ -96,14 +108,19 @@ void foo()
 
 \subsubsection{Arithmetic Exception : Division-by-zero Exception}
 
-Division by zero causes arithmetic exception. There are two different cases which were considered here. 
+Division by zero causes arithmetic exception. There are two different cases
+which were considered here. 
 \begin{itemize}
-	\item \textbf{Case I :} The denominator is going to the taint sink but the left hand side is not going to any taint sink. 
-	Here we will not manipulate the denominator as we are not manipulating any variable which are going to any taint sink.
-	\item \textbf{Case II :} The denominator and the left hand side, both are not going to any taint sink. So they are safe to patch.
+	\item \textbf{Case I :} The denominator is going to the taint sink but
+the left hand side is not going to any taint sink. 
+	Here we will not manipulate the denominator as we are not manipulating
+any variable which are going to any taint sink.
+	\item \textbf{Case II :} The denominator and the left hand side, both
+are not going to any taint sink. So they are safe to patch.
 \end{itemize}
 
-\lstset{language=Java, caption=arithmetic exception : division-by-zero patching, label=patchingexample2}
+\lstset{language=Java, caption=arithmetic exception : division-by-zero patching,
+label=patchingexample2}
 
 \begin{lstlisting}
 void foo()
@@ -134,7 +151,8 @@ void foo()
 
 \subsubsection{Null Pointer Exception}
 
-Null pointer exception in Java is the most common runtime exception encountered. 
+Null pointer exception in Java is the most common runtime exception
+encountered. 
 Thrown when an application attempts to use null in a case where an object is
 required. There exists various scenarios where null pointer exception can
 happen. These different scenario requires different patching techniques. Bellow
@@ -150,7 +168,8 @@ we enlist all cases and corresponding patching techniques.
   most suitable constructor should be picked up, this will ensure safest way to
   deal with the later method calls/field accesses.
   
-  \lstset{language=Java, caption=appropriate constructor, label=patchingexample2}
+  \lstset{language=Java, caption=appropriate constructor,
+label=patchingexample2}
 
 \begin{lstlisting}
 class MyClass
@@ -253,5 +272,7 @@ void foo()
 
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%

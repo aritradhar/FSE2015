@@ -5,7 +5,8 @@
 \textcolor{red}{\textbf{Please review this section}}\newline
 
 
-\lstset{language=Java, caption=Java code which may throws runtime exceptions, label=example1}
+\lstset{language=Java, caption=Java code which may throws runtime exceptions,
+label=example1}
 \begin{lstlisting}
 
 public class TestClass
@@ -76,7 +77,8 @@ particular example will be used to demonstrate the repairing strategy.
 \label{fig:datadep}
 \end{figure}
 
-We have done several  static analysis a priori  over the Java source code to discover :
+We have done several  static analysis a priori  over the Java source code to
+discover :
 \begin{enumerate}
 \item Critical section of the code which are not eligible for patching. Eg.
 banking or any financial transaction which should be crashed in case of
@@ -133,7 +135,8 @@ cone of all of these objects and variables.
 \subsection{Instrumenting Patching}
 \label{subsec:patchinstru}
 
-We have used Soot framework which is a Java byte code manipulator to instrument patch. 
+We have used Soot framework which is a Java byte code manipulator to instrument
+patch. 
 The patching technique is divided into two phases
 
 \subsubsection{Determine Exception Type} 

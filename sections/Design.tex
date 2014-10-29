@@ -45,7 +45,8 @@ module, the tagged statement will be passed to the repairing module.
 
 
 We have specify the list of source, sink and derivation methods in a
-configuration file before the analysis. The source methods includes methods which
+configuration file before the analysis. The source methods includes methods
+which
 take input from user from console or web application forms like text box. The
 sink methods are sensitive data storage which are unsafe to manipulate such as
 database, console print or methods to send a text file to printer etc. The
@@ -150,7 +151,8 @@ particular method. The method can be called from a path which leads to some
 tainted sink and it can also be called from such path which does not contain
 any taint sink. In such cases, we have taken special care about the callee. The
 path to the tainted sink should not call a patched method as it can influence
-data which are leaving the system. So, we also maintained two different version of
+data which are leaving the system. So, we also maintained two different version
+of
 the method and instrument the calling site so that appropriate method is called.
 
 \lstset{language=Java, caption = Same method calling in different scenario,
