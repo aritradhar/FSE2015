@@ -13,7 +13,7 @@ An application which constantly accesses I/O which also includes share resources
 may throw exception if another application blocks it.
 Here in this paper we discuss and analyze \java exceptions and produce repair
 patch based on that. Java supports two types of exceptions :
-\begin{itemize}
+\begin{mylist}
 	
 \item \textbf{Checked exception} which requires explicit \emph{throws}
 declaration at the method declaration or \emph{try-catch} block by the
@@ -26,7 +26,7 @@ subclasses and \emph{java.lang.Error} are types of unchecked exceptions.
 \emph{NullPointerException}, \emph{ArrayIndexOutOfBound},
 \emph{ArithmeticException} are examples of common \java runtime exceptions.
 
-\end{itemize}
+\end{mylist}
 
 Oracle official documentation says that ``\emph{Here's the bottom line
 guideline: If a client can reasonably be expected to recover from an exception,
@@ -78,7 +78,7 @@ to the potential point of failure.
 In this paper we proposed two solution to suppress runtime example and ensure
 system survivability. The approach consists of four primary phases
 
-\begin{itemize}
+\begin{mylist}
 \item \textbf{Generate input data-set} : We index user input along with the
 global variables and method arguments of successful runs.
 The local variables are not indexed as they can be re-generated.
@@ -112,7 +112,7 @@ sequence of operations maintains proper protocol or not.
 % repairing.
 The documentations of the API used in the application will define the valid
 typestate for repairing.
-\end{itemize}
+\end{mylist}
 
 The object of the patching is to repair the problem closest to it to minimize
 any collateral damage to other parts of the applications hence minimizing the
