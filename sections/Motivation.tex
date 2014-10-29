@@ -1,7 +1,7 @@
 
 
 \section{Motivation and Challenges}
-\label{sec:mot}
+\label{sec:motivation}
 
 \subsection{Historical Context}
 \label{subsec:historicalContext}
@@ -10,7 +10,7 @@ In recent past, we have seen couple of disastrous failure of critical military
 and civilian infrastructure system due to system failure/crash which is results
 of some very common runtime exceptions.
 
-\begin{itemize}
+\begin{mylist}
   
   \item In USS Yorktown, complete failure in propulsion and navigation system by
   a simple divide-by-zero exception in flight deck database.
@@ -31,67 +31,46 @@ of some very common runtime exceptions.
   call.
   
   
-\end{itemize}
+\end{mylist}
 
 
 \subsection{Data from Stack Overflow Posts}
 \label{subsec:stackoverflow}
 
-\begin{table}[h]
-\caption{Most frequent java runtime exceptions from stack overflow data}
-\label{tab:stackoverlow}
-\begin{tabular}{|c|c|c|}
+\begin{table}[t]
+\small
+\begin{tabular}{l|r|r}
+\textbf{Runtime Exception Type} & \textbf{Occurrences} & \textbf{\%age}\\
 \hline
-\textbf{Runtime Exception Type} & \textbf{Occurrences} & \textbf{Percentage}\\
-\hline NullPointerException & $34912$ & $54.94\%$ \\ \hline
-
-ClassCastException & $7504$ & $11.81\%$ \\ \hline
-
-IndexOutOfBoundsException & $6637$ & $10.44\%$ \\ \hline
-
-SecurityException  & $5818$ & $9.15\%$ \\  \hline
-
-NoSuchElementException & $2392$ & $3.76\%$ \\ \hline
-
-ArithmeticException & $2338$ & $3.67\%$ \\ \hline
-
-ConcurrentModificationExceptio & $1889$ & $2.97\%$ \\ \hline
-
-DOMException & $1024$ & $1.61\%$ \\ \hline
-
-ArrayStoreException & $279$ & $0.43\%$ \\ \hline
-
-MissingResourceException & $277$ & $0.43\%$ \\ \hline
-
-BufferOverFlowException & $161$ & $0.25\%$ \\ \hline
-
-NegativeArraySizeException & $122$ & $0.19\%$ \\ \hline
-
-BufferUnderFlowException & $66$ & $0.1\%$ \\ \hline
-
-LSException & $64$ &  $0.1\%$ \\ \hline
-
-MalformedParameterizedTypeExce & $38$ & $0.05\%$ \\ \hline
-
-CMMException  & $8$ & $0.01\%$ \\ \hline
-
-FileSystemNotFoundException & $6$ & $0.009\%$ \\ \hline
-
-NoSuchMechanismException & $3$ & $0.0045\%$ \\ \hline
-
-MirroredTypesException & $1$ & $0.0015\%$ \\ \hline
-
+NullPointerException & $34912$ & $54.94$ \\
+ClassCastException & $7504$ & $11.81$ \\
+IndexOutOfBoundsException & $6637$ & $10.44$ \\
+SecurityException  & $5818$ & $9.15$ \\
+NoSuchElementException & $2392$ & $3.76$ \\
+ArithmeticException & $2338$ & $3.67$ \\
+ConcurrentModificationExceptio & $1889$ & $2.97$ \\
+DOMException & $1024$ & $1.61$ \\
+ArrayStoreException & $279$ & $0.43$ \\
+MissingResourceException & $277$ & $0.43$ \\
+BufferOverFlowException & $161$ & $0.25$ \\
+NegativeArraySizeException & $122$ & $0.19$ \\
+BufferUnderFlowException & $66$ & $0.1$ \\
+LSException & $64$ &  $0.1$ \\
+MalformedParameterizedTypeExce & $38$ & $0.05$ \\
+CMMException  & $8$ & $0.01$ \\
+FileSystemNotFoundException & $6$ & $0.009$ \\
+NoSuchMechanismException & $3$ & $0.0045$ \\
+MirroredTypesException & $1$ & $0.0015$
 \end{tabular}
+\caption{Most frequent runtime exceptions from stack overflow}
+\label{tab:stackoverlow}
 \end{table}
 
-
-
-We have analyzed data from stack overflow and we looked for java runtime
+We have analyzed data from stack overflow and we looked for \java runtime
 exception which are discussed most frequently. In the
 table~\ref{tab:stackoverlow}, the data we find is tabulated along with their
 occurrences and percentages.
 
-
-From the table it is clear that null pointer exception in java is not only the
-most frequent but also the most dominant runtime exception having shere of more
-than $50\%$.
+From the table it is clear that null pointer exception in \java is not only the
+most frequent but also the most dominant runtime exception having share of more
+than $50$.
