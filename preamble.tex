@@ -1,6 +1,6 @@
 \usepackage{color}
 
-\newcommand{\subparagraph}{}
+%%\newcommand{\subparagraph}{}
 
 % You can tweak clickable link colors here:
 \definecolor{linkcol}{rgb}{0,0,1}
@@ -13,7 +13,7 @@
 
 \usepackage{amsmath}
 \usepackage{ragged2e}
-\usepackage{cite}
+%%\usepackage{cite}
 \usepackage{txfonts}
 \usepackage{fancyhdr}
 \usepackage{amssymb}
@@ -39,9 +39,16 @@ pdfpagelabels]{hyperref}
 \usepackage{multirow}
 \usepackage{flushend}
 \usepackage{epstopdf}
-%%\usepackage[small,compact]{titlesec}
+\usepackage[small,compact]{titlesec}
 \usepackage[font=scriptsize]{subfig}
 \usepackage{wrapfig}
+
+\usepackage{epstopdf}
+\usepackage{fancybox}
+\usepackage{listings}
+\usepackage{xcolor}
+%\usepackage[]{datetime}
+%\usepackage{lipsum}
 
 \SetAlFnt{\small}
 \SetAlCapFnt{\small}
@@ -58,6 +65,32 @@ pdftitle = {\papertitle},
 pdfkeywords = {\paperkeywords},
 pdfcreator = {LaTeX with hyperref package},
 pdfproducer = {pdflatex}}
+
+\definecolor{dkgreen}{rgb}{0,0.6,0}
+\definecolor{gray}{rgb}{0.5,0.5,0.5}
+\definecolor{mauve}{rgb}{0.58,0,0.82}
+
+\lstset{%frame=tb,
+  language=Java,
+  aboveskip=3mm,
+  belowskip=3mm,
+  showstringspaces=false,
+  columns=flexible,
+  basicstyle={\scriptsize\ttfamily},
+  numbers= left,
+	numbersep=6pt,
+	numberstyle=\scriptsize,
+  %frame=single,
+  numberstyle=\tiny\color{gray},
+  keywordstyle=\color{blue},
+  commentstyle=\color{dkgreen},
+  stringstyle=\color{mauve},
+  breaklines=true,
+  breakatwhitespace=true
+  tabsize=2
+	morecomment=[l]{//}
+	escapeinside={<@}{@>}
+}
 
 % Use a smaller font size for URLs:
 \makeatletter

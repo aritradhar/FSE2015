@@ -1,89 +1,25 @@
-\documentclass{sigplanconf}
+\documentclass[pldi]{sigplanconf}
 
-\usepackage{amsmath}
-\usepackage{graphicx}        % standard LaTeX graphics tool
-\usepackage{epstopdf}
-\usepackage{url}
-%\usepackage{algorithmic} 
-\usepackage{algorithm2e}
-\usepackage{amssymb}
-\usepackage{amsmath}
-\usepackage{fancybox}
+%% =============================================================
+\def\tool{\textsc{Tool}\xspace}
+\def\papertitle{\tool: Program Repairing using Exception Types, Constraint
+Automata and Typestate}
+\def\pdfauthors{}
+\def\paperkeywords{}
+%% =============================================================
 
-%\usepackage{subfigure}
-\usepackage{fancyvrb}
-\usepackage{listings}
-\usepackage{color}
-\usepackage{xcolor}
-%\usepackage[]{datetime}
-%\usepackage{lipsum}
-\usepackage{graphicx}
+\input{preamble}
 
-
-\definecolor{dkgreen}{rgb}{0,0.6,0}
-\definecolor{gray}{rgb}{0.5,0.5,0.5}
-\definecolor{mauve}{rgb}{0.58,0,0.82}
-
-\lstset{%frame=tb,
-  language=Java,
-  aboveskip=3mm,
-  belowskip=3mm,
-  showstringspaces=false,
-  columns=flexible,
-  basicstyle={\small\ttfamily},
-  numbers= left,
-	numbersep=6pt,
-	numberstyle=\small,
-  %frame=single,
-  numberstyle=\tiny\color{gray},
-  keywordstyle=\color{blue},
-  commentstyle=\color{dkgreen},
-  stringstyle=\color{mauve},
-  breaklines=true,
-  breakatwhitespace=true
-  tabsize=2
-	morecomment=[l]{//} 
-	escapeinside={<@}{@>}
-}
 \begin{document}
 
-\special{papersize=8.5in,11in}
-\setlength{\pdfpageheight}{\paperheight}
-\setlength{\pdfpagewidth}{\paperwidth}
+%%\toappear{}
 
-\conferenceinfo{CONF 'yy}{Month d--d, 20yy, City, ST, Country} 
-\copyrightyear{20yy} 
-\copyrightdata{978-1-nnnn-nnnn-n/yy/mm} 
-\doi{nnnnnnn.nnnnnnn}
-
-% Uncomment one of the following two, if you are not going for the 
-% traditional copyright transfer agreement.
-
-%\exclusivelicense                % ACM gets exclusive license to publish, 
-                                  % you retain copyright
-
-%\permissiontopublish             % ACM gets nonexclusive license to publish
-                                  % (paid open-access papers, 
-                                  % short abstracts)
-
-\titlebanner{banner above paper title}        % These are ignored unless
-\preprintfooter{short description of paper}   % 'preprint' option specified.
-
-\title{Program Repairing using Exception Types, Constraint Automata and
-Typestate}
-%\subtitle{Subtitle Text, if any}
-
-\authorinfo{Draft 4.0}
-           {\today}
-           {}
-%\authorinfo{Name2\and Name3}
-%           {Affiliation2/3}
-%           {Email2/3}
+\title{\Large \bf \papertitle}
 
 \maketitle
 
 \begin{abstract}
-
+\small
 %marker
 \textcolor{red}{\textbf{Changes done}}\newline
 
@@ -131,16 +67,11 @@ analysis, type-state
 \input{sections/RelatedWork}
 \input{sections/Conclusion}
 
-\acks
+%%\acks
 
+\raggedright
+\small
 \bibliographystyle{abbrvnat}
 \bibliography{paper}
-
-
-%\begin{thebibliography}{}
-%\softraggedright
-
-
-%\end{thebibliography}
 
 \end{document}
