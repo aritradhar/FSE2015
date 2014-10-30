@@ -36,10 +36,15 @@ In this paper, we present a novel technique to recover from unexpected runtime
 exceptions. We have used hybrid of two techniques for efficient detection of
 potential point of failure and patch it closest to that to minimize the damage. 
 One technique uses type of runtime exception to apply appropriate patch. The
-other technique will provides typestate analysis technique which will detect
-typestate violations to apply the right patch.
-%The developer will flag a specific portion of the program to be eligible for
-%repairing and patching.
+other technique analyze the constraint information both statically and
+dynamically to produce patch which will have characteristics as the good values.
+Both of the techniques are followed by a taint analysis phase which will
+determine which program statements are safe to patch.
+
+We have experimented on \java\ \code{String} API and applied our patching
+techniqes to some major bugs on some third party \java\ APIs and validate the
+patches with the actual patches developed by the programmers in the later
+versions.
 
 \end{abstract}
 
