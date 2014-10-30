@@ -5,7 +5,7 @@
 %later convert this pdf
 \begin{figure}[t]
 \centering
-\includegraphics[width=3.2in]{images/OverallDesign.eps}
+\includegraphics[width=3.2in]{images/OverallDesign.png}
 \caption{Overall Design}
 \label{fig:overallDesign}
 \end{figure}
@@ -26,7 +26,7 @@
 %later covert this to pdf
 \begin{figure*}[t]
 \centering
-  \includegraphics[width= 7.0in]{images/TaintModule.eps}
+  \includegraphics[width= 7.0in]{images/TaintModule.png}
   \caption{Design of the Taint Module}
   \label{fig:TaintModule}
 \end{figure*}
@@ -68,6 +68,8 @@ to patch.
 \begin{tabular}{l|l}
 \multicolumn{1}{c|}{\textbf{\java\ Class}} & \multicolumn{1}{c}{\textbf{Source
 Method Name}}\\
+% \scalebox{0.86}
+% {
 \hline
 \code{java.io.InputStream} & \code{read()}\\
 \code{java.io.BufferedReader} & \code{readLine()}\\
@@ -82,6 +84,7 @@ Method Name}}\\
 \end{tabular}
 \caption{Common \java\ library taint source functions}
 \label{tab:TaintSources}
+% }
 \end{table}
 
 
@@ -92,6 +95,8 @@ Method Name}}\\
 \begin{tabular}{l|l}
 \multicolumn{1}{c|}{\textbf{\java\ Class}} & \multicolumn{1}{c}{\textbf{Sink
 Method Name}}\\
+% \scalebox{0.86}
+% {
 \hline
 \code{java.io.PrintStream} & \code{printf()}\\
 \code{java.io.OutputStream} & \code{write()}\\
@@ -100,6 +105,7 @@ Method Name}}\\
 \code{java.net.Socket} & \code{connect()}\\
 %org.apache.http.impl.client.DefaultHttpClient & execute\\ \hline
 \end{tabular}
+% }
 \caption{Common \java\ library taint sink functions}
 \label{tab:TaintSinks}
 \end{table}
@@ -135,7 +141,7 @@ are
 %later covert this to pdf
 \begin{figure}[t]
 \centering
-  \includegraphics[scale= .5]{images/PatchModule.eps}
+  \includegraphics[scale= .5]{images/PatchModule.png}
   \caption{Design of the Patching Module}
   \label{fig:PatchModule}
 \end{figure}

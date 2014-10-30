@@ -12,6 +12,7 @@
 \setlength{\pdfpageheight}{11in}
 
 %%\usepackage{cite}
+\usepackage{amsthm}
 \usepackage{amsmath}
 \usepackage{ragged2e}
 \usepackage{txfonts}
@@ -49,6 +50,16 @@ pdfpagelabels]{hyperref}
 \usepackage{xcolor}
 %\usepackage[]{datetime}
 %\usepackage{lipsum}
+
+%==========================================
+%Added definitions
+% \usepackage{amsthm}
+\theoremstyle{definition}
+\newtheorem{definition}{Definition}[section]
+%==========================================
+%rename listing
+\renewcommand\lstlistingname{Code Snippet}
+%==========================================
 
 \SetAlFnt{\small}
 \SetAlCapFnt{\small}
