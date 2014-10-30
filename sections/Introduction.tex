@@ -15,16 +15,16 @@ Here in this paper we discuss and analyze java exceptions and produce repair
 patch based on that. Java supports two types of exceptions :
 \begin{itemize}
 	
-\item \textbf{Checked exception} which requires explicit \emph{throws}
-declaration at the method declaration or \emph{try-catch} block by the
+\item \textbf{Checked exception} which requires explicit \texttt{throws}
+declaration at the method declaration or \texttt{try-catch} block by the
 developers. Such exceptions are handled carefully as they often involves
 accessing resources like network, database, file system, I/O etc.
 	
 \item \textbf{Unchecked exception} which does not enforce similar handing
-mechanism as the former one. \emph{java.lang.RuntimeException} and its
-subclasses and \emph{java.lang.Error} are types of unchecked exceptions.
-\emph{NullPointerException}, \emph{ArrayIndexOutOfBound},
-\emph{ArithmeticException} are examples of common java runtime exceptions.
+mechanism as the former one. \texttt{java.lang.RuntimeException} and its
+subclasses and \texttt{java.lang.Error} are types of unchecked exceptions.
+\texttt{NullPointerException}, \texttt{ArrayIndexOutOfBound},
+\texttt{ArithmeticException} are examples of common java runtime exceptions.
 
 \end{itemize}
 
@@ -65,7 +65,7 @@ cover as much potential input .Yet may corner cases can be left overlooked which
 can cause runtime exceptions.
 Multi-threaded applications are also susceptible to erroneous thread
 interleaving. One such exception is
-\emph{java.lang.IllegalMonitorStateException}, when a thread has attempted to
+\texttt{java.lang.IllegalMonitorStateException}, when a thread has attempted to
 wait on an object's monitor or to notify other threads waiting on an object's
 monitor without owning the specified monitor. Applications under adversarial
 situation should be considered where deliberate malicious input may cause it to
