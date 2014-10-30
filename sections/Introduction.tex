@@ -71,47 +71,53 @@ monitor without owning the specified monitor. Applications under adversarial
 situation should be considered where deliberate malicious input may cause it to
 fail. To recover from such situation, a mechanism is needed which can predict
 failure by doing invariant and symbolic analysis. Invariant analysis will detect
-particular variables outside legal/safe bound. Symbolic analysis will indicate
+particular variables outside legal/safe bound. Static analysis will indicate
 to the potential point of failure.
 
 
 In this paper we proposed two solution to suppress runtime example and ensure
-system survivability. The approach consists of four primary phases
+system survivability. The approach consists of six primary phases
 
 \begin{mylist}
-\item \textbf{Generate input data-set}: We index user input along with the
-global variables and method arguments of successful runs.
-The local variables are not indexed as they can be re-generated.
-These data-set is used as a reference to later executions which encounters
-runtime exceptions.
-Appropriate user input of previous successful run is chosen in terms of
-correlation coefficient.
+\item \textbf{Taint analysis}: We performed static taint analysis before the
+repairing modules to detect the sensitive objects which are leaving the system
+via database, network stream, file stream or console. Patching these statements
+involving these objects may introduce security concern. We only patch those
+objects which never leaves the system. We have used \soot\ \infoflow\ framework
+for static taint analysis. We have defined potential taint source and sinks in the
+configuration file. The \infoflow\ frameworks returns all the program
+statements which lies in any of the program path from source and sink. We tag these
+statements as unsafe to patch.
+
+\item \textbf{Already handled exception detection using call graph}: There may
+be cases where an exception has been handled for a particular statement in its
+caller or any predecessor in the call chain. In such scenario the patching would
+change the normal program behavior. We have generated call graph using \soot\
+call-graph phase (\code{cg}) to detect such instances and exclude those
+statements.
+
+\item \textbf{Static constraint evaluation}: We considered constraints in the
+program for the objects for effective repairing. In the implementation, we
+considered \java\ SE \code{String} API and constraints for a \code{String} objects
+can be length, prefix, suffix etc. We have evaluated these constraints
+statically for which the information is also statically available. We regenerate
+these objects by solving the constraints.
 	
-\item \textbf{Program slice for patching}: We perform static analysis prior to
-running the program to determine data dependencies of the variables.
-The analysis yields a dependency graph which is used to determine optimal slice
-to be used as patch.
-This patch is placed in catch block and executed with the values of previous
-successful run while the original code is wrapped in try block.
+\item \textbf{Dynamic constraint evaluation}: The constraints which can not be
+evaluated statically are deferred and special function calls are instrumented in
+the byte code which will take care of extracting the constraints and solving
+them at the runtime.
 	
 \item \textbf{Determine type of exception and patching}: The characteristics of
 patching is dependent on the type of runtime exception encountered by the
 program. A piece of code may throws multiple types of exceptions and all of them
 are handled at the time of patching by instrumenting multiple catch blocks.
 	
-\item \textbf{Use typestate for repairing}: Typestate analysis, sometimes
-called protocol analysis defines valid sequences of operations that can be
-typically modeled using Finite State Machine (FSM) where the states represent
-abstract state of the program and the symbols are certain method invocations to
-perform state transition. Typestates are capable of representing behavioral type
-refinements like Iterators, where \code{hasNext()} method should be called
-before the \code{next()} method call.
-Typestate analysis is widely used as a safety feature to ensure a certain
-sequence of operations maintains proper protocol or not.
-% But this method is unconventional and investigated in the field of program
-% repairing.
-The documentations of the API used in the application will define the valid
-typestate for repairing.
+\item \textbf{Optimizing instrumentation}: We introduce couple of optimization
+technique to reduce number of instrumentation in the byte code and keep the
+overhead of repairing calls at bare minimum so that it does not affect the
+application/library performance.
+
 \end{mylist}
 
 The object of the patching is to repair the problem closest to it to minimize
