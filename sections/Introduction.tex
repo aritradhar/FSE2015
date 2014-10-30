@@ -15,16 +15,16 @@ Here in this paper we discuss and analyze \java\ exceptions and produce repair
 patch based on that. Java supports two types of exceptions :
 \begin{mylist}
 	
-\item \textbf{Checked exception} which requires explicit \emph{throws}
-declaration at the method declaration or \emph{try-catch} block by the
+\item \textbf{Checked exception} which requires explicit \code{throws}
+declaration at the method declaration or \code{try-catch} block by the
 developers. Such exceptions are handled carefully as they often involves
 accessing resources like network, database, file system, I/O etc.
 	
 \item \textbf{Unchecked exception} which does not enforce similar handing
-mechanism as the former one. \emph{java.lang.RuntimeException} and its
+mechanism as the former one. \code{java.lang.RuntimeException} and its
 subclasses and \emph{java.lang.Error} are types of unchecked exceptions.
-\emph{NullPointerException}, \emph{ArrayIndexOutOfBound},
-\emph{ArithmeticException} are examples of common \java\ runtime exceptions.
+\code{NullPointerException}, \code{ArrayIndexOutOfBound},
+\code{ArithmeticException} are examples of common \java\ runtime exceptions.
 
 \end{mylist}
 
@@ -65,7 +65,7 @@ cover as much potential input .Yet may corner cases can be left overlooked which
 can cause runtime exceptions.
 Multi-threaded applications are also susceptible to erroneous thread
 interleaving. One such exception is
-\emph{\java\.lang.IllegalMonitorStateException}, when a thread has attempted to
+\code{java.lang.IllegalMonitorStateException}, when a thread has attempted to
 wait on an object's monitor or to notify other threads waiting on an object's
 monitor without owning the specified monitor. Applications under adversarial
 situation should be considered where deliberate malicious input may cause it to
@@ -79,7 +79,7 @@ In this paper we proposed two solution to suppress runtime example and ensure
 system survivability. The approach consists of four primary phases
 
 \begin{mylist}
-\item \textbf{Generate input data-set} : We index user input along with the
+\item \textbf{Generate input data-set}: We index user input along with the
 global variables and method arguments of successful runs.
 The local variables are not indexed as they can be re-generated.
 These data-set is used as a reference to later executions which encounters
@@ -87,25 +87,25 @@ runtime exceptions.
 Appropriate user input of previous successful run is chosen in terms of
 correlation coefficient.
 	
-\item \textbf{Program slice for patching} : We perform static analysis prior to
+\item \textbf{Program slice for patching}: We perform static analysis prior to
 running the program to determine data dependencies of the variables.
 The analysis yields a dependency graph which is used to determine optimal slice
 to be used as patch.
 This patch is placed in catch block and executed with the values of previous
 successful run while the original code is wrapped in try block.
 	
-\item \textbf{Determine type of exception and patching} : The characteristics of
+\item \textbf{Determine type of exception and patching}: The characteristics of
 patching is dependent on the type of runtime exception encountered by the
 program. A piece of code may throws multiple types of exceptions and all of them
 are handled at the time of patching by instrumenting multiple catch blocks.
 	
-\item \textbf{Use typestate for repairing} : Typestate analysis, sometimes
+\item \textbf{Use typestate for repairing}: Typestate analysis, sometimes
 called protocol analysis defines valid sequences of operations that can be
 typically modeled using Finite State Machine (FSM) where the states represent
 abstract state of the program and the symbols are certain method invocations to
 perform state transition. Typestates are capable of representing behavioral type
-refinements like Iterators, where \emph{hasNext()} method should be called
-before the \emph{next()} method call.
+refinements like Iterators, where \code{hasNext()} method should be called
+before the \code{next()} method call.
 Typestate analysis is widely used as a safety feature to ensure a certain
 sequence of operations maintains proper protocol or not.
 % But this method is unconventional and investigated in the field of program

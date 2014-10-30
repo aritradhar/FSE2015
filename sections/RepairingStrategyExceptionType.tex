@@ -4,7 +4,7 @@
 %marker
 \textcolor{red}{\textbf{Please review this section}}\newline
 
-
+\begin{figure}[t]
 \lstset{language=Java, caption=Java code which may throws runtime exceptions,
 label=example1}
 \begin{lstlisting}[countblanklines=false]
@@ -50,6 +50,7 @@ public class MainClass {
     }    
 }
 \end{lstlisting}
+\end{figure}
 
 In the Example~\ref{example1}, we have given a piece of \java\ code which shows
 multiple lines can throw several runtime exceptions.
@@ -155,6 +156,7 @@ previous successful runs.
 \lstset{language=Java, caption=patching code slice based on exception type,
 label=patchingexample1}
 
+\begin{figure}[t]
 \begin{lstlisting}[countblanklines=false]
 public class TestClass {
     private int[] arr1;
@@ -205,6 +207,7 @@ public class MainClass {
     }    
 }
 \end{lstlisting}
+\end{figure}
 
 \subsection{Variable Tracking and Monitoring}
 \label{subsec:taint}
@@ -223,9 +226,3 @@ The bit values will be flipped when it is required to taint ($1$) or untaint
 ($1$) an object/variable.
 We will only monitor these entities until all of them flushed from the program
 and the entire program reached to a stable state.
-
-
-
-
-
-

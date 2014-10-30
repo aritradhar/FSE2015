@@ -20,7 +20,7 @@ transition and $init \rightarrow error$ is the invariant violation.
 	\item $F$: end state, here it same as $q_0$.
 \end{itemize}
 
-\begin{figure}[!htb]
+\begin{figure}[t]
 \centering
 \includegraphics[width=3.2in]{images/automata.pdf}
 \caption{Constraint automata general model}
@@ -46,7 +46,7 @@ we patch it by assigning $array.length - 1$.
 
 \lstset{language=Java, caption=array index out of bound patching,
 label=patchingexample2}
-
+\begin{figure}[t]
 \begin{lstlisting}[countblanklines=false]
 void foo() {
     int []arr = {1,2,3,4};
@@ -62,6 +62,7 @@ void foo() {
     }
 }
 \end{lstlisting}
+\end{figure}
 
 \subsubsection{Negative Array Size Exception}
 
@@ -75,7 +76,7 @@ the new array statement.
 
 \lstset{language=Java, caption=arr index out of bound patching,
 label=patchingexample2}
-
+\begin{figure}[t]
 \begin{lstlisting}[countblanklines=false]
 void foo() {
     int []arr = {1,2,3,4};
@@ -91,6 +92,7 @@ void foo() {
     }
 }
 \end{lstlisting}
+\end{figure}
 
 \subsubsection{Arithmetic Exception : Division-by-zero Exception}
 
@@ -107,7 +109,7 @@ going to any taint sink. So they are safe to patch.
 
 \lstset{language=Java, caption=arithmetic exception : division-by-zero patching,
 label=patchingexample2}
-
+\begin{figure}[t]
 \begin{lstlisting}[countblanklines=false]
 void foo() {
     int a = 10;
@@ -128,6 +130,7 @@ void foo() {
     }
 }
 \end{lstlisting}
+\end{figure}
 
 \subsubsection{Null Pointer Exception}
 
@@ -151,6 +154,7 @@ we enlist all cases and corresponding patching techniques.
   \lstset{language=Java, caption=appropriate constructor,
 label=patchingexample2}
 
+\begin{figure}[t]
 \begin{lstlisting}[countblanklines=false]
 class MyClass {
     Integer field1;
@@ -191,6 +195,8 @@ class main {
     }
 }
 \end{lstlisting}
+\end{figure}
+
   \item 
   
   \item \textbf{Case II} Possible Accessing or modifying the field of a null
@@ -208,6 +214,7 @@ class main {
   \lstset{language=Java, caption=array null pointer exception,
   label=patchingexample2}
 
+\begin{figure}[t]
 \begin{lstlisting}
 int[] bar(int a) {
     int []arr = new int[a];
@@ -228,6 +235,7 @@ void foo() {
     }
 }
 \end{lstlisting}
+\end{figure}
 
   \item \textbf{Case IV} Accessing or modifying the slots of null as if it were
   an array.

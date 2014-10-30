@@ -3,7 +3,7 @@
 
 
 %later convert this pdf
-\begin{figure}[!htb]
+\begin{figure}[t]
 \centering
 \includegraphics[width=3.2in]{images/OverallDesign.png}
 \caption{Overall Design}
@@ -24,7 +24,7 @@
 % \end{figure*}
 
 %later covert this to pdf
-\begin{figure*}
+\begin{figure*}[t]
 \centering
   \includegraphics[width= 7.0in]{images/TaintModule.png}
   \caption{Design of the Taint Module}
@@ -108,29 +108,32 @@ Method Name}}\\
 We have used extended InFlow framework for the taint analysis module. The steps
 are
 
-\begin{enumerate}
+\begin{mylist}
   \item We defined list of source and sink taint methods listed in
   Table~\ref{tab:TaintSources} and \ref{tab:TaintSinks}. We are only tainting
   the variables which are coming from the listed taint source methods.
+  
   \item We have also listed all taint propagation methods. The assignment ($=$)
-  is the basic taint propagator. But there are other methods like \emph{append}
-  in \emph{java.lang.StringBuffer} and \emph{java.lang.StringBuilder} which are
+  is the basic taint propagator. But there are other methods like \code{append}
+  in \code{java.lang.StringBuffer} and \code{java.lang.StringBuilder} which are
   taint propagator.
+
   \item All the variable which are referred to tainted variables/ objects or
   output of taint propagator over tainted variable/objects are also considered
   as tainted.
+
   \item For all the program patch we see if such tainted variables are reaching
   the tainted sink or not. If they are reaching to some tainted sink then all
   the statements along that particular program path to which the tainted
   variables are assigned are marked as unsafe otherwise safe.
-\end{enumerate}
+\end{mylist}
 
 
 \subsection{Repairing Module}
 \label{subsec:RepairingModule}
 
 %later covert this to pdf
-\begin{figure}
+\begin{figure}[t]
 \centering
   \includegraphics[width= 2.0in]{images/PatchModule.png}
   \caption{Design of the Patching Module}
@@ -157,6 +160,7 @@ the method and instrument the calling site so that appropriate method is called.
 
 \lstset{language=java, caption = Same method calling in different scenario,
 label=callingContext}
+\begin{figure}[t]
 \begin{lstlisting}[countblanklines=false]
 int bar(int a, int b) {
     return a/b;
@@ -169,11 +173,11 @@ void foo() {
     NonTaintSink(out1);
 }
 \end{lstlisting}
+\end{figure}
 
-
-\lstset{language=java, caption = Mehod name modification for different calling
+\lstset{language=java, caption = Method name modification for different calling
 context, label=callingContextPatch}
-
+\begin{figure}[t]
 \begin{lstlisting}[countblanklines=false]
 int bar(int a, int b) {
     return a/b;
@@ -202,6 +206,7 @@ void foo() {
     NonTaintSink(out1);
 }
 \end{lstlisting}
+\end{figure}
 
 In the Listing~\ref{callingContext} and \ref{callingContextPatch} we have
 defined an example code snippet of the original code and the patched code where
@@ -217,6 +222,3 @@ method, we did not do any modification to it.
 %   \item \textbf{Taint analysis module :}
 %   \item \textbf{Repairing Module : }
 % \end{enumerate}
-
-
-
