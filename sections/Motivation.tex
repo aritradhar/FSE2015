@@ -38,37 +38,37 @@ of some very common runtime exceptions.
 \begin{table}[t]
 \small
 \begin{tabular}{l|r|r}
-\textbf{Runtime Exception Type} & \textbf{Occurrences} & \textbf{\%age}\\
+\textbf{Runtime Exception Type} & \textbf{Frequency} & \textbf{\%age}\\
 \hline
-NullPointerException & $34912$ & $54.94$ \\
-ClassCastException & $7504$ & $11.81$ \\
-IndexOutOfBoundsException & $6637$ & $10.44$ \\
-SecurityException  & $5818$ & $9.15$ \\
-NoSuchElementException & $2392$ & $3.76$ \\
-ArithmeticException & $2338$ & $3.67$ \\
-ConcurrentModificationExceptio & $1889$ & $2.97$ \\
-DOMException & $1024$ & $1.61$ \\
-ArrayStoreException & $279$ & $0.43$ \\
-MissingResourceException & $277$ & $0.43$ \\
-BufferOverFlowException & $161$ & $0.25$ \\
-NegativeArraySizeException & $122$ & $0.19$ \\
-BufferUnderFlowException & $66$ & $0.1$ \\
-LSException & $64$ &  $0.1$ \\
-MalformedParameterizedTypeExce & $38$ & $0.05$ \\
-CMMException  & $8$ & $0.01$ \\
-FileSystemNotFoundException & $6$ & $0.009$ \\
-NoSuchMechanismException & $3$ & $0.0045$ \\
-MirroredTypesException & $1$ & $0.0015$
+\code{NullPointerException} & $34912$ & $54.94$ \\
+\code{ClassCastException} & $7504$ & $11.81$ \\
+\code{IndexOutOfBoundsException} & $6637$ & $10.44$ \\
+\code{SecurityException}  & $5818$ & $9.15$ \\
+\code{NoSuchElementException} & $2392$ & $3.76$ \\
+\code{ArithmeticException} & $2338$ & $3.67$ \\
+\code{ConcurrentModificationException} & $1889$ & $2.97$ \\
+\code{DOMException} & $1024$ & $1.61$ \\
+\code{ArrayStoreException} & $279$ & $0.43$ \\
+\code{MissingResourceException} & $277$ & $0.43$ \\
+\code{BufferOverFlowException} & $161$ & $0.25$ \\
+\code{NegativeArraySizeException} & $122$ & $0.19$ \\
+\code{BufferUnderFlowException} & $66$ & $0.1$ \\
+\code{LSException} & $64$ &  $0.1$ \\
+\code{MalformedParameterizedTypeException} & $38$ & $0.05$ \\
+\code{CMMException}  & $8$ & $0.01$ \\
+\code{FileSystemNotFoundException} & $6$ & $0.009$ \\
+\code{NoSuchMechanismException} & $3$ & $0.0045$ \\
+\code{MirroredTypesException} & $1$ & $0.0015$
 \end{tabular}
 \caption{Most frequent runtime exceptions from stack overflow}
 \label{tab:stackoverlow}
 \end{table}
 
-We have analyzed data from stack overflow and we looked for \java runtime
+We have analyzed data from stack overflow and we looked for \java\ runtime
 exception which are discussed most frequently. In the
 table~\ref{tab:stackoverlow}, the data we find is tabulated along with their
 occurrences and percentages.
 
-From the table it is clear that null pointer exception in \java is not only the
+From the table it is clear that null pointer exception in \java\ is not only the
 most frequent but also the most dominant runtime exception having share of more
 than $50$.

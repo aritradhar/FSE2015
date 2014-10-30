@@ -75,6 +75,7 @@ pdfproducer = {pdflatex}}
   language=Java,
   aboveskip=3mm,
   belowskip=3mm,
+  numberblanklines=false,
   showstringspaces=false,
   columns=flexible,
   basicstyle={\scriptsize\ttfamily},
@@ -89,9 +90,22 @@ pdfproducer = {pdflatex}}
   breaklines=true,
   breakatwhitespace=true
   tabsize=2,
-  morecomment=[l]{//}
-  escapeinside={<@}{@>}
+  xleftmargin=2em,
+  morecomment=[l]{//},
+  escapeinside={<@}{@>},
 }
+
+\makeatletter
+\lst@Key{countblanklines}{true}[t]%
+    {\lstKV@SetIf{#1}\lst@ifcountblanklines}
+
+\lst@AddToHook{OnEmptyLine}{%
+    \lst@ifnumberblanklines\else%
+       \lst@ifcountblanklines\else%
+         \advance\c@lstnumber-\@ne\relax%
+       \fi%
+    \fi}
+\makeatother
 
 % Use a smaller font size for URLs:
 \makeatletter

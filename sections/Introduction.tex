@@ -11,7 +11,7 @@ handling is natural part of software execution due to the nature of the
 software.
 An application which constantly accesses I/O which also includes share resources
 may throw exception if another application blocks it.
-Here in this paper we discuss and analyze \java exceptions and produce repair
+Here in this paper we discuss and analyze \java\ exceptions and produce repair
 patch based on that. Java supports two types of exceptions :
 \begin{mylist}
 	
@@ -24,7 +24,7 @@ accessing resources like network, database, file system, I/O etc.
 mechanism as the former one. \emph{java.lang.RuntimeException} and its
 subclasses and \emph{java.lang.Error} are types of unchecked exceptions.
 \emph{NullPointerException}, \emph{ArrayIndexOutOfBound},
-\emph{ArithmeticException} are examples of common \java runtime exceptions.
+\emph{ArithmeticException} are examples of common \java\ runtime exceptions.
 
 \end{mylist}
 
@@ -65,7 +65,7 @@ cover as much potential input .Yet may corner cases can be left overlooked which
 can cause runtime exceptions.
 Multi-threaded applications are also susceptible to erroneous thread
 interleaving. One such exception is
-\emph{\java.lang.IllegalMonitorStateException}, when a thread has attempted to
+\emph{\java\.lang.IllegalMonitorStateException}, when a thread has attempted to
 wait on an object's monitor or to notify other threads waiting on an object's
 monitor without owning the specified monitor. Applications under adversarial
 situation should be considered where deliberate malicious input may cause it to

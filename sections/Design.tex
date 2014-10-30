@@ -62,46 +62,46 @@ to patch.
 \label{subsubsec:TaintingRule}
 \textcolor{red}{\textbf{Needs Revision}}\newline
 
-\begin{table}[!htb]
+\begin{table}[t]
 \centering
-\caption{Common Java libray taint source functions}
-\label{tab:TaintSources}
-\begin{tabular}{|c|c|}
+\small
+\begin{tabular}{l|l}
+\multicolumn{1}{c|}{\textbf{\java\ Class}} & \multicolumn{1}{c}{\textbf{Source
+Method Name}}\\
 \hline
-
- \textbf{Java Class} & \textbf{Source Method Name}\\
- \hline java.io.InputStream & read()\\ \hline
- java.io.BufferedReader & readLine()\\ \hline
- java.net.URL & openConnection()\\ \hline
- org.apache.http.HttpResponse & getEntity()\\ \hline
- org.apache.http.util.EntityUtils & toString()\\ \hline
- org.apache.http.util.EntityUtils & toByteArray()\\ \hline 
- org.apache.http.util.EntityUtils & getContentCharSet()\\ \hline 
- javax.servlet.http.HttpServletRequest & getParameter()\\ \hline
- javax.servlet.ServletRequest & getParameter()\\ \hline
- java.Util.Scanner & next()\\ \hline
-
+\code{java.io.InputStream} & \code{read()}\\
+\code{java.io.BufferedReader} & \code{readLine()}\\
+\code{java.net.URL} & \code{openConnection()}\\
+\code{org.apache.http.HttpResponse} & \code{getEntity()}\\
+\code{org.apache.http.util.EntityUtils} & \code{toString()}\\
+\code{org.apache.http.util.EntityUtils} & \code{toByteArray()}\\
+\code{org.apache.http.util.EntityUtils} & \code{getContentCharSet()}\\
+\code{javax.servlet.http.HttpServletRequest} & \code{getParameter()}\\
+\code{javax.servlet.ServletRequest} & \code{getParameter()}\\
+\code{java.Util.Scanner} & \code{next()}\\
 \end{tabular}
+\caption{Common \java\ library taint source functions}
+\label{tab:TaintSources}
 \end{table}
 
 
 
-\begin{table}[!htb]
+\begin{table}[t]
 \centering
-\caption{Common Java libray taint sink functions}
-\label{tab:TaintSinks}
-\begin{tabular}{|c|c|}
+\small
+\begin{tabular}{l|l}
+\multicolumn{1}{c|}{\textbf{\java\ Class}} & \multicolumn{1}{c}{\textbf{Sink
+Method Name}}\\
 \hline
-
- \textbf{Java Class} & \textbf{Sink Method Name}\\
- \hline java.io.PrintStream & printf()\\ \hline
- java.io.OutputStream & write()\\ \hline
- java.io.FileOutputStream & write()\\ \hline
- java.io.Writer & write()\\ \hline
- java.net.Socket & connect()\\ \hline
- %org.apache.http.impl.client.DefaultHttpClient & execute\\ \hline
-
+\code{java.io.PrintStream} & \code{printf()}\\
+\code{java.io.OutputStream} & \code{write()}\\
+\code{java.io.FileOutputStream} & \code{write()}\\
+\code{java.io.Writer} & \code{write()}\\
+\code{java.net.Socket} & \code{connect()}\\
+%org.apache.http.impl.client.DefaultHttpClient & execute\\ \hline
 \end{tabular}
+\caption{Common \java\ library taint sink functions}
+\label{tab:TaintSinks}
 \end{table}
 
 
@@ -109,7 +109,7 @@ We have used extended InFlow framework for the taint analysis module. The steps
 are
 
 \begin{enumerate}
-  \item We defined list of source and sink tait methods listed in
+  \item We defined list of source and sink taint methods listed in
   Table~\ref{tab:TaintSources} and \ref{tab:TaintSinks}. We are only tainting
   the variables which are coming from the listed taint source methods.
   \item We have also listed all taint propagation methods. The assignment ($=$)
@@ -155,62 +155,52 @@ data which are leaving the system. So, we also maintained two different version
 of
 the method and instrument the calling site so that appropriate method is called.
 
-\lstset{language=Java, caption = Same method calling in different scenario,
+\lstset{language=java, caption = Same method calling in different scenario,
 label=callingContext}
-\begin{lstlisting}
-int bar(int a, int b)
-{
- return a/b;
+\begin{lstlisting}[countblanklines=false]
+int bar(int a, int b) {
+    return a/b;
 }
-void foo()
-{
- int a = 10, b = 0, c = 15;
- int out = bar(a, b);
- TaintSink(out);
- int out1 = bar(c, b);
- NonTaintSink(out1);
+void foo() {
+    int a = 10, b = 0, c = 15;
+    int out = bar(a, b);
+    TaintSink(out);
+    int out1 = bar(c, b);
+    NonTaintSink(out1);
 }
 \end{lstlisting}
 
 
-\lstset{language=Java, caption = Mehod name modification for different calling
+\lstset{language=java, caption = Mehod name modification for different calling
 context, label=callingContextPatch}
 
-\begin{lstlisting}
-int bar(int a, int b)
-{
- return a/b;
+\begin{lstlisting}[countblanklines=false]
+int bar(int a, int b) {
+    return a/b;
 }
-
-int bar_untainted_fa844d57(int a, int b)
-{
- int out;
- try
- {
-  out = a/b;
- }
- catch(ArithmeticException ex)
- {
-  b = 1;
-  out = a/b;
- }
- return out;
+int bar_untainted_fa844d57(int a, int b) {
+    int out;
+    try {
+	out = a/b;
+    } catch(ArithmeticException ex) {
+	b = 1;
+	out = a/b;
+    }
+    return out;
 }
+void foo() {
+    int a = 10, b = 0, c = 15;
 
-void foo()
-{
- int a = 10, b = 0, c = 15;
- 
- //no modification in the call where the result can go to a tainted sink method
- int out = bar(a, b);
- TaintSink(out);
- 
- //Modify the method call to the shielded method as the result is not going to
- //any tainted sink method 
- int out1 = bar_untainted_fa844d57(c, b);
- NonTaintSink(out1);
+    // no modification in the call where the result can go to a tainted sink
+    // method
+    int out = bar(a, b);
+    TaintSink(out);
+
+    // Modify the method call to the shielded method as the result is not going
+    // to any tainted sink method
+    int out1 = bar_untainted_fa844d57(c, b);
+    NonTaintSink(out1);
 }
-
 \end{lstlisting}
 
 In the Listing~\ref{callingContext} and \ref{callingContextPatch} we have

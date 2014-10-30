@@ -47,27 +47,20 @@ we patch it by assigning $array.length - 1$.
 \lstset{language=Java, caption=array index out of bound patching,
 label=patchingexample2}
 
-\begin{lstlisting}
-void foo()
-{
-  int []arr = {1,2,3,4};
-  int index = 10;
-  int y = 0;
-  try
-  {
-    //original code
-    y = arr[index];
-  }
-  //patching instrumentation
-  catch(IndexOutOfBoundException ex)
-  {
-    if(index > arr.length)
-      y = arr[arr.length - 1];
-    else
-      y = a[0];
-  }
+\begin{lstlisting}[countblanklines=false]
+void foo() {
+    int []arr = {1,2,3,4};
+    int index = 10;
+    int y = 0;
+    try {
+	//original code
+	y = arr[index];
+    } catch(IndexOutOfBoundException ex) {
+	//patching instrumentation
+	if(index > arr.length) y = arr[arr.length - 1];
+	else y = a[0];
+    }
 }
-
 \end{lstlisting}
 
 \subsubsection{Negative Array Size Exception}
@@ -83,27 +76,20 @@ the new array statement.
 \lstset{language=Java, caption=arr index out of bound patching,
 label=patchingexample2}
 
-\begin{lstlisting}
-void foo()
-{
-  int []arr = {1,2,3,4};
-  int index = 10;
-  int y = 0;
-  try
-  {
-    //original code
-    y = arr[index];
-  }
-  //patching instrumentation
-  catch(IndexOutOfBoundException ex)
-  {
-    if(index > arr.length)
-      y = arr[arr.length - 1];
-    else
-      y = a[0];
-  }
+\begin{lstlisting}[countblanklines=false]
+void foo() {
+    int []arr = {1,2,3,4};
+    int index = 10;
+    int y = 0;
+    try {
+	//original code
+	y = arr[index];
+    } catch(IndexOutOfBoundException ex) {
+	//patching instrumentation
+	if(index > arr.length) y = arr[arr.length - 1];
+	else y = a[0];
+    }
 }
-
 \end{lstlisting}
 
 \subsubsection{Arithmetic Exception : Division-by-zero Exception}
@@ -111,41 +97,35 @@ void foo()
 Division by zero causes arithmetic exception. There are two different cases
 which were considered here. 
 \begin{itemize}
-	\item \textbf{Case I :} The denominator is going to the taint sink but
-the left hand side is not going to any taint sink. 
-	Here we will not manipulate the denominator as we are not manipulating
-any variable which are going to any taint sink.
-	\item \textbf{Case II :} The denominator and the left hand side, both
-are not going to any taint sink. So they are safe to patch.
+ \item \textbf{Case I :} The denominator is going to the taint sink but
+the left hand side is not going to any taint sink. Here we will not
+manipulate the denominator as we are not manipulating any variable which are
+going to any taint sink.
+ \item \textbf{Case II :} The denominator and the left hand side, both are not
+going to any taint sink. So they are safe to patch.
 \end{itemize}
 
 \lstset{language=Java, caption=arithmetic exception : division-by-zero patching,
 label=patchingexample2}
 
-\begin{lstlisting}
-void foo()
-{
-  int a = 10;
-  int b = 0;
-	int y;
-  try
-  {
-    //original code
-    y = a/b;
-  }
-  //patching instrumentation
-  catch(ArithmeticException ex)
-  {
-    //case I
-    if(taintSink(b))
-      y = 0;
-    //case II
-    else
-    {
-      b = 1;
-      y = a/b;
+\begin{lstlisting}[countblanklines=false]
+void foo() {
+    int a = 10;
+    int b = 0;
+    int y;
+    try {
+	//original code
+	y = a/b;
+    } catch(ArithmeticException ex) {
+	//patching instrumentation
+	//case I
+	if(taintSink(b)) y = 0;
+	//case II
+	else {
+	    b = 1;
+	    y = a/b;
+	}
     }
-  }
 }
 \end{lstlisting}
 
@@ -171,53 +151,44 @@ we enlist all cases and corresponding patching techniques.
   \lstset{language=Java, caption=appropriate constructor,
 label=patchingexample2}
 
-\begin{lstlisting}
-class MyClass
-{
- Integer field1;
- String field2;
- Double field3;
+\begin{lstlisting}[countblanklines=false]
+class MyClass {
+    Integer field1;
+    String field2;
+    Double field3;
 
- public MyClass()
- {
-  this.field1 = 1;
-  this.field2 = null;
-  this.field3 = null;
- } 
- public MyClass(Integer field1, String field2)
- {
-  this.field1 = field1;
-  this.field2 = field2;
-  this.field3 = null;
- } 
- public MyClass(Integer field1, String field2, Double field3)
- {
-  this.field1 = field1;
-  this.field2 = field2;
-  this.field3 = field3;
- }
- public Double getfield3()
- {
-  return this.field3;
- }
+    public MyClass(){
+	this.field1 = 1;
+	this.field2 = null;
+	this.field3 = null;
+    }
+    public MyClass(Integer field1, String field2) {
+	this.field1 = field1;
+	this.field2 = field2;
+	this.field3 = null;
+    }
+    public MyClass(Integer field1, String field2, Double field3) {
+	this.field1 = field1;
+	this.field2 = field2;
+	this.field3 = field3;
+    }
+    public Double getfield3() {
+	return this.field3;
+    }
 }
 
-class main
-{
- Myclass mclass = null;
- Double a = null;
- try
- {
-  //original code
-  a = mclass.getfiled3() + 5.0;
- }
- //instrumentation
- catch(NullPointerException ex)
- {
-  //choose appropriate constructor
-  mlass = new MyClass(1, "a", 1.0); 
-  a = mclass.getfiled3();
- }
+class main {
+    Myclass mclass = null;
+    Double a = null;
+    try {
+	//original code
+	a = mclass.getfiled3() + 5.0;
+    } catch(NullPointerException ex) {
+	//instrumentation
+	//choose appropriate constructor
+	mlass = new MyClass(1, "a", 1.0);
+	a = mclass.getfiled3();
+    }
 }
 \end{lstlisting}
   \item 
@@ -238,28 +209,23 @@ class main
   label=patchingexample2}
 
 \begin{lstlisting}
-int[] bar(int a)
-{
- int []arr = new int[a];
- int []b = (a > 10) ? arr:null;
- return b; 
+int[] bar(int a) {
+    int []arr = new int[a];
+    int []b = (a > 10) ? arr:null;
+    return b;
 }
-void foo()
-{
- int[] arr;
- int []arr = bar(5);
- try
- {
-  //access or modify any field of arr
-  //this will throw a null pointer exception
- }
- //instrumented code
- catch
- {
-  int ARRAY_SIZE = 11;
-  int []arr = new int[ARRAY_SIZE];
-  //access or modify any field of arr
- }
+void foo() {
+    int[] arr;
+    int []arr = bar(5);
+    try {
+	//access or modify any field of arr
+	//this will throw a null pointer exception
+    } catch {
+	//instrumented code
+	int ARRAY_SIZE = 11;
+	int []arr = new int[ARRAY_SIZE];
+	//access or modify any field of arr
+    }
 }
 \end{lstlisting}
 
@@ -269,10 +235,3 @@ void foo()
  
   \item \textbf{Case V} Throwing null as if it were a Throwable value.
 \end{itemize}
-
-
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%
