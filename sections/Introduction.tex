@@ -75,6 +75,49 @@ particular variables outside legal/safe bound. Static analysis will indicate
 to the potential point of failure.
 
 
+\lstset{language=Java, caption=Example of repairing technique on Appache Commons
+Library in \code{fileUtils}, label = snippet:exampleRepairing} 
+\begin{figure}[t]
+\begin{lstlisting}
+public static String getPathNoEndSeparator(String filename){
+ return doGetPath(filename, 0);
+}
+private static String doGetPath(String filename, int separatorAdd)
+{
+  if (filename == null) {
+    return null;
+  }
+  int prefix = getPrefixLength(filename);
+  if (prefix < 0) {
+  return null;
+  }
+  int index = indexOfLastSeparator(filename);
+  if ((prefix >= filename.length()) || (index < 0)) {
+  return "";
+  }
+  return filename.substring(prefix, index + separatorAdd);
+}
+\end{lstlisting}
+\end{figure}
+
+\lstset{language=Java, caption=Bug reproduction of code
+snippet\ref{snippet:exampleRepairing}, label = snippet:exampleRepairing1}
+\begin{figure}[t]
+\begin{lstlisting}
+String path = "/foo.xml"; 
+String s = ApacheBug.getPathNoEndSeparator(path);
+\end{lstlisting}
+\end{figure}
+
+In the code snippet~\ref{snippet:exampleRepairing}, we have given the source
+code of the \code{fileUtils} class of Apache Common IO library. The method
+\code{getPathNoEndSeparator()} throws a \code{StringIndexOutOfBounds} exception
+when we call \code{getPathNoEndSeparator()} fiven in code
+snippet~\ref{snippet:exampleRepairing1}. This exception is thrown by the
+statement \code{return filename.substring(prefix, index + separatorAdd)} in the
+line no. 17 of~\ref{snippet:exampleRepairing} as \code{prefix > index +
+separatorAdd}.
+
 In this paper we proposed two solution to suppress runtime example and ensure
 system survivability. The approach consists of six primary phases
 

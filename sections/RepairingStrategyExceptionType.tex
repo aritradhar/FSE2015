@@ -144,11 +144,11 @@ The optimal code slice will be determined from the data dependency graph which
 was rendered at the time of static analysis mentioned in
 \S~\ref{subsec:symb}. In the Listing~\ref{patchingexample1}, the example
 code snippet shows such code slice inside the catch block.
-As the error occurred at the line $int\ temp5\ =\ this.arr3[temp3];$ the
-statements which produces the temp3 and the statement which also involves
-$temp3$ or any other variables derived from $temp3$, would be included in the
-catch block for re-execution with the valued of the same from the data table of
-previous successful runs.
+As the error occurred at the line \code{int\ temp5\ =\ this.arr3[temp3];} the
+statements which produces the \code{temp3} and the statement which also involves
+\code{temp3} or any other variables derived from \code{temp3}, would be included
+in the catch block for re-execution with the valued of the same from
+the data table of previous successful runs.
 
  
 
