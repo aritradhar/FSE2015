@@ -6,8 +6,7 @@ We have used taint analysis to detect program paths between source-sink pair in
 the program to determine which variables and objects go to tainted sink like
 database, print stream, network stream etc. We have used InfoFlow framework and
 modify it for our usage. The detaild design of the taint analysis module is
-given in Section~\ref{chapter:SystemDesign}
-Section~\ref{subsubsec:TaintingRule}. 
+given in \S~\ref{subsubsec:TaintingRule}.
 
 \subsection{Taint analysis : Definition}
 \label{subsec:TaintAnalysisDef}
@@ -31,16 +30,17 @@ trigger some undesirable events in the application.
 All tainted variables do not possess security threat. The tainted problem is
 defined at three points. They are:
 
-\begin{enumerate}
+\begin{mylist}
 	\item Source descriptor $<m,n_s,p_s>$
 	\item Derivation descriptor $<m,n_d,p_d>$
 	\item Sink descriptor $<m,n_s,n_d,p_s,p_d>$
-\end{enumerate}
+\end{mylist}
 Where $m$ is the method, $n$ is the number of parameter(s), $p$ is the access
 path.$s$ and $d$ denotes to source and sink(destination) respectively.
+
 \begin{figure}[t]
 \centering
-\includegraphics[scale=.3]{images/Taint.png}
+\includegraphics[scale=.25]{images/Taint.png}
 \caption{A simplified diagram indicating taint problem}
 \label{fig:taint}
 \end{figure}
