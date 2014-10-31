@@ -79,23 +79,19 @@ to the potential point of failure.
 Library in \code{fileUtils}, label = snippet:exampleRepairing} 
 \begin{figure}[t]
 \begin{lstlisting}
-public static String getPathNoEndSeparator(String filename){
- return doGetPath(filename, 0);
+public static String getPathNoEndSeparator(String filename) {
+    return doGetPath(filename, 0);
 }
-private static String doGetPath(String filename, int separatorAdd)
-{
-  if (filename == null) {
-    return null;
-  }
-  int prefix = getPrefixLength(filename);
-  if (prefix < 0) {
-  return null;
-  }
-  int index = indexOfLastSeparator(filename);
-  if ((prefix >= filename.length()) || (index < 0)) {
-  return "";
-  }
-  return filename.substring(prefix, index + separatorAdd);
+private static String doGetPath(String filename, int separatorAdd) {
+    if (filename == null)
+	return null;
+    int prefix = getPrefixLength(filename);
+    if (prefix < 0)
+	return null;
+    int index = indexOfLastSeparator(filename);
+    if ((prefix >= filename.length()) || (index < 0))
+	return "";
+    return filename.substring(prefix, index + separatorAdd);
 }
 \end{lstlisting}
 \end{figure}
