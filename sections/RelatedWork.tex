@@ -18,30 +18,26 @@ data-structures and repair them.
 The repairing strategy involves detecting the consistency constraints for the
 particular data structure, for the violation, they replace the error condition
 with correct proposition. In the paper~\cite{conf/icse/DemskyR05}, the authors
-Brian Demsky and Martin C. Rinard proposed repair strategy by goal-directed
-reasoning. This involves translating the data-structure to a abstract model by a
-set of model definition rules. The actual repair involves model reconstruction
-and statically mapped it to a data structure update. In their
-paper~\cite{conf/oopsla/2007} authors Bassem Elkarablieh, Sarfraz Khurshid, Duy
-Vu, Kathryn S. McKinley proposed the idea to statically analyze the data
-structure to access the information like recurrent fields and local fields. They
-used their technique to some well known data structures like singly linked list,
-sorted list, doubly liked list, N-ary tree, AVL tree, binary search tree,
-disjoint set, red-black tree, Fibonacci heap etc.
+Demsky et al. proposed repair strategy by goal-directed reasoning. This involves
+translating the data-structure to a abstract model by a set of model definition
+rules. The actual repair involves model reconstruction and statically mapped it
+to a data structure update. In the paper~\cite{conf/oopsla/2007} authors
+Elkarablieh et al. proposed the idea to statically analyze the data structure to
+access the information like recurrent fields and local fields. They used their
+technique to some well known data structures like singly linked list, sorted
+list, doubly liked list, N-ary tree, AVL tree, binary search tree, disjoint set,
+red-black tree, Fibonacci heap etc.
 
 \subsection{Works on Software Patching}
 \label{subsec:RecWorksSoftPatch}
 
-In their paper~\cite{conf/sosp/PerkinsKLABCPSSSWZER09}, authors Jeff H.
-Perkins, Sunghun Kim, Samuel Larsen, Saman P. Amarasinghe, Jonathan Bachrach and
-Michael Carbin, Carlos Pacheco, Frank Sherwood, Stelios Sidiroglou, Greg
-Sullivan, Weng-Fai Wong,Yoav Zibin, Michael D. Ernst and Martin C. Rinard
+In their paper~\cite{conf/sosp/PerkinsKLABCPSSSWZER09}, authors Perkins et al.
 presented their \emph{Clear view} system which works on windows x86 binaries
-without requiring any source code. They used invariants analysis for which they
-used Daikon~\cite{journals/scp/ErnstPGMPTX07}. They mostly patched security
-vulnerabilities by some candidate repair patches.
+without requiring any source code. They used invariants analysis for which
+they used Daikon~\cite{DBLP:journals/scp/ErnstPGMPTX07}. They mostly patched
+security vulnerabilities by some candidate repair patches.
 
-Fan Lon et al in their paper~\cite{conf/pldi/LongSR14} presented their new
+Fan Long et al in their paper~\cite{conf/pldi/LongSR14} presented their new
 system \emph{RCV} which recovers applications from divide-by-zero and
 null-deference error. Their tool replaces \emph{SIGFPE} and \emph{SIGSEGV}
 signal handler with its own handler. The approach simply works by assigning zero
@@ -56,11 +52,10 @@ shepherding}.
 \label{subsec:RecWorksGeneric}
 
 Reserch works on program repair based on genetic programming and evolutionary
-computation can be found in the paper of Stephanie Forrest, ThanhVu Nguyen,
-Westley Weimer and Claire Le Goues~\cite{conf/gecco/2009g} and Westley Weimer,
-Stephanie Forrest, Claire Le Goues, ThanhVu
-Nguyen~\cite{journals/cacm/WeimerFGN10} respectively. In the papers, the authors
-used genetic programming to generate and evaluate test cases. They used their
+computation can be found in the paper of Forrest
+et al.s~\cite{conf/gecco/2009g} and Weimer
+et al.~\cite{DBLP:journals/cacm/WeimerFGN10} respectively. In the papers, the
+authors used genetic programming to generate and evaluate test cases. They used their
 technique on the well known Microsoft Zune media player bug causing the
 application to freeze up.
 
