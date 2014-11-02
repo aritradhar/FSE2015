@@ -85,13 +85,23 @@ the methods which throws runtime exception. We do forward pass to see if there
 is any invocation of such methods and if we find any we then cross check it 
 with the results we got from the taint analysis. We also see if there is already
 some exception handling mechanism provided by the developer using the technique 
-described in Section~\cite{subsec:callChainLookUp}. We detected such method calls
+described in Section~\ref{subsec:callChainLookUp}. We detected such method calls
 and wrap them in try-catch block. In the catch block we place the appropriate
 exception type as provided by \java\ SE API documentation. 
 
 \subsubsection{Catch Block Instrumentation}
 \label{subsub:catchInstrumentation}
 ~\newline
+In this phase we instrument appropiate patching codes inside the catch block.
+We used the static constraint evaluation of
+Section~\ref{subsubsec:staticConstraint} to statically evaluate the string. In
+cases there are more constraints which can't be solved statically, it would instrument
+necessary method call so that the constraints would populate and get solved in runtime
+~\ref{subsubsec:dynamicConstraint}. In case there is no constraint, we repair the
+string in the method calls like \code{substrring}, \code{subSequence}, \code{charAt} etc.
+which are dependent on the index arguments. In those cases we used Algorithm
+~\ref{algo:stringPatchParametr} to repair them.
+
 
 \begin{algorithm}
 \small
