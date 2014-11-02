@@ -7,9 +7,49 @@ For the taint analysis phase we have used \soot\ \infoflow\ framework. This
 framework requires configuration files to fescribe source and sink methods. We
 have identified couple of methods and some of them are tabulated in the
 table~\ref{tab:TaintSources} and~\ref{tab:TaintSinks} respectively. We have
-extended their InfoFlow class and added methods which store the statemets in a
-\code{HashMap} object as \code{Unit}. 
+extended their InfoFlow class and added methods which store the statements in a
+\code{HashMap} object as \code{Unit}. The taint analysis phase takes two inputs :
+the jar file of the project which is to be analyzed and the \code{SootMethod} 
+signature of the entry point of that project.
 
+\subsection{Call Chain Look-up for Already Handled Exception}
+\label{subsec:callChainLookUp}
+
+In some scenarios, the developer may put exception handling mechanism in case
+there is any runtime exception. In such cases, we shouldn't do any repairing 
+as it may change the correct program behavior. There can be two cases.
+
+\begin{mylist}
+
+\item In the current method if the statement is wrapped in try-catch block. In \soot\
+the exception handling mechanism is handle by \code{Trap} class. Each \code{Trap}
+object has start, end and handler unit. From a particular \code{Unit}, we saw if 
+the unit belongs to any of the existing \code{Trap} and tag the \code{Unit} in
+a \code{HashMap} object so that later at the repairing phase it can be exclude
+from instrumentation.
+
+\item If the exception is handled upper in the call chain, in the case we generate 
+\code{CallGhaph} using the project's entry point as the entry point of that call 
+graph. For a method we did reverse Breadth First search (BFS) to see from which 
+methods it is invoked and also all of its ancestors in the call chain. From there
+we retrieve the information if any particular call sight was wrapped in try-catch
+block or not. In such case we tag the \code{Unit} in the \code{HashMap} mentioned 
+before.
+
+\end{mylist}
+
+\subsection{Static Constraint Analysis}
+\label{subsec:staticConstraint}
+
+We did static constraint analysis for all string object to make the patch as much
+close as the original object. In the static phase we see all the conditional 
+statements. There can be some conditional statements where the constraint can 
+be statically determined. E.g \code{if(str.length() == 5}. We collects all these
+information in a custom data type and update it. For simplicity, we keep only the 
+information such as minimum and maximum length, set of characters which the string
+may contains and set of possible prefix. With all these information, we generate 
+the string object statically. The sting generation algorithm is described in
+Algorithm~\ref{algo:constraint} 
 
 \begin{algorithm}
 \small
