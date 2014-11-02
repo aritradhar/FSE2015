@@ -1,5 +1,13 @@
 \section{Implementation Details}
-\label{sec:iimplementation}
+\label{sec:implementation}
+
+In the implementation we have used \soot\ framework for analysis and bytecode 
+instrumentation and \infoflow\ for static taint analysis. We have used our
+repairing strategy on the \java\ \code{String} API as it is one of the most
+frequent used APIs in commercially available \java\ applications and libraries.
+Another reason to choose \code{String} API was that we have found plenty of
+bugs related to \code{String} in some of the popular libraries and applications
+provided by Apache foundation, Eclipse, ASM etc.
 
 \subsection{Taint Analysis}
 
@@ -38,9 +46,12 @@ before.
 
 \end{mylist}
 
-\subsection{Static Constraint Analysis}
-\label{subsec:staticConstraint}
+\subsection{Constraint Analysis}
+\label{subsec:constraint analysis}
 
+\subsubsection{Static Constraint Analysis}
+\label{subsubsec:staticConstraint}
+~\newline
 We did static constraint analysis for all string object to make the patch as much
 close as the original object. In the static phase we see all the conditional 
 statements. There can be some conditional statements where the constraint can 
@@ -49,7 +60,38 @@ information in a custom data type and update it. For simplicity, we keep only th
 information such as minimum and maximum length, set of characters which the string
 may contains and set of possible prefix. With all these information, we generate 
 the string object statically. The sting generation algorithm is described in
-Algorithm~\ref{algo:constraint} 
+Algorithm~\ref{algo:constraint}. 
+
+\subsubsection{Dynamic Constraint Analysis}
+\label{subsubsec:dynamicConstraint}
+~\newline
+We performed dynamic analysis in case the constraint can not be evaluated 
+statically e.g. \code{if(str.contains(inputString()))}. In such cases just
+before the conditional statement we instrument the bytecode with a static 
+invocation which will populate the custom constraint data type and recalculate 
+the string object with already existing constraints.
+
+
+\subsection{String Repairing Phase}
+\label{subsec:stringReepairing}
+
+The string repairing phase is divided into two sub-phases.
+
+\subsubsection{Detecting Potential Point of Failure}
+\label{subsub:detectingFailure}
+~\newline
+We have used specification from \java\ SE official documentation and list all
+the methods which throws runtime exception. We do forward pass to see if there 
+is any invocation of such methods and if we find any we then cross check it 
+with the results we got from the taint analysis. We also see if there is already
+some exception handling mechanism provided by the developer using the technique 
+described in Section~\cite{subsec:callChainLookUp}. We detected such method calls
+and wrap them in try-catch block. In the catch block we place the appropriate
+exception type as provided by \java\ SE API documentation. 
+
+\subsubsection{Catch Block Instrumentation}
+\label{subsub:catchInstrumentation}
+~\newline
 
 \begin{algorithm}
 \small
