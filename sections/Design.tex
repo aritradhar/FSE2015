@@ -33,7 +33,7 @@
 
 
 The overall design of the repairing framework is illustrated in
-Figure~\ref{fig:overallDesign}. The framework consists of two basic modules.
+Figure~\ref{fig:overallDesign}. The framework consists of four basic modules.
 
 
 \subsection{Taint analysis Module}
@@ -53,9 +53,8 @@ database, console print or methods to send a text file to printer etc. The
 overview of the taint analysis module is illustrated in the
 Figure~\ref{fig:TaintModule}.  The input for the module is the compiled byte
 code intended to be repaired. Here we have generated a control flow graph (CFG)
-from the class file to get all the possible program paths. Here a point to be
-noted that any modification along the path going to the tainted sink is unsafe
-to patch.
+from to get all the possible program paths. The module will return all the
+program statements which are on any of the program paths from source to sink.
 
 
 \subsubsection{Tainting Rules}
@@ -110,9 +109,10 @@ Method}}\\
 \label{tab:TaintSinks}
 \end{table}
 
+~\newline
 
-We have used extended InFlow framework for the taint analysis module. The steps
-are
+For any generic taint analysis, the tainting rules including a list of source 
+and sink is to be defined. For our analysis we applied these policies, 
 
 \begin{mylist}
   \item We defined list of source and sink taint methods listed in
@@ -149,82 +149,3 @@ are
 The repairing module is consisted of three phases. All these three phases
 requires three sequential passes over the input bytecodes to produce the final
 patched result.
-
-
-\subsubsection{Method Shilding}
-\label{MethodShilding}
-
-
-When we are shielding a method, we also looked to the calling context of that
-particular method. The method can be called from a path which leads to some
-tainted sink and it can also be called from such path which does not contain
-any taint sink. In such cases, we have taken special care about the callee. The
-path to the tainted sink should not call a patched method as it can influence
-data which are leaving the system. So, we also maintained two different version
-of
-the method and instrument the calling site so that appropriate method is called.
-
-\lstset{language=java, caption = Same method calling in different scenario,
-label=callingContext}
-\begin{figure}[t]
-\begin{lstlisting}[countblanklines=false]
-int bar(int a, int b) {
-    return a/b;
-}
-void foo() {
-    int a = 10, b = 0, c = 15;
-    int out = bar(a, b);
-    TaintSink(out);
-    int out1 = bar(c, b);
-    NonTaintSink(out1);
-}
-\end{lstlisting}
-\end{figure}
-
-\lstset{language=java, caption = Method name modification for different calling
-context, label=callingContextPatch}
-\begin{figure}[t]
-\begin{lstlisting}[countblanklines=false]
-int bar(int a, int b) {
-    return a/b;
-}
-int bar_untainted_fa844d57(int a, int b) {
-    int out;
-    try {
-	out = a/b;
-    } catch(ArithmeticException ex) {
-	b = 1;
-	out = a/b;
-    }
-    return out;
-}
-void foo() {
-    int a = 10, b = 0, c = 15;
-
-    // no modification in the call where the result can go to a tainted sink
-    // method
-    int out = bar(a, b);
-    TaintSink(out);
-
-    // Modify the method call to the shielded method as the result is not going
-    // to any tainted sink method
-    int out1 = bar_untainted_fa844d57(c, b);
-    NonTaintSink(out1);
-}
-\end{lstlisting}
-\end{figure}
-
-In the Listing~\ref{callingContext} and \ref{callingContextPatch} we have
-defined an example code snippet of the original code and the patched code where
-we have renamed the method \emph{bar} to \emph{bar\_untainted\_fa844d57}
-before instrumenting any patching code in it. The variable \emph{out} goes to a
-tainted sink while \emph{out1} does not. So the we have done modification in the
-line where \emph{out1} is defined. As \emph{out} is going to a tainted sink
-method, we did not do any modification to it.
-
-
-
-% \begin{enumerate}
-%   \item \textbf{Taint analysis module :}
-%   \item \textbf{Repairing Module : }
-% \end{enumerate}
