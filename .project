@@ -14,4 +14,16 @@
 	<natures>
 		<nature>net.sourceforge.texlipse.builder.TexlipseNature</nature>
 	</natures>
+	<linkedResources>
+		<link>
+			<name>ttlkeys.def</name>
+			<type>1</type>
+			<location>D:/Program Files/MiKTeX 2.9/tex/latex/titlesec/ttlkeys.def</location>
+		</link>
+		<link>
+			<name>ttlps.def</name>
+			<type>1</type>
+			<location>D:/Program Files/MiKTeX 2.9/tex/latex/titlesec/ttlps.def</location>
+		</link>
+	</linkedResources>
 </projectDescription>

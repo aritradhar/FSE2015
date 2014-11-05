@@ -75,44 +75,61 @@ particular variables outside legal/safe bound. Static analysis will indicate
 to the potential point of failure.
 
 
-\lstset{language=Java, caption=Example of repairing technique on Appache Commons
-Library in \code{fileUtils}, label = snippet:exampleRepairing} 
-\begin{figure}[t]
+\lstset{language=Java, caption=Appache Log4j bug example,
+label = snippet:exampleRepairing} \begin{figure}[t]
 \begin{lstlisting}
-public static String getPathNoEndSeparator(String filename) {
-    return doGetPath(filename, 0);
-}
-private static String doGetPath(String filename, int separatorAdd) {
-    if (filename == null)
-	return null;
-    int prefix = getPrefixLength(filename);
-    if (prefix < 0)
-	return null;
-    int index = indexOfLastSeparator(filename);
-    if ((prefix >= filename.length()) || (index < 0))
-	return "";
-    return filename.substring(prefix, index + separatorAdd);
+private int substitute()
+{
+  if (priorVariables == null) 
+  {
+    priorVariables = new ArrayList<String>();
+    priorVariables.add(new String(chars, offset, length));
+  }
 }
 \end{lstlisting}
 \end{figure}
 
-\lstset{language=Java, caption=Bug reproduction of code
-snippet\ref{snippet:exampleRepairing}, label = snippet:exampleRepairing1}
-\begin{figure}[t]
+\lstset{language=Java, caption=Repairing technique on Appache Log4j bug,
+label = snippet:exampleRepairingPatched} \begin{figure}[t]
 \begin{lstlisting}
-String path = "/foo.xml"; 
-String s = ApacheBug.getPathNoEndSeparator(path);
+private int substitute()
+{
+  if (priorVariables == null) 
+  {
+    priorVariables = new ArrayList<String>();
+    String temp = null;
+    try
+    {
+    	temp = new String(chars, offset, length);
+    }
+    catch(StringIndexOutOfBoundsException ex)
+    {
+     int i = chars.length;
+     temp = new String(chars, IndexRepair.getI(offset, length, i),
+     IndexRepair.getJ(offset, length, i) length); 
+    }
+    priorVariables.add(temp);
+  }
+}
 \end{lstlisting}
 \end{figure}
 
-In the code snippet~\ref{snippet:exampleRepairing}, we have given the source
-code of the \code{fileUtils} class of Apache Common IO library. The method
-\code{getPathNoEndSeparator()} throws a \code{StringIndexOutOfBounds} exception
-when we call \code{getPathNoEndSeparator()} fiven in code
-snippet~\ref{snippet:exampleRepairing1}. This exception is thrown by the
-statement \code{return filename.substring(prefix, index + separatorAdd)} in the
-line no. 17 of~\ref{snippet:exampleRepairing} as \code{prefix > index +
-separatorAdd}.
+Here in the example~\ref{snippet:exampleRepairing}, the object
+\code{priorVariables} is a \code{List} of String. In the line 6, there is bug in
+Apache Log4j library version 2.0-beta9~\cite{ApacheLog4jBug} which made the
+logging framework to crash and was a major bug. In the code there is no check if \code{offset + length >
+chars.lenth} or if \code{offset > 0} or \code{length > 0 }which can throw a 
+\code{StringIndexOutOfBounds} exception. . Here the bug was for some cases the
+length value passed in the constructor was $0$. In the patched version, our 
+patching tool detected the statement automatically and wrap in a try catch 
+block with appropiate \code{RunTimeException} type in the
+code~\ref{snippet:exampleRepairingPatched}. \code{getI()} and \code{getJ()} are
+two static methods defined in the class \code{IndexRepair} which are
+instrumented in the byte code.  These two methods repair the last two parameters
+of the \code{String(char[]. int, int)} constructor so that it no longer throws an
+Exception. Out automated patch and developers' patch in Apache Log4j version 2.0-rc2.
+Behaves exactly the same. Both of them modified the last parameter i.e \code{length}
+so that \code{offset + length = chars.length}.
 
 In this paper we proposed two solution to suppress runtime example and ensure
 system survivability. The approach consists of six primary phases
