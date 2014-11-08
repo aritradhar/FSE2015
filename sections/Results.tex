@@ -109,7 +109,7 @@ for all of the phases in the analysis.
 
 \begin{sidewaystable}
 %\small
-\begin{tabular}{@{\makebox[3em][r]{\rownumber\space}}|l|c|c|c|r|r|r|r|r|r|r|r|r}
+\begin{tabular}{@{\makebox[3em][r]{\rownumber\space}}|l|c|c|c|c|c|c|c|c|c|c|c|c|c|c}
 \multicolumn{1}{c|}{\textbf{API}} &
 \multicolumn{1}{c|}{\textbf{BugID}} &
 \multicolumn{1}{c|}{\textbf{Priority}} &
@@ -117,37 +117,41 @@ for all of the phases in the analysis.
 \multicolumn{1}{c|}{\textbf{$PSI$}} &
 \multicolumn{1}{c|}{\textbf{$PFCI$}} &
 \multicolumn{1}{c|}{\textbf{$LOC$}} & 
-\multicolumn{1}{c|}{\textbf{$IC_O$}} &
-\multicolumn{1}{c|}{\textbf{$IC_{UO}$}} &
-\multicolumn{1}{c|}{\textbf{$CG_{size}$}} &
-\multicolumn{1}{c|}{\textbf{Time}} &
-\multicolumn{1}{c|}{\textbf{Memory}} &
-\multicolumn{1}{c}{\textbf{Cascading}} \\
+\multicolumn{1}{c|}{\textbf{$IC_O$}} & %instrumentation with optimization
+\multicolumn{1}{c|}{\textbf{$IC_{UO}$}} & %instrumentation without optimization
+\multicolumn{1}{c|}{\textbf{$\mathcal{N}_{CG}$}} &
+\multicolumn{1}{c|}{\textbf{$PF_{TA}$}} & 
+\multicolumn{1}{c|}{\textbf{$PF_{CG}$}} &
+\multicolumn{1}{c|}{\textbf{$PF_{CA}$}} &
+\multicolumn{1}{c|}{\textbf{$PF_{IN}$}} &
+\multicolumn{1}{c}{\textbf{$\mathcal{N}_{CE}$}}\\ % cascaded exception
 
 
 \hline
-\code{Aries} 	 	  		& \cite{ARIES1204} & Major 	&  &  & & & & & & & &\\
-\code{Commons CLI1.x}  		& \cite{CLI46} & Major 	&  &  & & & & & & & &\\
-\code{Commons CLI2.x}  		& \cite{CLI193} & Major 	&  &  & & & & & & & &\\
-\code{Commons Compress}		& \cite{COMPRESS26} & Blocker &  &  & & & & & & & &\\
-\code{Commons IO}   		& \cite{IO179}  & Major 	&  &  & & & & & & & &\\
-\code{Commons Lang} 	  	& \cite{LANG457}& Major 	&  &  & & & & & & & &\\
-\code{Commons Math} 	  	& \cite{MATH198} & Major 	&  &  & & & & & & & &\\
-\code{Commons Net} 	  		& \cite{NET442} & Major   &  &  & & & & & & & &\\
-\code{Commons VFS} 	  		& \cite{VFS338} & Major 	&  &  & & & & & & & &\\
-\code{Eclipse AspectJ} 		& \cite{EclipseBug333066} & Major 	&  &  & & & & & &&&\\
-\code{Hive} 			  	&\cite{}& Major 	&  		  &  & & & & & & & &\\
-\code{HttpClient} 	  		&\cite{HTTPCLIENT150}& Major 	&  &  & & & & & & & &\\
-\code{jUDDI} 	  			&\cite{JUDDI292}& Major 	&  &  & & & & & & & &\\
-\code{Log4j} 		  		&\cite{ApacheLog4jBug}& Major 	&  &  & & & & & & & &\\
-\code{Pivot} 		  		&\cite{PIVOT533}& Major   &  &  & & & & & & & &\\
-\code{Qpid} 			  	&\cite{}& Blocker &  &  & & & & & & & &\\
-\code{Servicemix-soap} 		&\cite{SMXCOMP156}& Major   &  &  & & & &  & && &\\
-\code{SOAP} 			 	&\cite{SOAP130}& Major 	&  &  & & & & & & & &\\
-\code{Struts2} 		  		&\cite{WW650}& Major 	&  &  & & & & & & & &\\
-\code{Tapestry 5} 		  	&\cite{TAP51770}& Major 	&  &  & & & & & & & &\\
-\code{Wicket} 		  		&\cite{WICKET4387}& Major 	&  &  & & & & & & & &\\
-\code{XalanJ2} 		  		&\cite{XALANJ836}& Major 	&  &  & & &  & && & &\\
+\code{Aries} 	 	  		& \cite{ARIES1204} & Major 	& High & High & $0$ &$129$ &$42$
+& $42$ & $3496$& & &&&\\
+\code{Commons CLI1.x}  		& \cite{CLI46} & Major 	&  &  & & & & & & & &&&\\
+\code{Commons CLI2.x}  		& \cite{CLI193} & Major 	&  &  & & & & & & &&& &\\
+\code{Commons Compress}		& \cite{COMPRESS26} & Blocker &  &  & & & & & & &&& &\\
+\code{Commons IO}   		& \cite{IO179}  & Major 	&  &  & & & & & & & &&&\\
+\code{Commons Lang} 	  	& \cite{LANG457}& Major 	&  &  & & & & & & & &&&\\
+\code{Commons Math} 	  	& \cite{MATH198} & Major 	&  &  & & & & & & & &&&\\
+\code{Commons Net} 	  		& \cite{NET442} & Major   &  &  & & & & & & & &&&\\
+\code{Commons VFS} 	  		& \cite{VFS338} & Major 	&  &  & & & & & & & &&&\\
+\code{Eclipse AspectJ} 		& \cite{EclipseBug333066} & Major 	&  &  & & & & &
+&&&&&\\
+\code{Hive} 			  	&\cite{}& Major 	&  		  &  & & & & & & & &&&\\
+\code{HttpClient} 	  		&\cite{HTTPCLIENT150}& Major 	&  &  & & & & & & & &&&\\
+\code{jUDDI} 	  			&\cite{JUDDI292}& Major 	&  &  & & & & & & & &&&\\
+\code{Log4j} 		  		&\cite{ApacheLog4jBug}& Major 	&  &  & & & & & & &&& &\\
+\code{Pivot} 		  		&\cite{PIVOT533}& Major   &  &  & & & & & & &&& &\\
+\code{Qpid} 			  	&\cite{}& Blocker &  &  & & & & & & & &&&\\
+\code{Servicemix-soap} 		&\cite{SMXCOMP156}& Major   &  &  & & & &  & &&&& &\\
+\code{SOAP} 			 	&\cite{SOAP130}& Major 	&  &  & & & & & & &&& &\\
+\code{Struts2} 		  		&\cite{WW650}& Major 	&  &  & & & & & & &&& &\\
+\code{Tapestry 5} 		  	&\cite{TAP51770}& Major 	&  &  & & & & &&& & & &\\
+\code{Wicket} 		  		&\cite{WICKET4387}& Major 	&  &  & & & & &&& & & &\\
+\code{XalanJ2} 		  		&\cite{XALANJ836}& Major 	&  &  & & &  & && &&& &\\
 
 \end{tabular}
 
