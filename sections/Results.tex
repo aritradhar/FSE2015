@@ -107,9 +107,8 @@ for all of the phases in the analysis.
 
 \end{mylist}
 
-
-\begin{table*}[t]
-\small
+\begin{sidewaystable}
+%\small
 \begin{tabular}{@{\makebox[3em][r]{\rownumber\space}}|l|c|c|c|r|r|r|r|r|r|r|r|r}
 \multicolumn{1}{c|}{\textbf{API}} &
 \multicolumn{1}{c|}{\textbf{BugID}} &
@@ -125,29 +124,33 @@ for all of the phases in the analysis.
 \multicolumn{1}{c|}{\textbf{Memory}} &
 \multicolumn{1}{c}{\textbf{Cascading}} \\
 
+
 \hline
-\code{Aries} 	 	  		& ARIES-1204 & Major 	&  &  & & & & & & & &\\
-\code{Commons CLI1.x}  		& CLI-46 & Major 	&  &  & & & & & & & &\\
-\code{Commons CLI2.x}  		& CLI-193 & Major 	&  &  & & & & & & & &\\
-\code{Commons Compress}		& COMPRESS26& Blocker &  &  & & & & & & & &\\
-\code{Commons IO}   		& IO179  & Major 	&  &  & & & & & & & &\\
-\code{Commons Lang} 	  	& LANG457& Major 	&  &  & & & & & & & &\\
-\code{Commons Math} 	  	& MATH198 & Major 	&  &  & & & & & & & &\\
-\code{Commons Net} 	  		& NET442 & Major   &  &  & & & & & & & &\\
-\code{Commons VFS} 	  		& VFS338 & Major 	&  &  & & & & & & & &\\
-\code{Eclipse AspectJ} 		& Bug 333066 & Major 	&  &  & & & & & & &&\\
-\code{Hive} 			  	&& Major 	&  		  &  & & & & & & & &\\
-\code{HttpClient} 	  		&& Major 	&  &  & & & & & & & &\\
-\code{Log4j} 		  		&& Major 	&  &  & & & & & & & &\\
-\code{Pivot} 		  		&& Major   &  &  & & & & & & & &\\
-\code{Qpid} 			  	&& Blocker &  &  & & & & & & & &\\
-\code{Servicemix-soap} 		&& Major   &  &  & & & &  & && &\\
-\code{SOAP} 			 	&& Major 	&  &  & & & & & & & &\\
-\code{Struts2} 		  		&& Major 	&  &  & & & & & & & &\\
-\code{Wicket} 		  		&& Major 	&  &  & & & & & & & &\\
-\code{XalanJ2} 		  		&& Major 	&  &  & & &  & && & &\\
+\code{Aries} 	 	  		& \cite{ARIES1204} & Major 	&  &  & & & & & & & &\\
+\code{Commons CLI1.x}  		& \cite{CLI46} & Major 	&  &  & & & & & & & &\\
+\code{Commons CLI2.x}  		& \cite{CLI193} & Major 	&  &  & & & & & & & &\\
+\code{Commons Compress}		& \cite{COMPRESS26} & Blocker &  &  & & & & & & & &\\
+\code{Commons IO}   		& \cite{IO179}  & Major 	&  &  & & & & & & & &\\
+\code{Commons Lang} 	  	& \cite{LANG457}& Major 	&  &  & & & & & & & &\\
+\code{Commons Math} 	  	& \cite{MATH198} & Major 	&  &  & & & & & & & &\\
+\code{Commons Net} 	  		& \cite{NET442} & Major   &  &  & & & & & & & &\\
+\code{Commons VFS} 	  		& \cite{VFS338} & Major 	&  &  & & & & & & & &\\
+\code{Eclipse AspectJ} 		& \cite{EclipseBug333066} & Major 	&  &  & & & & & &&&\\
+\code{Hive} 			  	&\cite{}& Major 	&  		  &  & & & & & & & &\\
+\code{HttpClient} 	  		&\cite{HTTPCLIENT150}& Major 	&  &  & & & & & & & &\\
+\code{jUDDI} 	  			&\cite{JUDDI292}& Major 	&  &  & & & & & & & &\\
+\code{Log4j} 		  		&\cite{ApacheLog4jBug}& Major 	&  &  & & & & & & & &\\
+\code{Pivot} 		  		&\cite{PIVOT533}& Major   &  &  & & & & & & & &\\
+\code{Qpid} 			  	&\cite{}& Blocker &  &  & & & & & & & &\\
+\code{Servicemix-soap} 		&\cite{SMXCOMP156}& Major   &  &  & & & &  & && &\\
+\code{SOAP} 			 	&\cite{SOAP130}& Major 	&  &  & & & & & & & &\\
+\code{Struts2} 		  		&\cite{WW650}& Major 	&  &  & & & & & & & &\\
+\code{Tapestry 5} 		  	&\cite{TAP51770}& Major 	&  &  & & & & & & & &\\
+\code{Wicket} 		  		&\cite{WICKET4387}& Major 	&  &  & & & & & & & &\\
+\code{XalanJ2} 		  		&\cite{XALANJ836}& Major 	&  &  & & &  & && & &\\
 
 \end{tabular}
+
 \caption{Experimental results}
 \label{tab:results}
-\end{table*}
+\end{sidewaystable}
