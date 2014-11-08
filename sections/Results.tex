@@ -53,7 +53,7 @@ the information about the potential patch. At the first step, we visually
 compared the patches to see how much they are similar and dissimilar with the
 developers' patch. We than use the instrumented class files and place it to the
 library archive replacing the buggy class files. We reproduced the similar test
-cases of the bugs and used the automated patched version and lated fixed version
+cases of the bugs and used the automated patched version and later fixed version
 of the same library to compare the results. In case the results are the primitive
 or string type we have printed the output in the console and compare them. In
 case the output is some complex object we compare the properties of them. Apart
@@ -78,7 +78,7 @@ see higher in the call chain or in the same method if a particular statement is
 handled or not. In such cases we have abort our patching effort considering that
 the exception is caught with exact exception type or its base type. We have also
 done measurement to see if the patching actually disrupts the normal program
-flow or not and we made a matrix called \textbf{Program Flow Consistency Index
+flow or not and we made a metric called \textbf{Program Flow Consistency Index
 (PFCI)} which is calculated as
 $$PFCI = \frac{Patch_{HE}}{Stmt_{HE}}$$
 
