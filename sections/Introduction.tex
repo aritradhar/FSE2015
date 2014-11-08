@@ -4,7 +4,122 @@
 % marker
 %\textcolor{red}{\textbf{Changes done}}\newline
 
-Exception handling attributes to the response of program during runtime to some
+
+Modern software applications are large and complex. In addition, they run in
+diverse environments and use inputs from variety of data sources. As a result,
+predicting safe behaviour for such applications can be extremely difficult.
+Moreover, giving assurances about the quality of service becomes practically
+impossible particularly when the applications are developed using third party
+libraries and components. Such applications often exhibit vulnerabilities that
+can be exploited by providing malicious inputs. Moreover, diverse data sources
+and complex constraints on them make it challenging for programmers to ensure
+that all data elements are correctly validated and processed. Any deficiencies
+in this process makes applications prone to failures.
+Such defects can be hard to detect at the compilation-time, and irrespective
+of the validation techniques used, some of them may go undetected and exist
+in the applications even when the applications are in production.
+
+The cost of failures can vary considerably depending on the mission-critical nature of
+applications. In particular, it would be extremely undesirable for an unmanned aerial vehicle on
+its mission to allow the control system to crash in case of a failure. Instead a
+suboptimal functioning for a short while might be acceptable depending on the situation
+until the system fully stabilises. Generally speaking, expectations about the
+quality of service would largely depend on how a failure may impact the business.
+For example, a commercial online store may not afford a crash while it is listing its
+products to a customer. Such unpleasant experiences might result in customers moving
+to other online stores making an adverse impact on the business. Similarly, a software
+company launching a new product would expect it to be stable while the product
+is undergoing beta-testing. Any crashes occurring at that time would result in negative feedback
+and loss in the business. To make the matter worse, these failures may occur in
+software components that do not possess critical functionality, and hence, may even get less attention
+to their quality at the time of development. Nevertheless, irrespective of the criticality
+of these components, if the crash occurs it is equally undesirable.
+
+\lstset{language=Java, caption=Apache Log4j bug example,
+label = snippet:exampleRepairing}
+\begin{figure}[t]
+\begin{lstlisting}
+private int substitute() {
+  if (priorVariables == null) {
+    priorVariables = new ArrayList<String>();
+    priorVariables.add(new String(chars, offset, length));
+  }
+}
+\end{lstlisting}
+\end{figure}
+
+For example, the code snippet~\ref{snippet:exampleRepairing} depicts a bug that existed in Apache
+Log4j library version 2.0-beta9~\cite{ApacheLog4jBug} and made the
+logging framework to crash. Hence, the bug was reported as a major bug in spite of the fact that
+it occurred in logging component. The object \code{priorVariables} is a \code{List} of String.
+On line 4, there is no check if \code{offset + length > chars.lenth} or if \code{offset > 0} or
+\code{length > 0} which can throw a \code{StringIndexOutOfBounds} exception. 
+
+In case of such failure, organisations would rather like to collect diagnostic information to identify the defects and allow
+suboptimal behaviour or a while until the running program stabilises. As long as such suboptimal behaviour
+is within acceptable limits, the program survival would get higher preference. The bug then can be fixed in the later versions.
+
+Several approaches have been proposed in the past to ensure that programs can recover from
+failures. Some of the approaches are based on static repairing where the patches are synthesised
+automatically based on the counter examples found in the field and using techniques such as model-checking that
+can be applied at the compilation-time \cite{}. However, it is not always desirable to analyse the system for the failure
+after shutting it down and then relaunch it after fixing the defect. In order to deal with this practical difficulty, some
+dynamic approaches have also been proposed to deal with problems
+that are related to memory, data, and incorrect programming constructs such as infinite loops \cite{}. Most of these
+approaches work either by identifying and isolating damaged data or memory portions, or by delaying the execution
+until the program stabilises on its own, or by patching programs on-the-fly and hoping that the program 
+can recover automatically from the errors. These approaches are optimistic and work on the assumption that some
+suboptimal behaviour for finite time under certain conditions is acceptable.
+
+\ignore{Recent approach proposed by Long et al. \cite{} uses technique that suppresses failures caused by
+divide-by-zero and null-dereference errors, and eventually recovering from them automatically.}
+
+In this work, we propose a novel approach, which is hybrid in the nature and deals with the failures originated from either
+malformed strings or incorrect handling of strings. The approach first identifies program statements statically that
+might be vulnerable to string-related failures, and then develops patches by trying to identify the root-causes
+of the errors. It also uses dynamic analysis to improve the precision of the patches generated by the static analysis.
+The approach targets string variables for patching firstly, because strings are used heavily in Java APIs and have been
+found to be common sources of errors \cite{}, and secondly, because by targeting a specific type of data the approach
+can develop patches that are more meaningful and result in the behaviour that would be close to the intended
+behaviour.
+
+This work makes following contributions:
+\begin{enumerate}
+\item We describe a technique that can generate patches by solving constraints on string data mainly statically
+and partly dynamically. Since the technique takes into account the constraints on the data, the patches generated
+have a higher chance of producing intended behaviour.
+
+\item We present a tool \texttt{Clotho} that implements our approach and effectively generates program
+patches to handle string-related errors \cite{}.
+
+\item We present results of our study that uses multiple open-source Java applications, and show that \texttt{Clotho}
+can effectively produce patches that save programs from crashing due to failures originating from known bugs. The study
+also gives insights into the characteristics of the commonly occurring string problems.
+
+\item Manual inspection of the automatically generated patches by \texttt{Clotho} in the study reveal that in most cases
+they were semantically similar to the ones produced by the developers in the later versions. In fact, on couple of occasions
+the patches generated by \texttt{Clotho} were found to be more accurate. This indicates that \texttt{Clotho} can guide 
+developers in the process of building patches for the future versions.
+\end{enumerate}
+
+
+The organisation of the paper is as follows. Section~\ref{sec:motivation} describes the problem and provides an example to
+illustrate the proposed approach. Section~\ref{sec:architecture} provides the architecture of \texttt{Clotho} and describes the
+analyses implemented by the tool. Section~\ref{sec:implementation} provides implementation details and Section~\ref{sec:evaluation}
+presents the results of the study. Finally, Section~\ref{ref:related work} presents the related work and Section~\ref{sec:conclusion} concludes
+with the outline of the future work.
+
+
+
+
+
+
+
+
+
+%------------- Deleted part of the section
+
+\ignore{Exception handling attributes to the response of program during runtime to some
 exceptional condition encounter.
 Most of the time it changes normal flow of program. In many cases exception
 handling is natural part of software execution due to the nature of the
@@ -73,46 +188,55 @@ fail. To recover from such situation, a mechanism is needed which can predict
 failure by doing invariant and symbolic analysis. Invariant analysis will detect
 particular variables outside legal/safe bound. Static analysis will indicate
 to the potential point of failure.
-
-
-\lstset{language=Java, caption=Example of repairing technique on Appache Commons
-Library in \code{fileUtils}, label = snippet:exampleRepairing} 
-\begin{figure}[t]
-\begin{lstlisting}
-public static String getPathNoEndSeparator(String filename) {
-    return doGetPath(filename, 0);
 }
-private static String doGetPath(String filename, int separatorAdd) {
-    if (filename == null)
-	return null;
-    int prefix = getPrefixLength(filename);
-    if (prefix < 0)
-	return null;
-    int index = indexOfLastSeparator(filename);
-    if ((prefix >= filename.length()) || (index < 0))
-	return "";
-    return filename.substring(prefix, index + separatorAdd);
+
+
+
+
+
+
+\ignore{
+\lstset{language=Java, caption=Repairing technique on Appache Log4j bug,
+label = snippet:exampleRepairingPatched} \begin{figure}[t]
+\begin{lstlisting}
+private int substitute()
+{
+  if (priorVariables == null) 
+  {
+    priorVariables = new ArrayList<String>();
+    String temp = null;
+    try
+    {
+    	temp = new String(chars, offset, length);
+    }
+    catch(StringIndexOutOfBoundsException ex)
+    {
+     int i = chars.length;
+     temp = new String(chars, IndexRepair.getI(offset, length, i),
+     IndexRepair.getJ(offset, length, i) length); 
+    }
+    priorVariables.add(temp);
+  }
 }
 \end{lstlisting}
 \end{figure}
 
-\lstset{language=Java, caption=Bug reproduction of code
-snippet\ref{snippet:exampleRepairing}, label = snippet:exampleRepairing1}
-\begin{figure}[t]
-\begin{lstlisting}
-String path = "/foo.xml"; 
-String s = ApacheBug.getPathNoEndSeparator(path);
-\end{lstlisting}
-\end{figure}
-
-In the code snippet~\ref{snippet:exampleRepairing}, we have given the source
-code of the \code{fileUtils} class of Apache Common IO library. The method
-\code{getPathNoEndSeparator()} throws a \code{StringIndexOutOfBounds} exception
-when we call \code{getPathNoEndSeparator()} fiven in code
-snippet~\ref{snippet:exampleRepairing1}. This exception is thrown by the
-statement \code{return filename.substring(prefix, index + separatorAdd)} in the
-line no. 17 of~\ref{snippet:exampleRepairing} as \code{prefix > index +
-separatorAdd}.
+Here in the example~\ref{snippet:exampleRepairing}, the object
+\code{priorVariables} is a \code{List} of String. In the line 6, there is bug in
+Apache Log4j library version 2.0-beta9~\cite{ApacheLog4jBug} which made the
+logging framework to crash and was a major bug. In the code there is no check if \code{offset + length >
+chars.lenth} or if \code{offset > 0} or \code{length > 0 }which can throw a 
+\code{StringIndexOutOfBounds} exception. . Here the bug was for some cases the
+length value passed in the constructor was $0$. In the patched version, our 
+patching tool detected the statement automatically and wrap in a try catch 
+block with appropiate \code{RunTimeException} type in the
+code~\ref{snippet:exampleRepairingPatched}. \code{getI()} and \code{getJ()} are
+two static methods defined in the class \code{IndexRepair} which are
+instrumented in the byte code.  These two methods repair the last two parameters
+of the \code{String(char[]. int, int)} constructor so that it no longer throws an
+Exception. Out automated patch and developers' patch in Apache Log4j version 2.0-rc2.
+Behaves exactly the same. Both of them modified the last parameter i.e \code{length}
+so that \code{offset + length = chars.length}.
 
 In this paper we proposed two solution to suppress runtime example and ensure
 system survivability. The approach consists of six primary phases
@@ -162,3 +286,4 @@ application/library performance.
 The object of the patching is to repair the problem closest to it to minimize
 any collateral damage to other parts of the applications hence minimizing the
 chance of unintentional data loss/corruption.
+}
