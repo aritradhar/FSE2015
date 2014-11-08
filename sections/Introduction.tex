@@ -94,7 +94,10 @@ analysis. The approach targets string variables for patching firstly, because
 strings are used heavily in \java\ APIs and have been found to be common sources
 of errors \cite{}, and secondly, because by targeting a specific type of data
 the approach can develop patches that are more meaningful and result in the
-behavior that would be close to the intended behavior.
+behavior that would be close to the intended behavior. We applied \tool\ to $x$
+hugely popular open-source libraries involving over $y$ million lines of
+code to patch $z$ high priority bugs resulting from unhandled runtime
+exceptions from \java\ \code{String} APIs.
 
 This work makes following contributions:
 \begin{mylist}
