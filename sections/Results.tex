@@ -84,7 +84,7 @@ $$PFCI = \frac{Patch_{HE}}{Stmt_{HE}}$$
 
 where $Patch_{HE}$ = Total number of patch placed in already handled exceptions,
 and $Stmt_{HE}$ =  total number of statements in the program which are already
-handled.
+handled and $0 \le PFCI \le 1$. The lower value of $PFCI$ is desirable.
 
 
 \item \textbf{Cascaded exception} : Cascaded exception can be a result of 
@@ -109,42 +109,48 @@ for all of the phases in the analysis.
 
 
 \begin{table*}[t]
+% \centering
+% \scriptsize
+% \begin{tabular}{l|c|c|r|r|r|r|r|r}
+% \multicolumn{1}{c|}{\textbf{Library/Application}} &
 \centering
 \scriptsize
-\begin{tabular}{l|c|c|r|r|r|r|r|r}
-\multicolumn{1}{c|}{\textbf{Library/Application}} &
+\begin{tabular}{@{\makebox[3em][r]{\rownumber\space}}|l|c|c|c|r|r|r|r|r|r|r|r|r}
+\multicolumn{1}{c|}{\textbf{API}} &
+\multicolumn{1}{c|}{\textbf{BugID}} &
 \multicolumn{1}{c|}{\textbf{Priority}} &
-\multicolumn{1}{c|}{\textbf{Repairing Result}} &
+\multicolumn{1}{c|}{\textbf{$PQI$}} &
+\multicolumn{1}{c|}{\textbf{$PSI$}} &
+\multicolumn{1}{c|}{\textbf{$PFCI$}} &
 \multicolumn{1}{c|}{\textbf{$LOC$}} & 
 \multicolumn{1}{c|}{\textbf{$IC_O$}} &
 \multicolumn{1}{c|}{\textbf{$IC_{UO}$}} &
+\multicolumn{1}{c|}{\textbf{$CG_{size}$}} &
 \multicolumn{1}{c|}{\textbf{Time}} &
 \multicolumn{1}{c|}{\textbf{Memory}} &
 \multicolumn{1}{c}{\textbf{Cascading}} \\
 
 \hline
-\code{Apache Commons}   	  & Major 	& Success &  & & & & & \\
-\code{Apache Aries} 	 	  & Major 	& Success &  & & & & & \\
-\code{Apache HttpClient} 	  & Major 	& Success &  & & & & & \\
-\code{Apache Log4j} 		  & Major 	& Success &  & & & & & \\
-\code{Apache Hive} 			  & Major 	&  		  &  & & & & & \\
-\code{Apache Struts2} 		  & Major 	& Success &  & & & & & \\
-\code{Eclipse AspectJ} 		  & Major 	& Success &  & & & & & \\
-\code{Apache Commons Lang} 	  & Major 	& Success &  & & & & & \\
-\code{Apache Commons Math} 	  & Major 	& Success &  & & & & & \\
-\code{Apache Commons Net} 	  & Major   & Success &  & & & & & \\
-\code{Apache servicemix-soap} & Major   & Success &  & & & & & \\
-\code{Apache Qpid} 			  & Blocker & Success &  & & & & & \\
-\code{Apache Pivot} 		  & Major   & Success &  & & & & & \\
-\code{Apache XalanJ2} 		  & Major 	& Success &  & & & & & \\
-\code{Apache SOAP} 			  & Major 	& Success &  & & & & & \\
-\code{Apache Commons VFS} 	  & Major 	& Success &  & & & & & \\
-\code{Apache Commons Compress}& Blocker & Success &  & & & & & \\
-\code{Apache Commons CLI1.x}  & Major 	& Success &  & & & & & \\
-\code{Apache Commons CLI2.x}  & Major 	& Success &  & & & & & \\
-\code{Apache Wicket} 		  & Major 	& Success &  & & & & & \\
-\code{Apache Wicket} 		  & Major 	& Success &  & & & & & \\
-
+\code{Aries} 	 	  		& ARIES-1204 & Major 	&  &  & & & & & & & &\\
+\code{Commons CLI1.x}  		& CLI-46 & Major 	&  &  & & & & & & & &\\
+\code{Commons CLI2.x}  		& CLI-193 & Major 	&  &  & & & & & & & &\\
+\code{Commons Compress}		& COMPRESS26& Blocker &  &  & & & & & & & &\\
+\code{Commons IO}   		& IO179  & Major 	&  &  & & & & & & & &\\
+\code{Commons Lang} 	  	& LANG457& Major 	&  &  & & & & & & & &\\
+\code{Commons Math} 	  	& MATH198 & Major 	&  &  & & & & & & & &\\
+\code{Commons Net} 	  		& NET442 & Major   &  &  & & & & & & & &\\
+\code{Commons VFS} 	  		& VFS338 & Major 	&  &  & & & & & & & &\\
+\code{Eclipse AspectJ} 		& Bug 333066 & Major 	&  &  & & & & & & &&\\
+\code{Hive} 			  	&& Major 	&  		  &  & & & & & & & &\\
+\code{HttpClient} 	  		&& Major 	&  &  & & & & & & & &\\
+\code{Log4j} 		  		&& Major 	&  &  & & & & & & & &\\
+\code{Pivot} 		  		&& Major   &  &  & & & & & & & &\\
+\code{Qpid} 			  	&& Blocker &  &  & & & & & & & &\\
+\code{Servicemix-soap} 		&& Major   &  &  & & & &  & && &\\
+\code{SOAP} 			 	&& Major 	&  &  & & & & & & & &\\
+\code{Struts2} 		  		&& Major 	&  &  & & & & & & & &\\
+\code{Wicket} 		  		&& Major 	&  &  & & & & & & & &\\
+\code{XalanJ2} 		  		&& Major 	&  &  & & &  & && & &\\
 
 \end{tabular}
 \caption{Experimental results}
