@@ -1,13 +1,19 @@
-\section{Implementation Details}
+\section{Implementation}
 \label{sec:implementation}
 
-In the implementation we have used \soot\ framework for analysis and bytecode 
-instrumentation and \infoflow\ for static taint analysis. We have used our
-repairing strategy on the \java\ \code{String} API as it is one of the most
-frequent used APIs in commercially available \java\ applications and libraries.
-Another reason to choose \code{String} API was that we have found plenty of
-bugs related to \code{String} in some of the popular libraries and applications
-provided by Apache foundation, Eclipse, ASM etc.
+We implemented a prototype of \tool\ as described in \xref{sec:design} for
+repairing runtime exceptions originating from unhandled \java\ \code{String}
+APIs. Our end-to-end toolchain is completely automated and was written in $x$
+lines of \java. We leveraged the \soot~\cite{} framework for analysis and
+bytecode instrumentation, and \infoflow~\cite{} for static taint analysis.
+
+% We have used our repairing strategy on the \java\ \code{String} API as it is one
+% of the most frequent used APIs in commercially available \java\ applications and
+% libraries. Another reason to choose \code{String} API was that we have found
+% plenty of bugs related to \code{String} in some of the popular libraries and
+% applications provided by Apache foundation, Eclipse, ASM etc.
+
+We now briefly describe a few salient features of our implementation.
 
 \subsection{Taint Analysis}
 
