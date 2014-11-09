@@ -138,40 +138,43 @@ ${i,j}$.}
 \caption{String patching based on parameters passed}
 \label{algo:stringPatchParametr}
 \end{algorithm}
+dfdf
+ssfs
 
-\subsection{Data Structures used in Various Phases}
-\label{subsec:dataStructure}
-
-\begin{mylist}
-\item \textbf{Taint Analysis} : We kept \code{HashMap} object to store all the
-\soot\ \code{Unit} object corresponds to a \code{Boolean} value indicating
-the fact if the the \code{Unit} is safe to patch or not. In later phases we
-used this information. As we went through multiple phases of analysis and
-after each of the phases we did a \soot\ reset, we needed to make sure in the
-later phases object equality maintained for the \code{Unit} objects. To make 
-sure we kept the \code{PatchingChain} generated from the \code{Jimple} method
-\code{body} which is the representation of the control flow graph. For each of 
-the \code{Units}, me marked the position of it in the \code{patchingChain} to 
-make sure the comparison with the same \code{Unit} object in later phases also
-work properly. 
-
-\item \textbf{Call Graph Analysis} : To detect already handled exception we
-see higher in the call chain if the call site of any one of the ancestors is
-wrapped in code{try-catch} block or not. To store and retrieve this information
-efficiently, we keep a \code{HashMap} where key is the method signature and 
-value is an \code{Object} array which contains a \code{Unit} and a \code{SootClass}.
-The \code{SootClass} object indicates the exception class by which the particular
-\code{Unit} was handled.
-
-\item \textbf{Constraint Analysis} : We made a custom data type named \code{ConstraintDataType} 
-which contains the information of the constraint for a particular \code{String} object and also evaluate
-the sting when required. The data type has four fields of \code{Value} object which
-indicates the value corresponding to a \soot\ \code{Local} variable. These are minimum
-length, maximum length, an array of prefix and an array of contains (both \code{Character}
-or substring). To manage this data type, we used a \code{HashMap} which is indexed by the
-\code{String} object and the value is \code{ConstraintDataType}.
-
-\end{mylist}
+% 
+% \subsection{Data Structures used in Various Phases}
+% \label{subsec:dataStructure}
+% 
+% \begin{mylist}
+% \item \textbf{Taint Analysis} : We kept \code{HashMap} object to store all the
+% \soot\ \code{Unit} object corresponds to a \code{Boolean} value indicating
+% the fact if the the \code{Unit} is safe to patch or not. In later phases we
+% used this information. As we went through multiple phases of analysis and
+% after each of the phases we did a \soot\ reset, we needed to make sure in the
+% later phases object equality maintained for the \code{Unit} objects. To make 
+% sure we kept the \code{PatchingChain} generated from the \code{Jimple} method
+% \code{body} which is the representation of the control flow graph. For each of 
+% the \code{Units}, me marked the position of it in the \code{patchingChain} to 
+% make sure the comparison with the same \code{Unit} object in later phases also
+% work properly. 
+% 
+% \item \textbf{Call Graph Analysis} : To detect already handled exception we
+% see higher in the call chain if the call site of any one of the ancestors is
+% wrapped in code{try-catch} block or not. To store and retrieve this information
+% efficiently, we keep a \code{HashMap} where key is the method signature and 
+% value is an \code{Object} array which contains a \code{Unit} and a \code{SootClass}.
+% The \code{SootClass} object indicates the exception class by which the particular
+% \code{Unit} was handled.
+% 
+% \item \textbf{Constraint Analysis} : We made a custom data type named \code{ConstraintDataType} 
+% which contains the information of the constraint for a particular \code{String} object and also evaluate
+% the sting when required. The data type has four fields of \code{Value} object which
+% indicates the value corresponding to a \soot\ \code{Local} variable. These are minimum
+% length, maximum length, an array of prefix and an array of contains (both \code{Character}
+% or substring). To manage this data type, we used a \code{HashMap} which is indexed by the
+% \code{String} object and the value is \code{ConstraintDataType}.
+% 
+% \end{mylist}
 
 
 \subsection{Optimizations}

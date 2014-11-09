@@ -111,52 +111,58 @@ for all of the phases in the analysis.
 \setlength{\tabcolsep}{4.5pt}
 \centering
 \scriptsize
-\begin{tabular}{l|l|l|l|l|l|l|l|l|l|l|l|l|l|l}
+\begin{tabular}{l|l|l|l|l|c|c|c|c|c|c|c|c|c|l}
 \multicolumn{1}{c|}{\textbf{API}} &
 \multicolumn{1}{c|}{\textbf{BugID}} &
 \multicolumn{1}{c|}{\textbf{Priority}} &
 \multicolumn{1}{c|}{\textbf{$PQI$}} &
 \multicolumn{1}{c|}{\textbf{$PSI$}} &
 \multicolumn{1}{c|}{\textbf{$PFCI$}} &
-\multicolumn{1}{c|}{\textbf{$LOC$}} & 
-\multicolumn{1}{c|}{\textbf{$IC_O$}} & %instrumentation with optimization
-\multicolumn{1}{c|}{\textbf{$IC_{UO}$}} & %instrumentation without optimization
+\multicolumn{1}{c|}{\textbf{$\mathcal{N}_{Unit}$}} & 
+\multicolumn{1}{c|}{\textbf{$\mathcal{IC}_O$}} & %instrumentation with optimization
+\multicolumn{1}{c|}{\textbf{$\mathcal{IC}_{UO}$}} & %instrumentation without optimization
 \multicolumn{1}{c|}{\textbf{$\mathcal{N}_{CG}$}} &
-\multicolumn{1}{c|}{\textbf{$PF_{TA}$}} & 
-\multicolumn{1}{c|}{\textbf{$PF_{CG}$}} &
-\multicolumn{1}{c|}{\textbf{$PF_{CA}$}} &
-\multicolumn{1}{c|}{\textbf{$PF_{IN}$}} &
-\multicolumn{1}{c}{\textbf{$\mathcal{N}_{CE}$}}\\ % cascaded exception
-
+\multicolumn{1}{c|}{\textbf{$\mathcal{PF}_{CA}$}} & %profile for constraint
+\multicolumn{1}{c|}{\textbf{$\mathcal{PF}_{TA}$}} & %profile for taint analysis
+\multicolumn{1}{c|}{\textbf{$\mathcal{PF}_{CG}$}} & %profile for call graph
+\multicolumn{1}{c|}{\textbf{$\mathcal{PF}_{IN}$}} & %profile for instrumentation
+\multicolumn{1}{c}{\textbf{$\mathcal{RS}_{CE}$}}\\ % cascaded exception
 
 \hline
-\code{Aries} 	 	  		& \cite{ARIES1204} & Major 	& High & High & $0$ &$129$ &$42$
-& $42$ & $3496$ & & & & &\\
-\code{Commons CLI1.x}  		& \cite{CLI46} & Major 	&  &  & & & & & & & &&&\\
-\code{Commons CLI2.x}  		& \cite{CLI193} & Major 	&  &  & & & & & & &&& &\\
-\code{Commons Compress}		& \cite{COMPRESS26} & Blocker &  &  & & & & & & &&& &\\
-\code{Commons IO}   		& \cite{IO179}  & Major 	&  &  & & & & & & & &&&\\
-\code{Commons Lang} 	  	& \cite{LANG457}& Major 	&  &  & & & & & & & &&&\\
-\code{Commons Math} 	  	& \cite{MATH198} & Major 	&  &  & & & & & & & &&&\\
-\code{Commons Net} 	  		& \cite{NET442} & Major   &  &  & & & & & & & &&&\\
-\code{Commons VFS} 	  		& \cite{VFS338} & Major 	&  &  & & & & & & & &&&\\
-\code{Eclipse AspectJ} 		& \cite{EclipseBug333066} & Major 	&  &  & & & & &
-&&&&&\\
-\code{Hive} 			  	&\cite{}& Major 	&  		  &  & & & & & & & &&&\\
-\code{HttpClient} 	  		&\cite{HTTPCLIENT150}& Major 	&  &  & & & & & & & &&&\\
-\code{jUDDI} 	  			&\cite{JUDDI292}& Major 	&  &  & & & & & & & &&&\\
-\code{Log4j} 		  		&\cite{ApacheLog4jBug}& Major 	&  &  & & & & & & &&& &\\
-\code{Pivot} 		  		&\cite{PIVOT533}& Major   &  &  & & & & & & &&& &\\
-\code{Qpid} 			  	&\cite{}& Blocker &  &  & & & & & & & &&&\\
-\code{Servicemix-soap} 		&\cite{SMXCOMP156}& Major   &  &  & & & &  & &&&& &\\
-\code{SOAP} 			 	&\cite{SOAP130}& Major 	&  &  & & & & & & &&& &\\
-\code{Struts2} 		  		&\cite{WW650}& Major 	&  &  & & & & & & &&& &\\
-\code{Tapestry 5} 		  	&\cite{TAP51770}& Major 	&  &  & & & & &&& & & &\\
-\code{Wicket} 		  		&\cite{WICKET4387}& Major 	&  &  & & & & &&& & & &\\
-\code{XalanJ2} 		  		&\cite{XALANJ836}& Major 	&  &  & & &  & && &&& &\\
+\code{Aries} 	 	  			& \cite{ARIES1204} 		  & Major   & High & Mid & $0$ &$129$ &$42$& $5$ & $3.5K$ & $3.1/10$ & $0.6/31$ & $12.8/146$ &$2.3/142$ & $\checkmark$ \\
+\code{Commons CLI2.x}  			& \cite{CLI46} 	   		  & Major 	& High &  & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ \\
+\code{Commons CLI1.x}  			& \cite{CLI193}    		  & Major 	& High & Mid & $0$ & $53$ & $19$ & $19$ & $3.2K$ & $2.8/5$ & $0.5/30$ & $11.6/149$ & $1.9/133$ & $\checkmark$ \\
+\code{Commons Compress}			& \cite{COMPRESS26}		  & Blocker & High & Mid & $0$ & $134$ & $46$& $4$ & $4K$ & $2.7/5$ & $0.5/30$ & $11.5/209$ & $1.8/130$ & $\checkmark$ \\
+\code{Commons IO}   			& \cite{IO179}  		  & Major 	& High & Mid & $0$ & $125$ & $76$ & $1$ & $3.3K$ & $3/11$ & $0.5/33$ & $12/209$ & $2/141$ & $\checkmark$\\
+\code{Commons Lang} 	  		& \cite{LANG457}		  & Major 	& High & Mid & $0$ & $240$ & $168$ & $8$ & $5.1K$ & $3/19$ & $0.57/30$ & $16.5/209$ & $2.8/158$ & $\checkmark$ \\
+\code{Commons Math} 	  		& \cite{MATH198} 		  & Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $\checkmark$ \\
+\code{Commons Net} 	  			& \cite{NET442} 		  & Major   & High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $\checkmark$ \\
+\code{Commons VFS} 	  			& \cite{VFS338} 		  & Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $\checkmark$ \\
+\code{Eclipse AspectJ} 			& \cite{EclipseBug333066} & Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $\checkmark$ \\
+\code{Eclipse Aspectj Weaver} 	& \cite{EclipseBug432874} & Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $\times$ \\
+\code{Hive} 			  		&\cite{}				  & Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $\checkmark$ \\
+\code{HttpClient} 	  			&\cite{HTTPCLIENT150}	  & Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $\checkmark$ \\
+\code{jUDDI} 	  				&\cite{JUDDI292}		  & Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $\checkmark$ \\
+\code{Log4j} 		  			&\cite{ApacheLog4jBug}	  & Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $\checkmark$ \\
+\code{Pivot} 		  			&\cite{PIVOT533}		  & Major   & High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $\checkmark$ \\
+\code{Qpid} 			  		&\cite{}				  & Blocker & High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $\checkmark$ \\
+\code{Servicemix-soap} 			&\cite{SMXCOMP156}		  & Major   & High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $\checkmark$ \\
+\code{SOAP} 			 		&\cite{SOAP130}		      & Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $\checkmark$ \\
+\code{Struts2} 		  			&\cite{WW650}			  & Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $\checkmark$ \\
+\code{Tapestry 5} 		  		&\cite{TAP51770}		  & Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $\checkmark$ \\
+\code{Wicket} 		  			&\cite{WICKET4387}		  & Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $\checkmark$ \\
+\code{XalanJ2} 		  			&\cite{XALANJ836}		  & Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $\checkmark$ \\
 
 \end{tabular}
 
 \caption{Experimental results}
 \label{tab:results}
 \end{table*}
+
+\subsection{Experimental Results}
+\label{subsec:experimentalResults}
+
+In the table~\ref{tab:results} we have listed the data we got \tool\. We have conducted our expriment over number of
+bugs related to \java\ \code{String} API. We have used
+
+
