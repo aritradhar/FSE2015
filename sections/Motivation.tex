@@ -1,6 +1,183 @@
-\section{Motivation and Challenges}
+\section{Motivation and Overview}
 \label{sec:motivation}
 
+Ensuring correctness for a software application is undecidable and static analysis will invariably produce numerous
+false positives restricting their usage. Similarly, programming logic can be very complex and data coming from
+external environment can be diverse. As result, unexpected failures may happened, and successful execution of any
+real application cannot be guaranteed. These unexpected failures often result in runtime exceptions being thrown
+by the applications which are typically not handled. The cost of these runtime failures can vary depending on the criticality
+of the applications being very high for mission-critical applications.
+
+\code{String} APIs are commonly used in \java\ applications and libraries. Strings used in programs are often 
+sources of errors. In order to understand common types of exceptions, we mined the post repository on stackoverflow~\cite{stackoverflow}.
+The most prominent exception types with the percentage share of higher than 5\% are enumerated in Table~\ref{tab:stackoverlow}. The second column indicates
+the types of exceptions, whereas the third column indicates their overall percentage share. We observe that strings can play
+a role in generating all except \code{SecurityException}. This result coupled with the potentially heavy cost of program
+failures motivated us to develop on-the-fly program repairing support for \java\ \code{String} APIs.
+
+
+\begin{table}[t]
+\small
+\begin{tabular}{l|r|r}
+\hline
+\multicolumn{1}{c|}{\textbf{Runtime Exception Type}} &
+\multicolumn{1}{c|}{\textbf{Frequency}} & \multicolumn{1}{c}{\textbf{\%}}\\
+% \scalebox{0.83}
+% {
+\hline
+\code{NullPointerException} & $34912$ & $54.94$ \\
+\code{ClassCastException} & $7504$ & $11.81$ \\
+\code{IndexOutOfBoundsException} & $6637$ & $10.44$ \\
+\code{SecurityException}  & $5818$ & $9.15$ \\
+\hline
+\end{tabular}
+\caption{Prominent runtime exceptions from stackoverflow~\cite{stackoverflow}.}
+\label{tab:stackoverlow}
+% }
+\end{table}
+
+\subsection{Problem Definition}
+\label{subsec:problem}
+
+In this work, we present an approach and its implementation that i) identifies the statements which might be vulnerable to string-related errors,
+and are less critical to the functionality of the application such that suboptimal behaviour might be acceptable, ii) is non-invasive ensuring no 
+side-effects during normal program execution and activating patches only when the program is guaranteed to crash, iii) identifies constraints on the string
+data associated with the statements, and develops patches that can regenerate string data which can satisfy the constraints, iv) optimises the
+number of statements by retaining only the ones that need to be protected by applying patches,  v) keeping program behaviour as close as possible to the
+intended behaviour by developing precise patches, and vi) incurring no runtime overhead during normal program execution and only negligible overhead in case of failures.
+
+\subsection{Overview}
+\label{subsec:overview}
+
+In order to achieve the goals enumerated in Section~\ref{subsec:problem}, we develop
+several techniques which are outlined below.
+
+\paragraph{Identifying Program Statements} We perform static taint analysis
+to identify sensitive data which are leaving the system via database, network
+stream, file stream or console. Providing patches to the
+statements that manipulate this data would be undesirable, since
+activation of the patches in case failures may allow altered data to eventually reach
+users. Hence, we only mark those program statements which do not manipulate
+sensitive data.
+
+\ignore{We have used \soot\ \infoflow\ framework
+for static taint analysis. We have defined potential taint source and sinks in the
+configuration file. The \infoflow\ frameworks returns all the program
+statements which lies in any of the program path from source and sink. We tag these
+statements as unsafe to patch.}
+
+\paragraph{Noninvasive Patching} In case a runtime exception that is thrown
+by a statement as a result of a failure is already caught and handled in a program,
+we skip that statement from patching to avoid interfering with the results. Such
+statements are identified by analysing call-graphs and ensuring that no callee method
+in the call-chain handles the exception or its superclass. By embedding the patches inside
+\texttt{catch} blocks, we ensure that they do not get activated during normal program execution.
+
+\paragraph{Static and Dynamic Constraint Evaluation} We perform an intra-procedural backward-flow static analysis
+to identify constraints on the string objects under consideration. We evaluate these constraints
+statically for which complete information is available at the compilation-time. We regenerate
+these objects by solving the constraints. Otherwise, for the constraints which can not be
+evaluated statically, the analysis automatically generates code that performs dynamic analysis
+to solve the constraints, and then instruments the program with that code.
+
+\paragraph{Optimizing Instrumentation} We perform reaching definitions analysis to skip marked statements
+if the string variables that are contained in the statements are already patched, and the variables
+are not redefined along any path that originates from the patched statement. This analysis reduces
+instrumentation points in a program.
+
+\paragraph{Patch Precision} The precision of a program patch is improved, firstly, by targeting only strings
+for patching which allows to develop more specialised patches, secondly, by patching programs very
+close to the point of failures which avoid unnecessary patching of other unaffected variables, and potential
+side effects, thirdly, by analysing the type of exception that is thrown which provides valuable insights into
+the failure that has occurred, and finally, by considering all the constraints on the strings. This would result
+in the program behaviour in case of a failure which would be close to the intended behaviour.
+
+\paragraph{Reduced Overhead} The side-effect of non-invasive patches is that they do not interfere while
+normal execution which results in no runtime overhead. Even when they get activated in case of failures,
+they still cause negligible overhead since we perform no analysis during runtime except to resolve the constraints.
+As revealed by our study the constraints are typically few and simple, making our dynamic analysis light-weight.
+
+
+\subsection{Patching Code}
+\label{subsec:patchingexample}
+	
+
+\lstset{language=Java, caption=Example from \code{fileUtils} of Apache Commons
+Library , label = snippet:exampleRepairing1}
+\begin{figure}[t]
+\begin{lstlisting}
+public static String getPathNoEndSeparator(String filename) {
+	return doGetPath(filename, 0);
+}
+private static String doGetPath(String filename, int separatorAdd) {
+	if (filename == null)
+		return null;
+	int prefix = getPrefixLength(filename);
+	if (prefix < 0)
+		return null;
+	int index = indexOfLastSeparator(filename);
+	if ((prefix >= filename.length()) || (index < 0))
+		return "";
+	return filename.substring(prefix, index + separatorAdd);
+}
+\end{lstlisting}
+\end{figure}
+
+We give an overview of some of the techniques described in Section~\ref{subsec:overview} with the help of
+an example in Code Snippet~\ref{snippet:exampleRepairing1}. The snippet depicts some code
+from \code{fileUtils} class of Apache Common IO library. The method \code{getPathNoEndSeparator()} throws
+a \code{StringIndexOutOfBounds} exception on Windows OS which originates from statement 
+\code{return filename.substring(prefix, index + separatorAdd)} on
+line 17 when the method is called with parameter \code{"/foo.xml"}.  Here, the value of \code{prefix} as
+returned by the method \code{getPrefixLength} is 1 which fails to satisfy the invariant
+\code{prefix <= index + separatorAdd} for \code{substring} method. This results in the exception being thrown.
+
+
+\lstset{language=Java, caption=Code after patch is applied on \code{fileUtils}
+in Apache Commons Library, label = snippet:exampleRepairing2, firstnumber
+=13}
+\begin{figure}[t]
+\begin{lstlisting}
+String temp = null;
+try {
+	temp = filename.substring(prefix, index + separatorAdd);
+}
+catch(IndexOutOfBoundsException ex) {
+	int length = filename.length;
+	int t = index + separatorAdd;
+	temp = filename.substring(getI(prefix,t,length), getJ(prefix,t,length));
+}
+return temp;
+}
+\end{lstlisting}
+\end{figure}
+
+
+Code Snippet~\ref{snippet:exampleRepairing2} depicts the patch automatically generated by \texttt{Clotho}
+using our approach.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\ignore{
 \subsection{Historical Context}
 \label{subsec:historicalContext}
 
@@ -76,3 +253,52 @@ occurrences and percentages.
 From the table it is clear that null pointer exception in \java\ is not only the
 most frequent but also the most dominant runtime exception having share of more
 than $50$.
+}
+
+\ignore{
+\lstset{language=Java, caption=Bug reproduction of code
+snippet\ref{snippet:exampleRepairing}, label = snippet:exampleRepairing}
+\begin{figure}[t]
+\begin{lstlisting}
+String path = "/foo.xml";
+String s = ApacheBug.getPathNoEndSeparator(path);
+\end{lstlisting}
+\end{figure}
+}
+
+
+\ignore{
+\lstset{language=Java, caption=Example of repairing technique on Appache Commons
+Library in \code{fileUtils}, label = snippet:exampleRepairing2}
+\begin{figure}[t]
+\begin{lstlisting}
+public static String getPathNoEndSeparator(String filename) {
+return doGetPath(filename, 0);
+}
+private static String doGetPath(String filename, int separatorAdd) {
+if (filename == null)
+return null;
+int prefix = getPrefixLength(filename);
+if (prefix < 0)
+return null;
+int index = indexOfLastSeparator(filename);
+if ((prefix >= filename.length()) || (index < 0))
+return "";
+String temp = null;
+try
+{
+temp = filename.substring(prefix, index + separatorAdd);
+}
+catch(IndexOutOfBoundsException ex)
+{
+int length = filename.length;
+int t = index + separatorAdd;
+temp = filename.substring(getI(prefix,t,length), getJ(prefix,t,length));
+}
+
+return temp;
+}
+\end{lstlisting}
+\end{figure}
+}
+
