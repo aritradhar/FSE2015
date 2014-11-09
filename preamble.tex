@@ -52,6 +52,7 @@ pdfpagelabels]{hyperref}
 %\usepackage{lipsum}
 
 % \newcommand{\ignore}[1]{}
+\usepackage{rotating}
 
 %==========================================
 %Added definitions
@@ -61,6 +62,13 @@ pdfpagelabels]{hyperref}
 %==========================================
 %rename listing
 \renewcommand\lstlistingname{Code Snippet}
+%==========================================
+
+%==========================================
+%rotate column title
+\usepackage{booktabs}
+\usepackage{xparse}
+\NewDocumentCommand{\rot}{O{45} O{1em} m}{\makebox[#2][l]{\rotatebox{#1}{#3}}}
 %==========================================
 
 %==========================================
