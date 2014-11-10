@@ -1,0 +1,53 @@
+
+
+\lstset{language=Java, caption=Repairing strategy example, label = snippet:exCode1}
+\begin{figure}[t]
+\begin{lstlisting}
+void foo(){
+	String s = Input();
+	String st = s.substring(1, 61);	
+	if(st.length() == 1){..}
+	if(st.length() < 39){..}
+	if(st.startsWith(">:")){..}
+	if(st.contains(Input())){..}
+	st1 = st1.substring(1, 2);
+}
+\end{lstlisting}
+\end{figure}
+
+\lstset{language=Java, caption=Repairing strategy example, label = snippet:exCode2}
+\begin{figure}[t]
+\begin{lstlisting}
+void foo(){
+	String s = Input();
+	try{
+		String st = s.substring(1, 61);
+	}
+	catch(IndexOutOBoundException ex){
+		st = ">:ffpsfkdvine%2&*&jd";
+		 EncounterRepair.encounterRepairSet("foo()>", str2);
+	}
+	ConstraintStorageMapDynamic.updateMinLength("<foo()>", st, 1);
+	ConstraintStorageMapDynamic.updateMaxLength("<foo()>", st, 1);
+	st = GenerateStringDynamic.init("foo()>", st);	
+	if(st.length() == 1){..}
+	ConstraintStorageMapDynamic.updateMaxLength("<foo()>", st, 39);
+	st = GenerateStringDynamic.init("foo()>", st);
+	if(st.length() < 39){..}
+	ConstraintStorageMapDynamic.updatePrefixSet("<foo()>", st, ">:");
+	st = GenerateStringDynamic.init("foo()>", st);
+	if(st.startsWith(">:")){..}
+	String temp = Input();
+	ConstraintStorageMapDynamic.updateContainsSet("<foo()>", st, temp);
+	st = GenerateStringDynamic.init("foo()>", st);
+	if(st.contains(temp)){..}
+	Character c = null;
+	try{
+	 c = st1.chatAt(1);
+	}
+	catch(IndexOutOfBoundException ex){
+	c = st1.failSafeCharAt(1,st1.length());
+	}
+}
+\end{lstlisting}
+\end{figure}
