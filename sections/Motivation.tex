@@ -42,7 +42,8 @@ failures motivated us to develop on-the-fly program repairing support for \java\
 In this work, we present an approach and its implementation that i) identifies the statements which might be vulnerable to string-related errors,
 and are less critical to the functionality of the application such that suboptimal behaviour might be acceptable, ii) is non-invasive ensuring no 
 side-effects during normal program execution and activating patches only when the program is guaranteed to crash, iii) identifies constraints on the string
-data associated with the statements, and develops patches that can regenerate string data which can satisfy the constraints, iv) optimises the
+data associated with the statements, and develops patches that can either regenerate string data which can satisfy the constraints
+or force the \java\code{String} API by tweaking their parameters to generate the data, iv) optimises the
 number of statements by retaining only the ones that need to be protected by applying patches,  v) keeping program behaviour as close as possible to the
 intended behaviour by developing precise patches, and vi) incurring no runtime overhead during normal program execution and only negligible overhead in case of failures.
 
@@ -73,12 +74,14 @@ statements are identified by analysing call-graphs and ensuring that no callee m
 in the call-chain handles the exception or its superclass. By embedding the patches inside
 \texttt{catch} blocks, we ensure that they do not get activated during normal program execution.
 
-\paragraph{Static and Dynamic Constraint Evaluation} We perform an intra-procedural backward-flow static analysis
-to identify constraints on the string objects under consideration. We evaluate these constraints
-statically for which complete information is available at the compilation-time. We regenerate
-these objects by solving the constraints. Otherwise, for the constraints which can not be
-evaluated statically, the analysis automatically generates code that performs dynamic analysis
-to solve the constraints, and then instruments the program with that code.
+\paragraph{Static and Dynamic Constraint Evaluation} We perform an intra-procedural static analysis
+to identify constraints on the string objects under consideration. Considering that a failure can happen
+at the statements, and identifying the type of exceptions that can be thrown, we develop patches that
+regenerate string objects either by tweaking \java\code{String} API used in
+the statements to regenerate legal string objects or by trying to solve the constraints. In the latter case,
+we evaluate the constraints statically if complete information is available at the compilation-time.
+Otherwise, for the constraints which can not be evaluated statically, the analysis automatically generates
+code that performs dynamic analysis to solve the constraints, and then instruments the program with that code.
 
 \paragraph{Optimizing Instrumentation} We perform reaching definitions analysis to skip marked statements
 if the string variables that are contained in the statements are already patched, and the variables
@@ -103,39 +106,36 @@ As revealed by our study the constraints are typically few and simple, making ou
 	
 
 \lstset{language=Java, caption=Example from \code{fileUtils} of Apache Commons
-Library , label = snippet:exampleRepairing1}
+Library , label = snippet:exampleRepairing1, basicstyle=\scriptsize}
 \begin{figure}[t]
 \begin{lstlisting}
 public static String getPathNoEndSeparator(String filename) {
 	return doGetPath(filename, 0);
 }
 private static String doGetPath(String filename, int separatorAdd) {
-	if (filename == null)
-		return null;
+	...
 	int prefix = getPrefixLength(filename);
-	if (prefix < 0)
-		return null;
+	if (prefix < 0) return null;
 	int index = indexOfLastSeparator(filename);
-	if ((prefix >= filename.length()) || (index < 0))
-		return "";
+	...
 	return filename.substring(prefix, index + separatorAdd);
 }
 \end{lstlisting}
 \end{figure}
 
-We give an overview of some of the techniques described in Section~\ref{subsec:overview} with the help of
+We give an overview of the techniques described in Section~\ref{subsec:overview} with the help of
 an example in Code Snippet~\ref{snippet:exampleRepairing1}. The snippet depicts some code
 from \code{fileUtils} class of Apache Common IO library. The method \code{getPathNoEndSeparator()} throws
 a \code{StringIndexOutOfBounds} exception on Windows OS which originates from statement 
 \code{return filename.substring(prefix, index + separatorAdd)} on
-line 17 when the method is called with parameter \code{"/foo.xml"}.  Here, the value of \code{prefix} as
+line 10 when the method is called with parameter \code{"/foo.xml"}.  Here, the value of \code{prefix} as
 returned by the method \code{getPrefixLength} is 1 which fails to satisfy the invariant
 \code{prefix <= index + separatorAdd} for \code{substring} method. This results in the exception being thrown.
 
 
-\lstset{language=Java, caption=Code after patch is applied on \code{fileUtils}
-in Apache Commons Library, label = snippet:exampleRepairing2, firstnumber
-=13}
+\lstset{language=Java, caption=Patch for the \code{fileUtils}
+in Apache Commons Library bug, label = snippet:exampleRepairing2, firstnumber
+=10, basicstyle = \scriptsize}
 \begin{figure}[t]
 \begin{lstlisting}
 String temp = null;
@@ -143,9 +143,9 @@ try {
 	temp = filename.substring(prefix, index + separatorAdd);
 }
 catch(IndexOutOfBoundsException ex) {
-	int length = filename.length;
-	int t = index + separatorAdd;
-	temp = filename.substring(getI(prefix,t,length), getJ(prefix,t,length));
+	int length = filename.length; int t = index + separatorAdd;
+	temp = filename.substring(
+		getStart(prefix,t,length),getEnd(prefix,t,length));
 }
 return temp;
 }
@@ -153,9 +153,39 @@ return temp;
 \end{figure}
 
 
-Code Snippet~\ref{snippet:exampleRepairing2} depicts the patch automatically generated by \texttt{Clotho}
-using our approach.
+Code Snippet~\ref{snippet:exampleRepairing2} presented the patch automatically generated by \texttt{Clotho}
+using our approach. \texttt{Clotho} first identifies that statement 10 in Code Snippet~\ref{snippet:exampleRepairing2}
+can be vulnerable to a failure and might throw \code{IndexOutOfBoundsException} which is not handled in the program.
+\texttt{Clotho} decides to tweak the API rather than regenerate the string based on the algorithm presented in
+Section~\ref{sec:architecture}. As a result it replaces statement 10 with the code depicted in Code
+Snippet~\ref{snippet:exampleRepairing2}. The statement 17 shows two methods namely \code{getStart} and \code{getEnd}
+which computes legally correct bounds required for \code{substring} method that regenerates string referenced by variable \code{temp}. 
 
+The actual patch provided by the developers is semantically similar to the one developed by \texttt{Clotho} and both versions
+of the code generate exactly the same output. Similarly, the patch developed for the bug depicted in Code Snippet~\ref{snippet:exampleRepairing}
+is semantically similar to the actual one and is presented in Code Snippet~\ref{snippet:exampleRepairing4}. Here string 
+variable \code{temp} is regenerated after legally correct adjustments of the indices.
+
+\lstset{language=java, caption=Patch for the Appache Log4j bug,
+label = snippet:exampleRepairing4, basicstyle=\scriptsize, firstnumber
+=4}
+\begin{figure}[t]
+\begin{lstlisting}
+try {
+	temp = new String(chars, offset, length);
+}
+catch(StringIndexOutOfBoundsException ex) {
+	int i = chars.length;
+	temp = new String(chars, IndexRepair.getStart(offset, length, i),
+		IndexRepair.getEnd(offset, length, i) length); 
+}
+priorVariables.add(temp);
+\end{lstlisting}
+\end{figure}
+
+We present in detail the techniques and the algorithms used in our analysis that can produce patches to regenerate string variables under more
+complex scenarios in Section~\ref{sec:architecture} . Our study presented in Section~\ref{sec:evaluation} suggests that majority
+of the string generation scenarios in practice are more straight-forward.
 
 
 
