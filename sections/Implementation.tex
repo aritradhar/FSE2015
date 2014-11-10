@@ -164,10 +164,10 @@ ${i,j}$.}
 \subsection{Optimizations}
 \label{subsec:optimizations}
 
-\tool\ performs several optimizations as well to improve the precision and
-quality of the patches. We describe a few of them below.
+\tool\ performs several optimizations to improve the precision and quality of
+the patches. We describe a few of them below.
 
-\subsubsection{Handled Exceptions}
+\subsubsection{Checked exceptions}
 \label{subsubsec:callChainLookUp}
 ~\newline
 Although unlikely, it is possible that the developers may themselves incorporate
@@ -203,17 +203,14 @@ tag the corresponding \code{Unit} in the \code{HashMap} mentioned before.
 % articular
 %  \code{Unit} was handled.
 
-% \subsubsection{Minimize Constraint Instrumentation}
-% \label{subsubsec:minimizeConstrintInstrumentation}
-% ~\newline
-% We instrument statements by which we can generate new string objects based on
-% the
-% constrains we observed in a forward pass of the program. In case a particular
-% string object have not encountered any exception, we deferred the
-% instrumentation
-% until the first repairing instrumentation. There may be cases that the string
-% object never went through such methods which can throw runtime exception, in
-% such cases those instrumentation are not necessary.
+\subsubsection{Minimize constraint analysis}
+\label{subsubsec:minimizeConstrintInstrumentation}
+~\newline
+\tool\ collects constraints only for those string literals that may be involved
+in a runtime exception. For example, if a string object does not involve API
+methods that can throw runtime exception, then it is not required to collect and
+evaluate constraints on them. This significantly reduces the number of
+statements analyzed for instrumentation.
  
 \subsubsection{Minimize conflicts in constraint evaluation}
 \label{subsubsec:minimizeConflictsinConstraintEvaluation}
@@ -240,4 +237,8 @@ object is modified after it as been patched. If the object is not modified then
 no further patching of statements capable of throwing runtime exceptions is
 required, since all constraints will have been satisfied and no exceptions
 concerning the object will be thrown. This reduces the total number of possible
-instrumentations required.
+instrumentations required. Further, a string object that involves methods
+capable of throwing runtime exceptions, may not encounter any exceptions during
+execution. Thus, we defer the actual instrumentation required for patching until
+the first exception is thrown, which also minimizes the total amount of code
+instrumentation.
