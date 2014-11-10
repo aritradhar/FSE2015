@@ -23,13 +23,13 @@ We also consider such bugs which still remains un-fixed.
 
 We did all the experiments in a laptop pc equipped with a dual core Intel i5
 2.3-2.9 GHz processor, 8 GB or RAM, Microsoft Windows 8.1 operating system, JDK
-version 1.7-45 with 2 GB of allocated heap space. All the bug reproduction was done on
+version 1.7-45 with 2 GB of allocated heap space. All the bug reproduction was
+done on
 Eclipse Juno IDE. For static analysis and instrumentation we have used \soot\
 version 2.5.0 and \soot\ \infoflow\ for static taint analysis. We have also used
 java decompiler JD version 0.7.0.1. 
 
 \end{mylist}
-
 
 \subsection{Evaluation Matrices}
 \label{sub:evaluationMartices}
@@ -54,7 +54,8 @@ compared the patches to see how much they are similar and dissimilar with the
 developers' patch. We than use the instrumented class files and place it to the
 library archive replacing the buggy class files. We reproduced the similar test
 cases of the bugs and used the automated patched version and later fixed version
-of the same library to compare the results. In case the results are the primitive
+of the same library to compare the results. In case the results are the
+primitive
 or string type we have printed the output in the console and compare them. In
 case the output is some complex object we compare the properties of them. Apart
 from the test cases to reproduce the bug, we also ran couple of good test case
@@ -91,7 +92,8 @@ handled and $0 \le PFCI \le 1$. The lower value of $PFCI$ is desirable.
 auto-generated patching in the case the patched objects are used as a input
 to other methods and violates the specification there. This is the limitation
 in our technique in the some complicated cases where it requires develops' 
-attention. The limitation is due to the fact that the analysis for the repairing 
+attention. The limitation is due to the fact that the analysis for the
+repairing 
 technique is a intra-procedural analysis and the constraint evaluation method is
 very simple. For the constraint evaluation part, the solver is pluggable, we can
 easily replace it with a third party solver. Cascaded exception can be noticed 
@@ -107,67 +109,12 @@ for all of the phases in the analysis.
 
 \end{mylist}
 
-\begin{table*}[t]
-\setlength{\tabcolsep}{4.5pt}
-\centering
-\scriptsize
-\begin{tabular}{l|l|l|l|l|c|c|c|c|c|c|c|c|c|l}
-\multicolumn{1}{c|}{\textbf{API}} &
-\multicolumn{1}{c|}{\textbf{BugID}} &
-\multicolumn{1}{c|}{\textbf{Priority}} &
-\multicolumn{1}{c|}{\textbf{$PQI$}} &
-\multicolumn{1}{c|}{\textbf{$PSI$}} &
-\multicolumn{1}{c|}{\textbf{$PFCI$}} &
-\multicolumn{1}{c|}{\textbf{$\mathcal{N}_{Unit}$}} & 
-\multicolumn{1}{c|}{\textbf{$\mathcal{IC}_{NO}$}} & %instrumentation with optimization
-\multicolumn{1}{c|}{\textbf{$\mathcal{IC}_{WO}$}} & %instrumentation without optimization
-\multicolumn{1}{c|}{\textbf{$\mathcal{N}_{CG}$}} &
-\multicolumn{1}{c|}{\textbf{$\mathcal{PF}_{CA}$}} & %profile for constraint
-\multicolumn{1}{c|}{\textbf{$\mathcal{PF}_{TA}$}} & %profile for taint analysis
-\multicolumn{1}{c|}{\textbf{$\mathcal{PF}_{CG}$}} & %profile for call graph
-\multicolumn{1}{c|}{\textbf{$\mathcal{PF}_{IN}$}} & %profile for instrumentation
-\multicolumn{1}{c}{\textbf{$\mathcal{RS}_{CE}$}}\\ % cascaded exception
-
-\hline
-\code{Aries} 	 	  			& \cite{ARIES1204} 		  & Major   & High & Mid & $0$ &$129$ &$42$& $5$ & $3.5K$ & $3.1/10$ & $0.6/31$ & $12.8/146$ &$2.3/142$ & $\checkmark$ \\
-\code{Commons CLI2.x}  			& \cite{CLI46} 	   		  & Major 	& High &  & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ \\
-\code{Commons CLI1.x}  			& \cite{CLI193}    		  & Major 	& High & Mid & $0$ & $53$ & $19$ & $19$ & $3.2K$ & $2.8/5$ & $0.5/30$ & $11.6/149$ & $1.9/133$ & $\checkmark$ \\
-\code{Commons Compress}			& \cite{COMPRESS26}		  & Blocker & High & Mid & $0$ & $134$ & $46$& $4$ & $4K$ & $2.7/5$ & $0.5/30$ & $11.5/209$ & $1.8/130$ & $\checkmark$ \\
-\code{Commons IO}   			& \cite{IO179}  		  & Major 	& High & Mid & $0$ & $125$ & $76$ & $1$ & $3.3K$ & $3/11$ & $0.5/33$ & $12/209$ & $2/141$ & $\checkmark$\\
-\code{Commons Lang} 	  		& \cite{LANG457}		  & Major 	& High & Mid & $0$ & $240$ & $168$ & $8$ & $5.1K$ & $3/19$ & $0.57/30$ & $16.5/209$ & $2.8/158$ & $\checkmark$ \\
-\code{Commons Math} 	  		& \cite{MATH198} 		  & Major 	& High & Mid & $0$ & $300$ & $36$ & $2$ & $3.4K$ & $3/20$ & $0.5/30$ & $11.9/209$ & $2.9/152$ & $\checkmark$ \\
-\code{Commons Net} 	  			& \cite{NET442} 		  & Major   & High & Mid & $0$ & $14$ & $6$ & $1$ & $3.3K$ & $2.8/6$ & $0.5/33$ & $11.4/212$ & $1.9/132$ & $\checkmark$ \\
-\code{Commons VFS} 	  			& \cite{VFS338} 		  & Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $\checkmark$ \\
-\code{Eclipse AspectJ} 			& \cite{EclipseBug333066} & Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $\checkmark$ \\
-\code{Eclipse Aspectj Weaver} 	& \cite{EclipseBug432874} & Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $\times$ \\
-\code{Hive} 			  		&\cite{}				  & Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $\checkmark$ \\
-\code{HttpClient} 	  			&\cite{HTTPCLIENT150}	  & Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $\checkmark$ \\
-\code{jUDDI} 	  				&\cite{JUDDI292}		  & Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $\checkmark$ \\
-\code{Log4j} 		  			&\cite{ApacheLog4jBug}	  & Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $\checkmark$ \\
-\code{Pivot} 		  			&\cite{PIVOT533}		  & Major   & High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $\checkmark$ \\
-\code{Qpid} 			  		&\cite{}				  & Blocker & High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $\checkmark$ \\
-\code{Servicemix-soap} 			&\cite{SMXCOMP156}		  & Major   & High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $\checkmark$ \\
-\code{SOAP} 			 		&\cite{SOAP130}		      & Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $\checkmark$ \\
-\code{Struts2} 		  			&\cite{WW650}			  & Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $\checkmark$ \\
-\code{Tapestry 5} 		  		&\cite{TAP51770}		  & Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $\checkmark$ \\
-\code{Wicket} 		  			&\cite{WICKET4387}		  & Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $\checkmark$ \\
-\code{XalanJ2} 		  			&\cite{XALANJ836}		  & Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $\checkmark$ \\
-
-\end{tabular}
-
-\caption{Experimental results}
-\label{tab:results}
-\end{table*}
-
 \subsection{Experimental Results}
 \label{subsec:experimentalResults}
 
-In the table~\ref{tab:results} we have listed the data we got \tool\. We have conducted our expriment over number of
-bugs related to \java\ \code{String} API. We have used these notations in the table which are explained
-
 \begin{table}[t]
 \centering
-\small
+\scriptsize
 \begin{tabular}{l|l}
 
 \multicolumn{1}{c|}{\textbf{Notation}} &
@@ -177,13 +124,13 @@ bugs related to \java\ \code{String} API. We have used these notations in the ta
 API & Analyzed library\\
 BugID & Unique ID in bug repository\\
 Priority & Severity of bug \\
-$PQI$ & Program Quality Index\\ 
+$PQI$ & Program Quality Index\\
 $PSI$ & Program Size Index\\
 $PFCI$ & Program Flow Consistency Index\\
 $\mathcal{N}_{Unit}$ & Total \#\code{Units} analyzed\\
-$\mathcal{IC}_{NO}$ & Instrumentattion without opimizattion\\
-$\mathcal{IC}_{WO}$ & Instrumentattion with opimizattion\\
-$\mathcal{N}_{CG}$ & Size of the call grapg\\
+$\mathcal{IC}_{NO}$ & Instrumentation without optimization\\
+$\mathcal{IC}_{WO}$ & Instrumentation with optimization\\
+$\mathcal{N}_{CG}$ & Size of the call graph\\
 $\mathcal{PF}_{CA}$ & Profiling data of constraint analysis(sec/MB)\\
 $\mathcal{PF}_{TA}$ & Profiling data of taint analysis(sec/MB)\\
 $\mathcal{PF}_{CG}$ & Profiling data of call graph(sec/MB)\\
@@ -195,3 +142,105 @@ $\mathcal{RS}_{CE}$ & If cascaded exception exists\\
 \caption{Notations used in Table~\ref{tab:results}}
 \label{tab:Notation}
 \end{table}
+
+\begin{table*}[t]
+\setlength{\tabcolsep}{3pt}
+\centering
+\scriptsize
+\begin{tabular}{l|l|l|l|l|c|c|c|c|c|c|c|c|c|c}
+\multicolumn{1}{c|}{\textbf{API}} &
+\multicolumn{1}{c|}{\textbf{BugID}} &
+\multicolumn{1}{c|}{\textbf{Priority}} &
+\multicolumn{1}{c|}{\textbf{$PQI$}} &
+\multicolumn{1}{c|}{\textbf{$PSI$}} &
+\multicolumn{1}{c|}{\textbf{$PFCI$}} &
+\multicolumn{1}{c|}{\textbf{$\mathcal{N}_{Unit}$}} &
+\multicolumn{1}{c|}{\textbf{$\mathcal{IC}_{NO}$}} & %instrumentation with
+%optimization
+\multicolumn{1}{c|}{\textbf{$\mathcal{IC}_{WO}$}} & %instrumentation without
+%optimization
+\multicolumn{1}{c|}{\textbf{$\mathcal{N}_{CG}$}} &
+\multicolumn{1}{c|}{\textbf{$\mathcal{PF}_{CA}$}} & %profile for constraint
+\multicolumn{1}{c|}{\textbf{$\mathcal{PF}_{TA}$}} & %profile for taint analysis
+\multicolumn{1}{c|}{\textbf{$\mathcal{PF}_{CG}$}} & %profile for call graph
+\multicolumn{1}{c|}{\textbf{$\mathcal{PF}_{IN}$}} & %profile for instrumentation
+\multicolumn{1}{c}{\textbf{$\mathcal{RS}_{CE}$}}\\ % cascaded exception
+
+\hline
+\code{Aries} 	 	  			& \cite{ARIES1204}
+ & Major   & High & Mid & $0$ &$129$ &$42$& $5$ & $3.5K$ & $3.1/10$ & $0.6/31$ &
+$12.8/146$ &$2.3/142$ & $\checkmark$ \\
+\code{Commons CLI2.x}  			& \cite{CLI46} 	   		  &
+Major 	& High &  & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ \\
+\code{Commons CLI1.x}  			& \cite{CLI193}    		  &
+Major 	& High & Mid & $0$ & $53$ & $19$ & $19$ & $3.2K$ & $2.8/5$ & $0.5/30$ &
+$11.6/149$ & $1.9/133$ & $\checkmark$ \\
+\code{Commons Compress}			& \cite{COMPRESS26}		  &
+Blocker & High & Mid & $0$ & $134$ & $46$& $4$ & $4K$ & $2.7/5$ & $0.5/30$ &
+$11.5/209$ & $1.8/130$ & $\checkmark$ \\
+\code{Commons IO}   			& \cite{IO179}  		  &
+Major 	& High & Mid & $0$ & $125$ & $76$ & $1$ & $3.3K$ & $3/11$ & $0.5/33$ &
+$12/209$ & $2/141$ & $\checkmark$\\
+\code{Commons Lang} 	  		& \cite{LANG457}		  &
+Major 	& High & Mid & $0$ & $240$ & $168$ & $8$ & $5.1K$ & $3/19$ & $0.57/30$ &
+$16.5/209$ & $2.8/158$ & $\checkmark$ \\
+\code{Commons Math} 	  		& \cite{MATH198} 		  &
+Major 	& High & Mid & $0$ & $300$ & $36$ & $2$ & $3.4K$ & $3/20$ & $0.5/30$ &
+$11.9/209$ & $2.9/152$ & $\checkmark$ \\
+\code{Commons Net} 	  			& \cite{NET442}
+ & Major   & High & Mid & $0$ & $14$ & $6$ & $1$ & $3.3K$ & $2.8/6$ & $0.5/33$ &
+$11.4/212$ & $1.9/132$ & $\checkmark$ \\
+\code{Commons VFS} 	  			& \cite{VFS338}
+ & Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ &
+$\checkmark$ \\
+\code{Eclipse AspectJ} 			& \cite{EclipseBug333066} & Major
+& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $\checkmark$ \\
+\code{Eclipse Aspectj Weaver} 	& \cite{EclipseBug432874} & Major 	& High &
+Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $\times$ \\
+\code{Hive} 			  		&\cite{}
+  & Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ &
+$\checkmark$ \\
+\code{HttpClient} 	  			&\cite{HTTPCLIENT150}	  &
+Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ &
+$\checkmark$ \\
+\code{jUDDI} 	  				&\cite{JUDDI292}
+ & Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ &
+$\checkmark$ \\
+\code{Log4j} 		  			&\cite{ApacheLog4jBug}	  &
+Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ &
+$\checkmark$ \\
+\code{Pivot} 		  			&\cite{PIVOT533}
+ & Major   & High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ &
+$\checkmark$ \\
+\code{Qpid} 			  		&\cite{}
+  & Blocker & High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ &
+$\checkmark$ \\
+\code{Servicemix-soap} 			&\cite{SMXCOMP156}		  &
+Major   & High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ &
+$\checkmark$ \\
+\code{SOAP} 			 		&\cite{SOAP130}		      &
+Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ &
+$\checkmark$ \\
+\code{Struts2} 		  			&\cite{WW650}
+ & Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ &
+$\checkmark$ \\
+\code{Tapestry 5} 		  		&\cite{TAP51770}
+ & Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ &
+$\checkmark$ \\
+\code{Wicket} 		  			&\cite{WICKET4387}
+ & Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ &
+$\checkmark$ \\
+\code{XalanJ2} 		  			&\cite{XALANJ836}
+ & Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ &
+$\checkmark$ \\
+
+\end{tabular}
+
+\caption{Experimental results}
+\label{tab:results}
+\end{table*}
+
+In the table~\ref{tab:results} we have listed the data we got \tool\. We have
+conducted our expriment over number of
+bugs related to \java\ \code{String} API. We have used these notations in the
+table which are explained
