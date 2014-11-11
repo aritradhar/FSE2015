@@ -171,37 +171,6 @@ handle all cascaded failures involving malformed \code{String} objects.
 % \subsection{Experimental Results}
 % \label{subsec:experimentalResults}
 
-\begin{table}[t]
-\centering
-\scriptsize
-\begin{tabular}{l|l}
-
-\multicolumn{1}{c|}{\textbf{Notation}} &
-\multicolumn{1}{c}{\textbf{Meaning}} \\
-
-\hline
-API & Analyzed library\\
-BugID & Unique ID in bug repository\\
-Priority & Severity of bug \\
-$PQI$ & Program Quality Index\\
-$PSI$ & Program Size Index\\
-$PFCI$ & Program Flow Consistency Index\\
-$\mathcal{N}_{Unit}$ & Total \#\code{Units} analyzed\\
-$\mathcal{IC}_{NO}$ & Instrumentation without optimization\\
-$\mathcal{IC}_{WO}$ & Instrumentation with optimization\\
-$\mathcal{N}_{CG}$ & Size of the call graph\\
-$\mathcal{PF}_{CA}$ & Profiling data of constraint analysis(sec/MB)\\
-$\mathcal{PF}_{TA}$ & Profiling data of taint analysis(sec/MB)\\
-$\mathcal{PF}_{CG}$ & Profiling data of call graph(sec/MB)\\
-$\mathcal{PF}_{IN}$ & Profiling data of instrumentation phase(sec/MB)\\
-$\mathcal{RS}_{CE}$ & If cascaded exception exists\\
-
-\end{tabular}
-
-\caption{Notations used in Table~\ref{tab:results}}
-\label{tab:Notation}
-\end{table}
-
 \begin{table*}[t]
 \setlength{\tabcolsep}{3pt}
 \centering
@@ -300,6 +269,37 @@ $5$ & $6.2K$ & $2.9/10$ & $0.5/34$ & $2.4/211$ & $1.9/136$ & $\checkmark$ \\
 \caption{Experimental results}
 \label{tab:results}
 \end{table*}
+
+\begin{table}[t]
+\centering
+\scriptsize
+\begin{tabular}{l|l}
+
+\multicolumn{1}{c|}{\textbf{Notation}} &
+\multicolumn{1}{c}{\textbf{Meaning}} \\
+
+\hline
+API & Analyzed library\\
+BugID & Unique ID in bug repository\\
+Priority & Severity of bug \\
+$PQI$ & Program Quality Index\\
+$PSI$ & Program Size Index\\
+$PFCI$ & Program Flow Consistency Index\\
+$\mathcal{N}_{Unit}$ & Total \#\code{Units} analyzed\\
+$\mathcal{IC}_{NO}$ & Instrumentation without optimization\\
+$\mathcal{IC}_{WO}$ & Instrumentation with optimization\\
+$\mathcal{N}_{CG}$ & Size of the call graph\\
+$\mathcal{PF}_{CA}$ & Profiling data of constraint analysis(sec/MB)\\
+$\mathcal{PF}_{TA}$ & Profiling data of taint analysis(sec/MB)\\
+$\mathcal{PF}_{CG}$ & Profiling data of call graph(sec/MB)\\
+$\mathcal{PF}_{IN}$ & Profiling data of instrumentation phase(sec/MB)\\
+$\mathcal{RS}_{CE}$ & If cascaded exception exists\\
+
+\end{tabular}
+
+\caption{Notations used in Table~\ref{tab:results}}
+\label{tab:Notation}
+\end{table}
 
 Table~\ref{tab:results} lists $30$ real-world and $5$ synthetic bugs that we
 have patched using \tool, along with the several accuracy metrics described
