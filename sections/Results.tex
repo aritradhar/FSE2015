@@ -167,6 +167,7 @@ $\mathcal{RS}_{CE}$ & If cascaded exception exists\\
 \multicolumn{1}{c}{\textbf{$\mathcal{RS}_{CE}$}}\\ % cascaded exception
 
 \hline
+
 \code{Aries} 	 	  			& \cite{ARIES1204}
  & Major   & High & Mid & $0$ &$129$ &$42$& $5$ & $3.5K$ & $3.1/10$ & $0.6/31$ &
 $12.8/146$ &$2.3/142$ & $\checkmark$ \\
@@ -208,6 +209,14 @@ $\checkmark$ \\
 \code{Eclipse Aspectj Weaver} 	& \cite{EclipseBug432874} & Major 	& High &
 Mid & $0$ & $50$ & $4$ & $1$ & $20.6K$ & $3.1/18$ & $0.6/34$ & $41.2/212$ & $1.6/142$ & $\times$ \\
 
+\code{FlexDK 3.4} 		  			&\cite{SDK14417}
+ & Minor 	& High & Mid & $0$ & $600$ & $207$ & $25$ & $6.3K$ & $4.8/40$ & $0.4/31$ & $12.9/209$ & $2.6/189$ &
+$\checkmark$ \\
+
+\code{Hama 0.2.0} 			  		&\cite{HAMA212}
+  & Critical! 	& High & Mid & $0$ & $35$ & $28$ & $5$ & $3.7K$ & $2.6/5$ & $0.5/33$ & $14.4/210$ & $3.1/134$ &
+$\checkmark$ \\
+
 \code{Hive} 			  		&\cite{}
   & Major 	& High & Mid & $0$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ & $$ &
 $\checkmark$ \\
@@ -241,7 +250,7 @@ $\checkmark$ \\
 $\checkmark$ \\
 
 \code{Tapestry 5} 		  		&\cite{TAP51770}
- & Major 	& High & Mid & $0$ & $71$ & $31$ & $5$ & $6.2K$ & $2.9/10$ & $0.5/34$ & $2.4/211$ & $1.9/136$ &
+ & Major 	& High & Mid & $0$ & $71$ & $31$ & $5$ & $6.2K$ & $2.9/10$ & $0.5/34$ & $22.3/211$ & $1.9/136$ &
 $\checkmark$ \\
 
 \code{Wicket} 		  			&\cite{WICKET4387}
@@ -262,3 +271,19 @@ In the table~\ref{tab:results} we have listed the data we got \tool\. We have
 conducted our expriment over number of
 bugs related to \java\ \code{String} API. We have used these notations in the
 table which are explained
+
+
+\begin{figure}[t]
+\centering
+\includegraphics[scale = .5]{images/CallGraphHisto.pdf}
+\caption{Performance statistics of call graph analysis phase}
+\label{fig:callGraphHisto}
+\end{figure}
+
+
+\begin{figure}[t]
+\centering
+\includegraphics[scale = .5]{images/ConstraintHisto.pdf}
+\caption{Performance statistics of constraint analysis phase}
+\label{fig:constraintHisto}
+\end{figure}
