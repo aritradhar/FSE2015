@@ -5,7 +5,7 @@
 %later convert this pdf
 \begin{figure}[t]
 \centering
-\includegraphics[scale=.42]{images/OverallDesign.pdf}
+\includegraphics[scale=.38]{images/OverallDesign.pdf}
 \caption{Overall Design}
 \label{fig:overallDesign}
 \end{figure}
@@ -149,3 +149,168 @@ and sink is to be defined. For our analysis we applied these policies,
 The repairing module is consisted of three phases. All these three phases
 requires three sequential passes over the input bytecodes to produce the final
 patched result.
+
+\subsubsection{Example Scenario}
+\label{subsec:exampleScenario}
+~\newline
+We have performed dataflow analysis by extending Soot main class. The objectives
+of the dataflow analysis are the following:
+
+\begin{itemize}
+  \item For a target statement analyze used and defined variables.
+  
+  \item Extracts other statements which are both above and bellow the target
+  statement in the control flow graph on which the used and defined variables
+  are dependent on.
+  
+\end{itemize}
+
+In the code snippet~\ref{snippet:dataflow}, we gave an example code based on
+\java\ \code{String} API to demonstrate the analysis.
+
+
+\lstset{language=Java, caption=Dataflow analysis, label = snippet:dataflow}
+\begin{figure}[t]
+\begin{lstlisting}
+void bar() {
+    foo("fname:lname");
+}
+
+String foo(String s) {
+    int a = s.indexof(":");
+    int b = s.indexOf("&");
+    int c = s.indexOf("#");
+    int d = 0;
+    if(c>0)
+	d = 1;
+    return s.substring(a,b);
+}
+\end{lstlisting}
+\end{figure}
+
+Let us assume that our target is \code{s.substring(a,b)} which in this case
+may throw an array index out of bound exception. In this target statement,
+\code{a} and \code{b} are used variable which are dependent on another
+String API method i.e \code{indexOf()} which calculates index of starting of a
+sub-string or single character in the main string. In case the sub-string or the
+character does not exist in the main string, \code{indexOf()} method returns
+$-1$ which causes throwing a runtime exception in the \code{substring()}
+method call.
+\newline
+By using dataflow analysis we try to understand how these different variables
+are correlated and based on that how we can effectively apply patching technique
+so the patching code will have very less footprint in the instrumented bytecode.
+In \S~\ref{subsubsec:flowFunction}, we have given detailed
+explanations of such analysis.
+
+\begin{figure}[t]
+\centering
+\includegraphics[scale=.30]{images/dataflow.png}
+\caption{Dataflow diagram with in, out set in forward analysis}
+\label{fig:dataflow}
+\end{figure}
+
+\subsubsection{Flow Function}
+\label{subsubsec:flowFunction}
+
+~\newline
+Let us define $P_i$ as a program point/ node in the control flow graph. $in(P)$
+and $out(P_i)$ respectively denotes in set and out set to and from the node $P$.
+We define set $IG$ as the set of methods like \code{indexOf()},
+\code{codePointAt()}, \code{CodePointBefore()} etc. which returns an integer
+which can be used as input to other String methods. We also define set $IU$
+which contains the methods which may use the integers produced by the methods in
+$IG$ Then, 
+$$out(P_i) = in(P_i) \cup Def(P_i)$$ where statement in P is a invoke statement
+and method $m \in IG$ and
+$$out(P_i) = in(P_i) \cap Used(P_i)$$ where statement in P is a invoke statement
+and method $m \in IU$. Initial entry set = ${\phi}$.
+
+
+We have defined $Def(P_i)$ set as the set of variables and objects which are
+defined or redefined in the program point $P_i$. The set $Used(P_i)$ is also a
+set of variables and objects which are used in the program point $P_i$.
+
+\textbf{Example}: Consider the program statement \code{Pi : int a = b.fun(c
+d)}.
+Here the variable \code{a} is initialized, so $Def(P_i)$ = \code{\{a\}} and
+as
+\code{b, c, d} are used, $Used(P_i) =$ \code{\{b, c, d\}}
+
+In the figure~\ref{fig:dataflow}, we gave an example of a sample CFG with in set
+and out set.
+
+
+\subsubsection{Constraint Storage}
+\label{subsubsec:constraintStorage}
+
+~\newline
+For each of the string object, we store in the way illustrated in the
+Figure~\ref{fig:constraint}.
+
+\begin{figure}[t]
+\centering
+%% change the font size in the img; make it min len, max len
+\includegraphics[width=\linewidth]{images/constraint.eps}
+\caption{String constraints storage format}
+\label{fig:constraint}
+\end{figure}
+
+When to evaluate a new string object we need bounds like the minimuma and maximum
+length, the prefixes and the candidate characters and their relative position.
+We keep minimum information to safely evaluate the string.
+
+\begin{algorithm}
+\scriptsize
+\DontPrintSemicolon
+\KwData{String object $Str$ and constraint set $CS$.}
+\KwResult{String object $Str$ such that $\forall i \in CS$, $Str$ satisfies $i$
+}
+\Begin
+{
+ $CS_{Str} \longleftarrow$ Get the constrint set for $Str$\;
+ $MinLength \longleftarrow CS_{Str}[0]$\;
+ $MaxLength \longleftarrow CS_{Str}[1]$\;
+ $PrefixSet_{Str} \longleftarrow CS_{Str}[2 \rightarrow MaxLength + 1]$\;
+ $ContainSet_{Str} \longleftarrow CS_{Str}[MaxLength +2  \rightarrow 2*MaxLength
+ + 1]$\;
+ 
+  \For{$C \in PrefixSet_{Str}$}
+  {
+   \If{$C$ is Empty}
+   {
+    continue\;
+   }
+   $PrefixLength \longleftarrow$ {\bf LENGTH OF} $C$\;
+   
+   \If{$PrefixLength$ is Maximum $\in PrefixSet_{Str}$}
+   {
+     Use $C$ to construct $Str$\;
+   }
+  }
+ 
+  \For{$C \in ContainSet_{Str}$}
+  {
+   \If{$C$ is Empty {\bf OR} $C \in Str$}
+   {
+    continue\;
+   }
+   $Str \leftarrow Str$ {\bf APPEND} $C$\;
+  }
+  return $Str$\;
+}
+\caption{String object constraint evaluation}
+ \label{algo:constraint}
+\end{algorithm}
+
+\subsubsection{Repairing Strategy using Constraint Evaluation}
+\label{subsubsec:repairingStrategyConstraint}
+
+~\newline
+The patching is evaluated in two ways, static and dynamic. We evaluated those
+conditions which can be evaluated safely during compile time. Such constraints
+have constants like \code{if(s.length<10)}. We looked for particular
+constraints based on our storage specification. In the algorith~\ref{algo:constraint}
+we describe one such evaluation technique with \code{String} objects.
+
+
