@@ -235,8 +235,8 @@ such scenarios \tool\ (i) generates a patch that itself dynamically collects
 constraint information, (ii) augments it with the previously collected static
 constraint details, and (iii) evaluates these constraints on the fly to generate
 repaired \code{String} objects, which do not cause the program to throw runtime
-exceptions. Algorithm~\ref{algo:patchingStrategy} briefly describes this hybrid
-approach.
+exceptions. Algorithm~\ref{algo:patchingStrategy} gives an overview of this
+hybrid approach.
 
 \begin{algorithm}[t]
 \scriptsize
@@ -267,19 +267,20 @@ approach.
 \end{algorithm}
 
 \myparagraph{Static constraint collection}: \tool's static constraint collection
-phase identifies and stores all declarative constraints. Specifically, \tool\
-iterates over all program code and analyzes conditional statements involving
-string objects to determine the possible constraints that the object must
-satisfy if the control flow should take the \textit{preferred} branch of the
-conditional. We define the \textit{preferred} branch as one that does not throw
-exceptions or error conditions, like \code{System.err.print()}. In other words,
-\tool\ only considers the conditional expressions in the branches that do not
-involve any exceptions or error paths.
-
-Algorithm~\ref{algo:constraintCollection} lists the steps to collect the
-constraints 
-
-\myparagraph{Dynamic constraint collection}
+phase identifies all declarative constraints.
+Algorithm~\ref{algo:constraintCollection} briefly describes the steps to
+populate the constraint store shown in Figure~\ref{fig:constraint}.
+Specifically, \tool\ iterates over all program code and analyzes conditional
+statements involving string objects of the form \code{if (st.length() == $5$)}.
+\tool\ considers only those constraints that the object must satisfy to ensure
+that the control flows through the \textit{preferred} branch of the conditional.
+We define the preferred branch as the one that does not throw exceptions or
+error conditions, like \code{System.err.print()}. In other words, \tool\ only
+considers the conditional expressions in the branches that do not involve any
+exceptions or error paths. Note that \tool\ also evaluates $OP$ (in
+Algorithm~\ref{algo:constraintCollection}) when collecting constraints, in case
+$OP$ is a composite mathematical expression $f(x,y,z,...)$, such as $x + y * z$,
+where all $x$, $y$ and $z$ are known to be numeric.
 
 \begin{algorithm}[t]
 \scriptsize
@@ -316,6 +317,46 @@ constraints
 \label{algo:constraint}
 \end{algorithm}
 
+\myparagraph{Dynamic constraint collection}: The constraint set is populated at
+the end of the static phase, and \tool\ leverages
+Algorithm~\ref{algo:constraint} to evaluate these constraints and determine the
+potential safe values of the string object under consideration. However, there
+are scenarios, where there are potentially conflicting constraints or no
+permissible values of the constraints can be calculated statically.
+
+\lstset{language=Java, caption=Repairing strategy example, label =
+snippet:exCode1, firstnumber =1}
+\begin{figure}[t]
+\begin{lstlisting}
+void foo() {
+  String st = Input(); /* user input */
+  if (st.length() == 5) {/* do something */}
+  if (st.contains(Input())) {/* do something */}
+  st = st.substring(7, 10);
+}
+\end{lstlisting}
+\end{figure}
+
+Consider the example shown in Code~\ref{snippet:exCode1}, where the function
+\code{foo} performs a series of checks on a user entered string before computing
+a substring on it. Since the constraints on the string \code{st} cannot be
+completely collected and evaluated statically. For such cases, \tool\
+instruments the code with statements to dynamically collect constraint
+information, augment them with previously known static constraints, and evaluate
+these constraints at runtime. Specifically, \tool\ instruments the bytecode
+with constraint collection code just before the conditional statements under
+consideration, \ie\ line $4$ in Code~\ref{snippet:exCode1}.
+
+\subsubsection{Code generation}
+\label{sec:tool:stage2:generation}
+
+
+information, augment them with previously known static constraints, and evaluate
+these constraints at runtime. Specifically, \tool\ instruments the bytecode
+with constraint collection code just before the conditional statements under
+consideration, such as line $4$ in Code~\ref{snippet:exCode1}.
+
+
 \begin{mylist}
 
  \item \textbf{Object repairing}
@@ -346,13 +387,10 @@ condition\;
     }
 }
 \caption{String patching based on parameters passed}
-\label{algo:stringPatchParameter}
+\label{algo:stringPatchParametr}
 \end{algorithm}
 
 \end{mylist}
-
-\subsubsection{Code generation}
-\label{sec:tool:stage2:generation}
 
 \subsection{Instrumentation}
 \label{sec:tool:stage3}

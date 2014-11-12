@@ -132,34 +132,34 @@ snippet~\ref{listing:dynamic}).
 % Algorithm~\ref{algo:stringPatchParametr} to repair them.
 
 
-\begin{algorithm}
-\scriptsize
-\DontPrintSemicolon
-\KwData{String object $Str$ and index set $IS$ which contains ${i}$ or
-${i,j}$.}
-\KwResult{Repaired index set containing ${Ri}$ or ${Ri,Rj}$ based on input $IS$}
-\Begin
-{
-	$Length \longleftarrow$ length of $Str$\;
-	\If{$Length == 0$} {
-		$Ri, Rj \longleftarrow 0$\;
-	} \Else {
-		\If{$i \textgreater j$} {
-			$Ri \longleftarrow j - 1$;
-		}
-		\If{$i \textgreater Lengrh$ \bf{OR} $j \textgreater Lengrh$} {
-			$Ri \longleftarrow Length - 1$ or $Rj \longleftarrow Length - 1$ based on
-			condition\; 
-		}
-		\If{$i \textless 0$ \bf{OR} $j \textless 0h$} {
-			$Ri \longleftarrow 0$ or $Rj \longleftarrow 0$ based on
-			condition\; 
-		}		
-	}	
-}
-\caption{String patching based on parameters passed}
-\label{algo:stringPatchParametr}
-\end{algorithm}
+% \begin{algorithm}
+% \scriptsize
+% \DontPrintSemicolon
+% \KwData{String object $Str$ and index set $IS$ which contains ${i}$ or
+% ${i,j}$.}
+% \KwResult{Repaired index set containing ${Ri}$ or ${Ri,Rj}$ based on input $IS$}
+% \Begin
+% {
+% 	$Length \longleftarrow$ length of $Str$\;
+% 	\If{$Length == 0$} {
+% 		$Ri, Rj \longleftarrow 0$\;
+% 	} \Else {
+% 		\If{$i \textgreater j$} {
+% 			$Ri \longleftarrow j - 1$;
+% 		}
+% 		\If{$i \textgreater Lengrh$ \bf{OR} $j \textgreater Lengrh$} {
+% 			$Ri \longleftarrow Length - 1$ or $Rj \longleftarrow Length - 1$ based on
+% 			condition\; 
+% 		}
+% 		\If{$i \textless 0$ \bf{OR} $j \textless 0h$} {
+% 			$Ri \longleftarrow 0$ or $Rj \longleftarrow 0$ based on
+% 			condition\; 
+% 		}		
+% 	}	
+% }
+% \caption{String patching based on parameters passed}
+% \label{algo:stringPatchParametr}
+% \end{algorithm}
 
 \subsection{Optimizations}
 \label{subsec:optimizations}
