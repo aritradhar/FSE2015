@@ -39,11 +39,11 @@ overhead in case of failures.
 \label{fig:overallDesign}
 \end{figure}
 
-\myparagraph{\underline{Key Idea}} \tool\ leverages precise taint analysis and
-call graph analysis to identify program instrumentation points, and builds upon
-custom algorithms to generate targeted, high quality patches for repairing
-programs with potential runtime exceptions, while still satisfying goals
-mentioned in \xref{sec:tool:goals}.
+\myparagraph{\underline{Key Idea}} \tool\ leverages a combination of program 
+analysis techniques to precisely identify program instrumentation points, and
+builds upon custom algorithms to generate targeted, high quality patches for
+repairing programs with potential runtime exceptions, while still satisfying
+goals mentioned in \xref{sec:tool:goals}.
 
 Figure~\ref{fig:overallDesign} shows \tool's workflow, which involves three
 main stages. First, \tool\ uses precise program analysis techniques to identify
