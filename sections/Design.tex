@@ -362,7 +362,7 @@ we describe one such evaluation technique with \code{String} objects.
     $minlength_{str} \longleftarrow OP$\;
    }
    
-   \If{$*$ is $\textlessr$ {\bf AND} $*$ is $\le$}
+   \If{$*$ is $\textless$ {\bf AND} $*$ is $\le$}
    {
     $maxlength_{str} \longleftarrow OP$\;
    }
@@ -382,15 +382,41 @@ we describe one such evaluation technique with \code{String} objects.
  \label{algo:constraintCollection}
 \end{algorithm}
 
-%%still writing 
 \begin{algorithm}
 \scriptsize
 \DontPrintSemicolon
-\KwData{Constraint set $CS_{str}$}
-\KwResult{Constraint set $CS_{str}$}
+\KwData{Control flow graph $CFG$ for program $P$}
+\KwResult{Patched program $\hat{P}$}
 \Begin
 { 
- 
+ \For{$\forall$ node $N \in CFG$}
+ {
+  Statement $S$ in node $N$\;
+  \If{$S$ conntaints \code{String} API call}
+  {
+  	$str \longleftarrow$ \code{String} reference on $S$\; 
+  	\If{$S$ can throw \code{RuntimeException}}
+  	{
+  		Exception class $EC \longleftarrow$ \code{RuntimeException} of $S$\;
+  		$CES_{str} \longleftarrow$ all conditional statement in $P$ on $str$;
+  		$CS_{str} \longleftarrow$ output of
+  		Algorithm~\ref{algo:constraintCollection}$(CES_{str})$ \;
+  		\If{$str$ have sufficient constraints in $CS_{str}$}
+  		{ 
+  			$str \longleftarrow$ output of Algorith~\ref{algo:constraint}$(CS_{str})$\;
+  		}
+  		\Else
+  		{
+  			$str \longleftarrow$ output of
+  			Algorithm~\ref{algo:stringPatchParametr}$(S)$\; 
+  		}
+  		Instrument ~\ref{algo:constraintCollection}$(CES_{str})$ in $P$ for dynamic
+  		constraint collection\;
+  		Instrument ~\ref{algo:constraint}$(CS_{str})$ in $P$ for dynamic
+  		constraint evaluation\;
+  	}
+  } 
+ }
 }
 \caption{Patching strategy for \code{String} objects}
  \label{algo:patchingStrategy}
