@@ -16,17 +16,17 @@ malformed strings or incorrect handling of strings as follows:
 % iv) optimizes the number of statements to be patched by retaining only the ones
 % that need to be protected,  
 
-\myparagraph{High patch fidelity} We require that the patched program must
+\myparagraph{(i) High patch fidelity} We require that the patched program must
 preserve the intended program behavior, \ie\ the patch must be precise and
 should not induce any undesirable control flows in the repaired program.
 
-\myparagraph{Non-invasive instrumentation} We require that the technique must be
-non-invasive, \ie\ ensure no side-effects during normal program execution and
-activate patches only when the program is guaranteed to crash.
+\myparagraph{(ii) Non-invasive instrumentation} We require that the technique
+must ensure no side-effects during normal program execution and activate patches
+only when the program is guaranteed to crash.
 
-\myparagraph{Low system overhead} We desire that the patched program must incur
-no runtime overhead during normal program execution and only negligible overhead
-in case of failures.
+\myparagraph{(iii) Low system overhead} We desire that the patched program must
+incur no runtime overhead during normal program execution and only negligible
+overhead in case of failures.
 
 \subsection{Design}
 \label{sec:tool:design}
@@ -40,8 +40,9 @@ in case of failures.
 
 \myparagraph{\underline{Key Idea}} \tool\ leverages precise taint analysis and
 call graph analysis to identify program instrumentation points, and builds upon
-novel custom algorithms to generate targeted, high quality patches for repairing
-programs with potential runtime exceptions.
+custom algorithms to generate targeted, high quality patches for repairing
+programs with potential runtime exceptions, while still satisfying goals
+mentioned in \xref{sec:tool:goals}.
 
 Figure~\ref{fig:overallDesign} shows \tool's workflow, which involves three
 main stages. First, \tool\ uses precise program analysis techniques to identify
@@ -52,7 +53,118 @@ intra-procedural static and dynamic analyses to identify and evaluate
 constraints on the string objects under consideration. Third, \tool\ uses the
 constraints evaluated in the earlier stage to programatically generate and embed
 patches inside \texttt{catch} blocks to ensure that they do not get activated
-during normal program execution. These three stages 
+during normal program execution.
+
+\subsubsection{Precise Identification of Instrumentation Points}
+\label{sec:tool:stage1}
+
+In this stage, \tool\ leverages a combination of program analyses to accurately
+determine the minimum set of points of interest where instrumentation is
+required to repair. We list several techniques below that help \tool\ achieve
+precision.
+
+\myparagraph{Taint analysis}: The main purpose of taint analysis is to
+broadly identify which program statements can be patched without affecting
+the program control flow. \tool\ does not repair program statements that lie
+along a control flow path that leads to an I/O sink, \eg\ file system, console,
+network, GUI, etc. While this is not a binding constraint, this principle
+ensures that \tool\ does not significantly alter critical program behavior.
+
+For example, \tool\ choses not to repair statements
+that lie on a control flow that leads to the user interface. 
+
+We have specify the list of source, sink and derivation methods in a
+configuration file before the analysis. The source methods includes methods
+which
+take input from user from console or web application forms like text box. The
+sink methods are sensitive data storage which are unsafe to manipulate such as
+database, console print or methods to send a text file to printer etc. The
+overview of the taint analysis module is illustrated in the
+Figure~\ref{fig:TaintModule}.  The input for the module is the compiled byte
+code intended to be repaired. Here we have generated a control flow graph (CFG)
+from to get all the possible program paths. The module will return all the
+program statements which are on any of the program paths from source to sink.
+
+
+\subsubsection{Tainting Rules}
+\label{subsubsec:TaintingRule}
+%\textcolor{red}{\textbf{Needs Revision}}\newline
+
+\begin{table}[t]
+\centering
+\scriptsize
+\begin{tabular}{l|l}
+\multicolumn{1}{c|}{\textbf{\java\ Class}} & \multicolumn{1}{c}{\textbf{Source
+Method}}\\
+% \scalebox{0.86}
+% {
+\hline
+\code{java.io.InputStream} & \code{read()}\\
+\code{java.io.BufferedReader} & \code{readLine()}\\
+\code{java.net.URL} & \code{openConnection()}\\
+\code{org.apache.http.HttpResponse} & \code{getEntity()}\\
+\code{org.apache.http.util.EntityUtils} & \code{toString()}\\
+\code{org.apache.http.util.EntityUtils} & \code{toByteArray()}\\
+\code{org.apache.http.util.EntityUtils} & \code{getContentCharSet()}\\
+\code{javax.servlet.http.HttpServletRequest} & \code{getParameter()}\\
+\code{javax.servlet.ServletRequest} & \code{getParameter()}\\
+\code{java.Util.Scanner} & \code{next()}\\
+\end{tabular}
+\caption{Common \java\ library taint source functions}
+\label{tab:TaintSources}
+% }
+\end{table}
+
+
+
+\begin{table}[t]
+\centering
+\scriptsize
+\begin{tabular}{l|l}
+\multicolumn{1}{c|}{\textbf{\java\ Class}} & \multicolumn{1}{c}{\textbf{Sink
+Method}}\\
+% \scalebox{0.86}
+% {
+\hline
+\code{java.io.PrintStream} & \code{printf()}\\
+\code{java.io.OutputStream} & \code{write()}\\
+\code{java.io.FileOutputStream} & \code{write()}\\
+\code{java.io.Writer} & \code{write()}\\
+\code{java.net.Socket} & \code{connect()}\\
+%org.apache.http.impl.client.DefaultHttpClient & execute\\ \hline
+\end{tabular}
+% }
+\caption{Common \java\ library taint sink functions}
+\label{tab:TaintSinks}
+\end{table}
+
+For any generic taint analysis, the tainting rules including a list of source
+and sink is to be defined. For our analysis we applied these policies,
+
+\begin{mylist}
+  \item We defined list of source and sink taint methods listed in
+  Table~\ref{tab:TaintSources} and \ref{tab:TaintSinks}. We are only tainting
+  the variables which are coming from the listed taint source methods.
+
+  \item We have also listed all taint propagation methods. The assignment ($=$)
+  is the basic taint propagator. But there are other methods like \code{append}
+  in \code{java.lang.StringBuffer} and \code{java.lang.StringBuilder} which are
+  taint propagator.
+
+  \item All the variable which are referred to tainted variables/ objects or
+  output of taint propagator over tainted variable/objects are also considered
+  as tainted.
+
+  \item For all the program patch we see if such tainted variables are reaching
+  the tainted sink or not. If they are reaching to some tainted sink then all
+  the statements along that particular program path to which the tainted
+  variables are assigned are marked as unsafe otherwise safe.
+\end{mylist}
+
+\myparagraph{Call graph analysis}
+
+\myparagraph{Optimizations}
+
 
 \ignore{
 \paragraph{Identifying Program Statements.} We perform static taint analysis
