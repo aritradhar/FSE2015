@@ -49,9 +49,25 @@ regarding failures related to \code{String} APIs.
 % }
 \end{table}
 
-\subsection{Problem Definition and Challenges}
+\ignore{
+\subsection{Problem and Challenges}
 \label{subsec:problem}
 
+In this work, we present a technique which automatically repairs programs
+that otherwise would crash due to failures related to malformed strings or incorrect handling of
+the string.  The technique i) identifies
+the statements which might be vulnerable to string-related errors,
+and are less critical to the functionality of the application such that
+suboptimal behavior might be acceptable, ii) operates in non-invasive mode by ensuring no
+side-effects during normal program execution and activating patches only when
+the program is guaranteed to crash, iii) generates patches, iv) optimizes the number of
+statements to be patched,  v) keeps program behavior as close as possible to the
+intended behavior, and vi) incurs no runtime overhead during normal program execution
+and only negligible overhead in case of failures.
+}
+
+
+\ignore{
 In this work, we present a technique and its implementation to automatically repair programs
 that otherwise would crash due to failures related to malformed strings or incorrect handling of
 the string.  The technique i) identifies
@@ -62,14 +78,17 @@ side-effects during normal program execution and activating patches only when
 the program is guaranteed to crash, iii) generates patches by identifying constraints on the string
 data and if required, tweaks \code{String} API  parameters to regenerate legally correct
 string data, iv) optimizes the number of statements to be patched by retaining only the ones that need to
-be protected,  v) keeping program behavior as close as possible to the
-intended behavior by developing precise patches, and vi) incurring no runtime
+be protected,  v) keeps program behavior as close as possible to the
+intended behavior by developing precise patches, and vi) incurs no runtime
 overhead during normal program execution and only negligible overhead in case of
 failures.
+}
+
 
 \subsection{Overview}
 \label{subsec:overview}
 
+\ignore{
 In order to achieve the goals enumerated in \xref{subsec:problem}, we
 develop
 several techniques which are outlined below.
@@ -142,10 +161,7 @@ they still cause negligible overhead since we perform no analysis during runtime
 except if required resolve the dynamic constraints.
 As our study reveals~\xref{sec:evaluation} the constraints are typically few and simple, making
 the dynamic analysis light-weight.
-
-
-\subsection{Repairing Code}
-\label{subsec:patchingexample}
+}
 	
 
 \lstset{language=Java, caption=Example from \code{fileUtils} of Apache Commons

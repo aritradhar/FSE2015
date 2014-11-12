@@ -1,11 +1,36 @@
 \section{Design of the System}
 \label{sec:design}
 
+Small description :
+\begin{mylist}
+\item \textbf{Find program point for patching.} We have used static taint
+analysis to detect if a particular statement is on the path from tainted source
+to sink. In such case we have excluded it from repairing. Also we have performed
+analysis on call graph to detect if there is already handled exception placed by
+the developer or not. In such cases also we have considered such statement tot
+to patch.
 
+\item \textbf{Static constraint analysis.} We have collected and evaluated
+constraint for such conditional expression for which we can evaluate them
+statically to make sure the patched object have the correct characteristics.
+
+\item \textbf{Patching.} We have find such statements which can potentially throw
+\code{RuntimeException} and we put them in try-catch block and place appropriate
+patch inside the catch block based on the appropriate exception type.
+
+\item \textbf{Dynamic constraints.} Apart form static constraint evaluation,
+there may be some constraint in the program which depends on the user input
+value which can not be determined statically. For such cases we have also
+instrumented dynamic constraint collection statements in the program which will
+collect and evaluate objects at runtime. These newly instrumented statements
+will also collect the static constraint information to ensure correctness in
+constraint evaluation.
+
+\end{mylist}
 %later convert this pdf
 \begin{figure}[t]
 \centering
-\includegraphics[scale=.38]{images/OverallDesign.pdf}
+\includegraphics[scale=.38]{images/NewDesignDiagram.pdf}
 \caption{Overall Design}
 \label{fig:overallDesign}
 \end{figure}
@@ -150,6 +175,8 @@ The repairing module is consisted of three phases. All these three phases
 requires three sequential passes over the input bytecodes to produce the final
 patched result.
 
+\ignore{
+
 \subsubsection{Example Scenario}
 \label{subsec:exampleScenario}
 ~\newline
@@ -239,7 +266,7 @@ as
 
 In the figure~\ref{fig:dataflow}, we gave an example of a sample CFG with in set
 and out set.
-
+}
 
 \subsubsection{Constraint Storage}
 \label{subsubsec:constraintStorage}
