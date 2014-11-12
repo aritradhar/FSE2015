@@ -45,24 +45,24 @@ builds upon custom algorithms to generate targeted, high quality patches for
 repairing programs with potential runtime exceptions, while still satisfying
 goals mentioned in \xref{sec:tool:goals}.
 
-Figure~\ref{fig:overallDesign} shows \tool's workflow, which involves three
-main stages. First, \tool\ uses precise program analysis techniques to identify
-points of interest, \ie\ string objects or API arguments that must be repaired
-to prevent runtime exceptions. In the second stage, \tool\ leverages custom
-algorithms to generate relevant patches. Specifically, \tool\ performs
+Figure~\ref{fig:overallDesign} shows \tool's workflow, which involves three main
+stages. First, \tool\ uses several program analysis techniques to precisely
+identify points of interest, \ie\ string objects or API arguments that must be
+repaired to prevent runtime exceptions. In the second stage, \tool\ leverages
+custom algorithms to generate relevant patches. Specifically, \tool\ performs
 intra-procedural static and dynamic analyses to identify and evaluate
 constraints on the string objects under consideration. Third, \tool\ uses the
 constraints evaluated in the earlier stage to programatically generate and embed
-patches inside \texttt{catch} blocks to ensure that they do not get activated
-during normal program execution.
+patches inside \texttt{catch} blocks to ensure that they get activated only
+during failure conditions.
 
 \subsubsection{Precise Identification of Instrumentation Points: }
 \label{sec:tool:stage1}
 
 In this stage, \tool\ leverages a combination of program analyses to accurately
 determine the minimum set of points of interest where instrumentation is
-required to repair. We list several techniques below that help \tool\ achieve
-precision.
+required to repair the program. We list several techniques below that help
+\tool\ achieve precision.
 
 \myparagraph{(i) Taint analysis} The main purpose of taint analysis is to
 broadly identify which program statements can be patched (possibly even
@@ -70,11 +70,11 @@ suboptimally) without affecting the program control flow, \ie\ affect only
 objects that are generated and stay within the application throughout their
 lifetime. While this principle is not a binding constraint, it ensures that
 \tool's repairing mechanism does not adversely affect critical program behavior.
-We specify a generic set of sensitive sources and sensitive sinks for each input
-program, to identify critical program paths where a repaired \code{String}
-objects (and thus possibly suboptimal) must not flow. For example, \tool\ does
-not repair program statements that lie along a control flow path that leads to
-an I/O sink, like file system, console, network, GUI, etc.
+We specify a generic set of sensitive sources and sinks for each input program,
+to identify critical program paths where a repaired \code{String} object (and
+thus possibly suboptimal) must not flow. For example, \tool\ does not repair
+program statements that lie along a control flow path that lead to an I/O sink,
+like file system, console, network, GUI, etc.
 
 \begin{table}[t]
 \centering
@@ -117,12 +117,12 @@ an I/O sink, like file system, console, network, GUI, etc.
 
 The taint analysis module take as input the compiled byte code intended to be
 repaired, and generates a control flow graph identifying program statements that
-lie along paths from sensitive sources to sensitive sinks. Since, \tool\ targets
-strings in particular, it must support taint propagation for all \java\ APIs
-that support string manipulation, including \code{StringBuffer} and
+lie along paths from sensitive sources to sinks. Since, \tool\ targets strings
+in particular, it must support taint propagation for all \java\ APIs that
+support string manipulation, including \code{StringBuffer} and
 \code{StringBuilder}. All \code{String} objects (whether generated or assigned)
-that lie along the tainted path from a sensitive source to a sensitive sink are
-marked as \textit{unsafe} to patch. Subsequently, \tool\ does not repair such
+that lie along the tainted path from a sensitive source to a sink are marked as
+\textit{unsafe} to patch. Subsequently, \tool\ does not repair such
 \code{String} objects. Figures~\ref{table:TaintSources} and
 \ref{table:TaintSinks} list some common sensitive sources and sinks for several
 classes in \java.
@@ -130,25 +130,25 @@ classes in \java.
 \myparagraph{(ii) Call graph analysis} \tool\ leverages call graph analysis to
 further improve the precision for finding instrumentation points. Although
 unlikely, it is possible that the developers may themselves handle code that
-raises runtime exceptions. Thus, \tool\ must not instrument program points that
-are explicitly handled as checked exceptions, since repairing such statements
-would definitely alter the intended control flow.
+raises runtime exceptions. Thus, \tool\ must not instrument such program points
+that are explicitly handled as checked exceptions, since repairing such
+statements would definitely alter the intended control flow.
 
 Checked runtime exceptions may be placed in the (i) same method, or (ii)
 upstream in the call chain. While handling the former scenario is trivial,
-\tool\ handles the latter case by identifying all possible call chains (in
-the call graph) involving the concerned method using reverse Breadth First
-search (BFS), and determines ancestor methods where the call site was wrapped in
-\code{try-catch} block or not.
+\tool\ handles the latter case by identifying all possible call chains (in the
+call graph) involving the concerned method using reverse Breadth First search
+(BFS), and determines ancestor methods where the call site was wrapped in
+\code{try-catch} block.
 
 \myparagraph{(iii) Reaching definitions analysis} Taint and call graph analyses
 together provide a small set of program points to be instrumented with the
-patch. However, this set can be further pruned. \tool\ performs \textit{reaching
+patch. However, this set can be pruned further. \tool\ performs \textit{reaching
 definitions} analysis~\cite{reaching_definitions} to skip marked statements if
 (i) the string variables contained in such statements have already been patched
 upstream in the method, and (ii) the variables have not been redefined along any
-path that originates from the patched statement. This analysis further reduces
-instrumentation points in a program.
+path that originates from the patched statement. Thus, this analysis further
+reduces instrumentation points in a program.
 
 \subsubsection{Patch Generation: }
 \label{sec:tool:stage2}
@@ -156,12 +156,13 @@ instrumentation points in a program.
 The output from the first stage is essentially a set of program points,
 typically bytecodes or some other intermediate representation, denoting
 \code{String} objects or APIs that are safe to repair. Once these
-instrumentation points have been identified, \tool\ determines the
-possible patches that can be applied to each of them. Specifically, a program
-patch constitutes a set of constraints on either the \code{String} object or the
-parameters to the \code{String} API under consideration, such that the new
-repaired \code{String} object that is generated will satisfy all constraints and
-thus the patched program does not throw any runtime exceptions.
+instrumentation points have been identified, \tool\ generates a set of
+constraints to determine the possible patches that can be applied to each of
+them. Specifically, a program patch constitutes regenerating either the
+\code{String} object or the parameters to the \code{String} API under
+consideration, such that the new repaired \code{String} object or API parameters
+will satisfy all constraints and thus the patched program does not throw any
+runtime exceptions.
 
 \tool's patch generation mechanism involves two main parts (i) constraint
 collection and evaluation, and (ii) code generation. We now describe \tool's
@@ -268,13 +269,13 @@ hybrid approach.
  \item \textbf{Static constraint collection}: \tool's static constraint
 collection phase identifies all declarative constraints.
 Algorithm~\ref{algo:constraintCollection} briefly describes the steps to
-populate the constraint store shown in Figure~\ref{fig:constraint}.
-Specifically, \tool\ iterates over all program code and analyzes conditional
-statements involving string objects of the form \code{if (st.length() == $5$)}.
-\tool\ considers only those constraints that the object must satisfy to ensure
-that the control flows through the \textit{preferred} branch of the conditional.
-We define the preferred branch as the one that does not throw exceptions or
-error conditions, like \code{System.err.print()}. In other words, \tool\ only
+populate the constraint store (see Figure~\ref{fig:constraint}). Specifically,
+\tool\ iterates over all program code and analyzes conditional statements
+involving string objects of the form \code{if (st.length() == $5$)}. \tool\
+considers only those constraints that the object must satisfy to ensure that the
+control flows through the \textit{preferred} branch of the conditional. We
+define the preferred branch as the one that does not throw exceptions or error
+conditions, like \code{System.err.print()}. In other words, \tool\ only
 considers the conditional expressions in the branches that do not involve any
 exceptions or error paths. Note that \tool\ also evaluates $OP$ (in
 Algorithm~\ref{algo:constraintCollection}) when collecting constraints, in case
@@ -350,8 +351,8 @@ st = GenerateStringDynamic.init("<foo()>", st);
 
 Consider the example shown in Code~\ref{snippet:exCode1}, where the function
 \code{foo} performs a series of checks on a user entered string before computing
-a substring on it. Since the constraints on the string \code{st} cannot be
-completely collected and evaluated statically. For such cases, \tool\
+a substring on it. We observe that the constraints on the string \code{st}
+cannot be completely collected and evaluated statically. For such cases, \tool\
 instruments the code with statements to dynamically collect constraint
 information, augment them with previously known static constraints, and evaluate
 these constraints at runtime. Specifically, \tool\ instruments the bytecode
@@ -448,10 +449,11 @@ program's intended control flow.
 An important task in the instrumentation stage is to determine the kind of
 exception that may be thrown, and appropriately constructing the
 \code{catch} block. While most APIs throw only a single subclass of
-\code{RuntimeException}, it is possible that a statement may throw both
-\code{NullPointerException} and \code{StringIndexOutOfBoundsException}. \tool\
-generates a \code{catch} ladder for each kind of exception, which also
-facilitates exception-specific repairing as well.
+\code{RuntimeException}, it is possible that a statement is capable of throwing
+more than one runtime exception, such as both \code{NullPointerException}
+and \code{StringIndexOutOfBoundsException}. \tool\ handles such cases
+by generating a \code{catch} ladder for each kind of exception that also
+facilitates exception-specific repairing.
 
 \subsection{Limitations}
 \label{sec:tool:limitation}
