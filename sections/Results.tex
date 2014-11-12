@@ -476,6 +476,28 @@ requires $52.4$s and $210$MB memory for complete end-to-end analysis.
 
 \end{mylist}
 
+%%%%Table for the taint analysis stats
+\begin{table}[t]
+\centering
+\scriptsize
+\begin{tabular}{|l|c|c|c|}
+\hline
+\multicolumn{1}{|c|}{\textbf{Application}} &
+\multicolumn{1}{c|}{\textbf{KLOC}} & 
+\multicolumn{1}{c|}{\textbf{Statements}} & 
+\multicolumn{1}{c|}{\textbf{Flagged by taint analysis}}\\
+
+\hline
+\code{checkstyle4j}& $58K$ & $66K$ & $28$\\
+\code{Jazzy}& $4.9K$ & $5.5K$ & $26$\\
+\hline
+\end{tabular}
+
+\caption{Taint analysis result}
+\label{tab:taintAnalysis}
+\end{table}
+
+
 \subsection{Case studies}
 \label{sub:casestudies}
 
