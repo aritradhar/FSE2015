@@ -63,107 +63,72 @@ determine the minimum set of points of interest where instrumentation is
 required to repair. We list several techniques below that help \tool\ achieve
 precision.
 
-\myparagraph{Taint analysis}: The main purpose of taint analysis is to
-broadly identify which program statements can be patched without affecting
-the program control flow. \tool\ does not repair program statements that lie
-along a control flow path that leads to an I/O sink, \eg\ file system, console,
-network, GUI, etc. While this is not a binding constraint, this principle
-ensures that \tool\ does not significantly alter critical program behavior.
-
-For example, \tool\ choses not to repair statements
-that lie on a control flow that leads to the user interface. 
-
-We have specify the list of source, sink and derivation methods in a
-configuration file before the analysis. The source methods includes methods
-which
-take input from user from console or web application forms like text box. The
-sink methods are sensitive data storage which are unsafe to manipulate such as
-database, console print or methods to send a text file to printer etc. The
-overview of the taint analysis module is illustrated in the
-Figure~\ref{fig:TaintModule}.  The input for the module is the compiled byte
-code intended to be repaired. Here we have generated a control flow graph (CFG)
-from to get all the possible program paths. The module will return all the
-program statements which are on any of the program paths from source to sink.
-
-
-\subsubsection{Tainting Rules}
-\label{subsubsec:TaintingRule}
-%\textcolor{red}{\textbf{Needs Revision}}\newline
+\myparagraph{(i) Taint analysis}: The main purpose of taint analysis is to
+broadly identify which program statements can be patched (possibly even
+suboptimally) without affecting the program control flow, \ie\ affect only
+objects that are generated and stay within the application throughout their
+lifetime. While this principle is not a binding constraint, it ensures that
+\tool's repairing mechanism does not adversely affect critical program behavior.
+We specify a generic set of sensitive sources and sensitive sinks for each input
+program, to identify critical program paths where a repaired \code{String}
+objects (and thus possibly suboptimal) must not flow. For example, \tool\ does
+not repair program statements that lie along a control flow path that leads to
+an I/O sink, like file system, console, network, GUI, etc.
 
 \begin{table}[t]
 \centering
 \scriptsize
+% \setlength{\tabcolsep}{3pt}
 \begin{tabular}{l|l}
-\multicolumn{1}{c|}{\textbf{\java\ Class}} & \multicolumn{1}{c}{\textbf{Source
-Method}}\\
-% \scalebox{0.86}
-% {
+\multicolumn{1}{c|}{\textbf{Class}} & \multicolumn{1}{c}{\textbf{Source}}\\
 \hline
 \code{java.io.InputStream} & \code{read()}\\
 \code{java.io.BufferedReader} & \code{readLine()}\\
 \code{java.net.URL} & \code{openConnection()}\\
+\code{java.util.Scanner} & \code{next()}\\
+% \code{javax.servlet.http.HttpServletRequest} & \code{getParameter()}\\
+\code{javax.servlet.ServletRequest} & \code{getParameter()}\\
 \code{org.apache.http.HttpResponse} & \code{getEntity()}\\
 \code{org.apache.http.util.EntityUtils} & \code{toString()}\\
 \code{org.apache.http.util.EntityUtils} & \code{toByteArray()}\\
 \code{org.apache.http.util.EntityUtils} & \code{getContentCharSet()}\\
-\code{javax.servlet.http.HttpServletRequest} & \code{getParameter()}\\
-\code{javax.servlet.ServletRequest} & \code{getParameter()}\\
-\code{java.Util.Scanner} & \code{next()}\\
 \end{tabular}
-\caption{Common \java\ library taint source functions}
-\label{tab:TaintSources}
-% }
+\caption{Common sensitive sources in \java.}
+\label{table:TaintSources}
 \end{table}
-
-
 
 \begin{table}[t]
 \centering
 \scriptsize
+% \setlength{\tabcolsep}{3pt}
 \begin{tabular}{l|l}
-\multicolumn{1}{c|}{\textbf{\java\ Class}} & \multicolumn{1}{c}{\textbf{Sink
-Method}}\\
-% \scalebox{0.86}
-% {
+\multicolumn{1}{c|}{\textbf{Class}} & \multicolumn{1}{c}{\textbf{Sink}}\\
 \hline
-\code{java.io.PrintStream} & \code{printf()}\\
-\code{java.io.OutputStream} & \code{write()}\\
 \code{java.io.FileOutputStream} & \code{write()}\\
-\code{java.io.Writer} & \code{write()}\\
+\code{java.io.OutputStream} & \code{write()}\\
+\code{java.io.PrintStream} & \code{printf()}\\
 \code{java.net.Socket} & \code{connect()}\\
-%org.apache.http.impl.client.DefaultHttpClient & execute\\ \hline
+\code{java.io.Writer} & \code{write()}\\
 \end{tabular}
-% }
-\caption{Common \java\ library taint sink functions}
-\label{tab:TaintSinks}
+\caption{Common sensitive sinks in \java.}
+\label{table:TaintSinks}
 \end{table}
 
-For any generic taint analysis, the tainting rules including a list of source
-and sink is to be defined. For our analysis we applied these policies,
+The taint analysis module take as input the compiled byte code intended to be
+repaired, and generates a control flow graph (CFG) identifying program
+statements that lie along paths from sensitive sources to sensitive sinks.
+Since, \tool\ targets strings in particular, it must support taint propagation
+for all \java\ APIs that support string manipulation, including
+\code{StringBuffer} and \code{StringBuilder}. All \code{String} objects (whether
+generated or assigned) that lie along the tainted path from a sensitive source
+to a sensitive sink are marked as \textit{unsafe} to patch. Subsequently, \tool\
+does not repair such \code{String} objects. Figures~\ref{table:TaintSources} and
+\ref{table:TaintSinks} list some common sensitive sources and sinks for several
+classes in \java.
 
-\begin{mylist}
-  \item We defined list of source and sink taint methods listed in
-  Table~\ref{tab:TaintSources} and \ref{tab:TaintSinks}. We are only tainting
-  the variables which are coming from the listed taint source methods.
+\myparagraph{(ii) Call graph analysis}:
 
-  \item We have also listed all taint propagation methods. The assignment ($=$)
-  is the basic taint propagator. But there are other methods like \code{append}
-  in \code{java.lang.StringBuffer} and \code{java.lang.StringBuilder} which are
-  taint propagator.
-
-  \item All the variable which are referred to tainted variables/ objects or
-  output of taint propagator over tainted variable/objects are also considered
-  as tainted.
-
-  \item For all the program patch we see if such tainted variables are reaching
-  the tainted sink or not. If they are reaching to some tainted sink then all
-  the statements along that particular program path to which the tainted
-  variables are assigned are marked as unsafe otherwise safe.
-\end{mylist}
-
-\myparagraph{Call graph analysis}
-
-\myparagraph{Optimizations}
+\myparagraph{(iii) Optimizations}:
 
 
 \ignore{
