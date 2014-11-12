@@ -340,4 +340,58 @@ have constants like \code{if(s.length<10)}. We looked for particular
 constraints based on our storage specification. In the algorith~\ref{algo:constraint}
 we describe one such evaluation technique with \code{String} objects.
 
+\begin{algorithm}
+\scriptsize
+\DontPrintSemicolon
+\KwData{Set of conditional statement on string $str$}
+\KwResult{Constraint set $CS_{str}$}
+\Begin
+{ 
+  \For{Conditional statement$ \leftarrow i$, $\forall i \in CS_{str}$}
+  {
+   $i \Rightarrow str\ *\ OP$\;
+   where $*$ is the binary comparisn operator\;
+   \If{$*$ is $==$}
+   {
+    $maxlength_{str} \longleftarrow OP$\;
+    $minlength_{str} \longleftarrow OP$\;
+   }
+   
+   \If{$*$ is $\textgreater$ {\bf AND} $*$ is $\ge$}
+   {
+    $minlength_{str} \longleftarrow OP$\;
+   }
+   
+   \If{$*$ is $\textlessr$ {\bf AND} $*$ is $\le$}
+   {
+    $maxlength_{str} \longleftarrow OP$\;
+   }
+   
+   \If{$*$ is Prefix Check}
+   {
+    $PrefixSet_{str} \cup OP$\;
+   }
+   
+   \If{$*$ is Contains Check}
+   {
+    $ContainSet_{str} \cup OP$;
+   }
+  }
+}
+\caption{Constraint collection for \code{String} objects}
+ \label{algo:constraintCollection}
+\end{algorithm}
 
+%%still writing 
+\begin{algorithm}
+\scriptsize
+\DontPrintSemicolon
+\KwData{Constraint set $CS_{str}$}
+\KwResult{Constraint set $CS_{str}$}
+\Begin
+{ 
+ 
+}
+\caption{Patching strategy for \code{String} objects}
+ \label{algo:patchingStrategy}
+\end{algorithm}

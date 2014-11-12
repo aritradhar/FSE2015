@@ -70,5 +70,34 @@ is responsible for generating new string object which complies to the constraint
 associated to it.
 
 
-
-
+\begin{algorithm}
+\scriptsize
+\DontPrintSemicolon
+\KwData{Set of conditional statement COND on string $str$}
+\KwResult{Constraint set $CS_{str}$}
+\Begin
+{ 
+  \For{Conditional statement$ \leftarrow i$, $\forall i \in CS_{str}$}
+  {
+   $i \Rightarrow str\ *\ OP$\;
+   where $*$ is the binary comparisn operator\;
+   \If{$*$ is $==$}
+   {
+    $CS_{str}.maxlength \longleftarrow OP$\;
+    $CS_{str}.minlength \longleftarrow OP$\;
+   }
+   
+   \If{$*$ is $\textgreater$ {\bf AND} $*$ is $\ge$}
+   {
+    $CS_{str}.minlength \longleftarrow OP$\;
+   }
+   
+   \If{$*$ is $\textlessr$ {\bf AND} $*$ is $\le$}
+   {
+    $CS_{str}.maxlength \longleftarrow OP$\;
+   }
+  }
+}
+\caption{Constraint collection for \code{String} objects}
+ \label{algo:constraintCollection}
+\end{algorithm}
