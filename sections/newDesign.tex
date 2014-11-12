@@ -337,6 +337,16 @@ void foo() {
 \end{lstlisting}
 \end{figure}
 
+\lstset{language=Java, caption=Repairing strategy example, label =
+snippet:exCode2, firstnumber =1}
+\begin{figure}[t]
+\begin{lstlisting}
+String temp = Input();
+ConstraintStore.updateSet("<foo()>", st, temp);
+st = GenerateStringDynamic.init("<foo()>", st);
+\end{lstlisting}
+\end{figure}
+
 Consider the example shown in Code~\ref{snippet:exCode1}, where the function
 \code{foo} performs a series of checks on a user entered string before computing
 a substring on it. Since the constraints on the string \code{st} cannot be
@@ -345,23 +355,29 @@ instruments the code with statements to dynamically collect constraint
 information, augment them with previously known static constraints, and evaluate
 these constraints at runtime. Specifically, \tool\ instruments the bytecode
 with constraint collection code just before the conditional statements under
-consideration, \ie\ line $4$ in Code~\ref{snippet:exCode1}.
+consideration. Thus, \tool\ will insert Code~\ref{snippet:exCode2} before line
+$4$ in Code~\ref{snippet:exCode1} to update and evaluate the set of constraints
+on string \code{st}.
 
-\subsubsection{Code generation}
+\subsubsection{Code generation:}
 \label{sec:tool:stage2:generation}
 
-
-information, augment them with previously known static constraints, and evaluate
-these constraints at runtime. Specifically, \tool\ instruments the bytecode
-with constraint collection code just before the conditional statements under
-consideration, such as line $4$ in Code~\ref{snippet:exCode1}.
-
+Code generation can be done either statically or dynamically depending on how
+the constraints are evaluated. In either scenario, a key component of code
+generation is \textit{object repairing}. Additionally, in certain cases
+where constraints cannot be satisfied, either statically or dynamically or
+both, \tool\ resorts to \textit{parameter tweaking}.
 
 \begin{mylist}
 
- \item \textbf{Object repairing}
-
- \item \textbf{API parameter tweaking}
+ \item \textbf{Object repairing}: \tool\ generates the code for the repaired
+object under consideration after all the constraints have been collected and
+evaluated. If the constraints are resolved statically, then \tool\ updates its
+constraint data store and instruments the corresponding bytecodes appropriately.
+However, in case the patch requires dynamic constraint collection, \tool\ embeds
+the code to dynamically collect constraints and generate the patch as well. Line
+$1$ and $3$ in Code~\ref{snippet:exCode2} update the constraint set and generate
+the repaired object, respectively.
 
 \begin{algorithm}[t]
 \scriptsize
@@ -390,19 +406,62 @@ condition\;
 \label{algo:stringPatchParametr}
 \end{algorithm}
 
+\lstset{language=Java, caption=Repairing strategy example, label =
+snippet:exCode3, firstnumber =1}
+\begin{figure}[t]
+\begin{lstlisting}
+try{
+    c = s.chatAt(4);
+} catch(IndexOutOfBoundException ex) {
+    c = s.failSafeCharAt(4, s.length());
+}
+\end{lstlisting}
+\end{figure}
+
+ \item \textbf{Parameter tweaking}: It is possible that as a side-effect of
+object repairing, the newly patched object may throw runtime errors when
+invoked with certain string APIs. For example, \code{c = s.charAt(4);} may still
+throw runtime errors even if \code{s} has been repaired. This is possible if
+the repaired \code{s} has a length less than $4$. In such scenarios, \tool\
+patches the code with a \code{try-catch} block around the offending API call,
+and appropriately inserts the repaired code in the \code{catch} block but with
+tweaks to the API arguments, as shown in Code~\ref{snippet:exCode3}, to ensure
+that no further runtime exception is thrown. Note that parameter tweaking is
+leveraged to counter a potentially suboptimal object repair that may throw
+cascading exceptions. Algorithm~\ref{algo:stringPatchParametr} briefly outlines
+the mechanism to correctly set the parameters for the offending string API.
+
 \end{mylist}
 
 \subsection{Instrumentation}
 \label{sec:tool:stage3}
 
-try-catch
-catch ladder
+\tool\ embeds the repair in a \code{try-catch} ladder to ensure that the patches
+do not get activated during normal program execution, thereby minimizing any
+side-effects of repairing and preventing any inadvertent changes to the
+program's intended control flow.
 
-We have find such statements which can potentially throw \code{RuntimeException}
-and we put them in try-catch block and place appropriate patch inside the catch
-block based on the appropriate exception type to make sure
-the exception is suppressed and the operation we performed
-in patch maintains the safe bound.
+An important task in the instrumentation stage is to determine the kind of
+exception that may be thrown, and appropriately constructing the
+\code{catch} block. While most APIs throw only a single subclass of
+\code{RuntimeException}, it is possible that a statement may throw both
+\code{NullPointerException} and \code{StringIndexOutOfBoundsException}. \tool\
+generates a \code{catch} ladder for each kind of exception, which also
+facilitates exception-specific repairing as well.
+
+\subsection{Limitation}
+\label{sec:tool:limitation}
+
+\tool's major limitation arises from the fact that it is heavily directed
+towards repairing handling \code{String} objects and API exceptions. While this
+may seem to be a limitation, we believe that \tool's strength lies in the fact
+that it mines contextual data about runtime exceptions related to \code{String}
+objects that helps development of intelligent program patches. Moreover, \tool's
+technique is generic and can be ported to any other class of \java\ APIs.
+
+The quality of \tool's patches also depends on the nature of the constraint
+solver, which is pluggable. A more sophisticated solver may improve the quality
+of program repair, and leave comparison of different solvers for future work.
 
 \ignore{
 \paragraph{Identifying Program Statements.} We perform static taint analysis
