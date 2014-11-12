@@ -166,7 +166,7 @@ snippet~\ref{snippet:exCode2}).
 \tool\ performs several optimizations to improve the precision and quality of
 the patches. We describe a few of them below.
 
-\subsubsection{Checked exceptions}
+\subsubsection{Checked exceptions \todo{remove redundancy}}
 \label{subsubsec:callChainLookUp}
 ~\newline
 Although unlikely, it is possible that the developers may themselves incorporate
@@ -211,15 +211,15 @@ methods that can throw runtime exception, then it is not required to collect and
 evaluate constraints on them. This significantly reduces the number of
 statements analyzed for instrumentation.
  
-\subsubsection{Minimize conflicts in constraint evaluation}
-\label{subsubsec:minimizeConflictsinConstraintEvaluation}
-~\newline
-It is likely that in some cases the constrains generated over the string objects
-may never be satisfied due to conflicting constraints. We reduce the number of
-such conflicts by skipping conditional branches that throw exceptions or
-error conditions, like \code{System.err.print()}. In other words, \tool\ only
-considers the conditional expressions in the branches that do not involve any
-exceptions or error paths.
+% \subsubsection{Minimize conflicts in constraint evaluation}
+% \label{subsubsec:minimizeConflictsinConstraintEvaluation}
+% ~\newline
+% It is likely that in some cases the constrains generated over the string objects
+% may never be satisfied due to conflicting constraints. We reduce the number of
+% such conflicts by skipping conditional branches that throw exceptions or
+% error conditions, like \code{System.err.print()}. In other words, \tool\ only
+% considers the conditional expressions in the branches that do not involve any
+% exceptions or error paths.
 
 % During the constraint evaluation both statically and dynamically, we
 % instrumented methods calls which collect the information about the objects. To
