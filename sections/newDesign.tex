@@ -227,7 +227,7 @@ Algorithm~\ref{algo:stringPatchParametr}$(S)$
   }
  }
 }
-\caption{Patching strategy for \code{String} objects}
+\caption{Patching strategy for \code{String} objects.}
 \label{algo:patchingStrategy}
 \end{algorithm}
 
@@ -332,7 +332,8 @@ potential safe values of the string object under consideration. However, there
 are scenarios, where there are potentially conflicting constraints or no
 permissible values of the constraints can be calculated statically.
 
-\lstset{language=Java, caption=Code with dynamic string constraints., label =
+\lstset{language=Java, caption=Code requiring dynamic string constraint
+evaluation., label =
 snippet:exCode1, firstnumber =1}
 \begin{figure}[t]
 \begin{lstlisting}
@@ -345,8 +346,9 @@ void foo() {
 \end{lstlisting}
 \end{figure}
 
-\lstset{language=Java, caption=Dynamic constraint collection and evaluation corresponding to code \ref{snippet:exCode1}, label =
-snippet:exCode2, firstnumber =1}
+\lstset{language=Java, caption=Dynamic constraint collection and evaluation
+corresponding to code \ref{snippet:exCode1}., label =snippet:exCode2,
+firstnumber =1}
 \begin{figure}[t]
 \begin{lstlisting}
 String temp = Input();
@@ -421,7 +423,8 @@ condition\\
 \label{algo:stringPatchParametr}
 \end{algorithm}
 
-\lstset{language=Java, caption=Repairing strategy example, label =
+\lstset{language=Java, caption=Example of parameter tweaking.,
+label =
 snippet:exCode3, firstnumber =1}
 \begin{figure}[t]
 \begin{lstlisting}
@@ -441,9 +444,12 @@ the repaired \code{s} has a length less than $4$. In such scenarios, \tool\
 patches the code with a \code{try-catch} block around the offending API call,
 and appropriately inserts the repaired code in the \code{catch} block but with
 tweaks to the API arguments, as shown in Code~\ref{snippet:exCode3}, to ensure
-that no further runtime exception is thrown. Note that parameter tweaking is
-leveraged to counter a potentially suboptimal object repair that may throw
-cascading exceptions. Algorithm~\ref{algo:stringPatchParametr} briefly outlines
+that no further runtime exception is thrown. For example, if the length of the
+string is greater than $4$, then the API works similar to default \code{charAt}
+API. However, if the length is $3$, then line $4$ is invoked with both arguments
+equal to string length, \ie\ $3$. Note that parameter tweaking is leveraged to
+counter a potentially suboptimal object repair that may throw cascading
+exceptions. Algorithm~\ref{algo:stringPatchParametr} briefly outlines
 the mechanism to correctly set the parameters for the offending string API.
 
 \end{mylist}
