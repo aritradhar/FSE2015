@@ -519,9 +519,9 @@ actually not in the Aries framework as originally reported. Thus, we patched the
 particular ASM methods containing the bugs, and retested it with the Aries
 framework to ensure conformance.
 
- \item In some libraries like Math, the bug was that for a wrong formatted
-input, the
-library was throwing a string exception which is completely irrelevant.
+ \item Commons Math had a bug related to incorrect formatting of the input
+string, while the library was throwing a string exception which is completely
+irrelevant.
 According to the API documentation, the method supposed to throw a very specific
 type of exception (\code{NumberFormatException})which contains the information
 of the malformed string. In such cases we see if the patch version also throws
