@@ -46,10 +46,10 @@ repairing programs with potential runtime exceptions, while still satisfying
 goals mentioned in \xref{sec:tool:goals}.
 
 Figure~\ref{fig:overallDesign} shows \tool's workflow, which involves three
-main stages. First, \tool\ uses precise program analysis techniques to identify
-points of interest, \ie\ string objects or API arguments that must be repaired
-to prevent runtime exceptions. In the second stage, \tool\ leverages custom
-algorithms to generate relevant patches. Specifically, \tool\ performs
+main stages. First, \tool\ uses program analysis techniques to precisely
+identify points of interest, \ie\ string objects or API arguments that must be
+repaired to prevent runtime exceptions. In the second stage, \tool\ leverages
+custom algorithms to generate relevant patches. Specifically, \tool\ performs
 intra-procedural static and dynamic analyses to identify and evaluate
 constraints on the string objects under consideration. Third, \tool\ uses the
 constraints evaluated in the earlier stage to programatically generate and embed
