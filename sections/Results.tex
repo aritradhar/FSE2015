@@ -521,16 +521,17 @@ per call. The above overhead is imperceptible at human response time scales.
 
  \item \textbf{Call graph}: The size of the call graph directly governs the time
 and memory consumption for \tool. Figure~\ref{fig:perf:callgraph} shows the
-results for the bugs analyzed in our data set. We observe that for the
-\code{Wicket} benchmark, \tool\ generates a call graph of $\sim$$70K$ nodes, and
-requires $52.4$s and $210$MB memory for complete end-to-end analysis.
+results for the benchmarks analyzed from our data set. The overall analysis
+time was under a minute for all the benchmarks. We observed that even for a call
+graph of $\sim$$70K$ nodes (for \code{Wicket}), \tool\ required just $52.4$s
+and $210$MB memory.
 
  \item \textbf{Constraint set}: \tool\ performs an exhaustive multi-pass
 analysis to gather and evaluate the set of constraints for generating patches. A
 higher number of constraints and their complexity increases the duration of
 \tool's analysis. Figure~\ref{fig:perf:constraints} compares the time required
-for analysis with an increasing number of constraints for the benchmarks used in
-our data set.
+for static constraint collection and evaluation with an increasing number of
+constraints for the benchmarks used in our data set. We observe that 
 
 \item \textbf{Instrumentation overhead}:
 
