@@ -116,6 +116,10 @@ program from crashing ensuring its acceptable behavior.
 % and effectively generates program patches to handle string-related errors
 % \cite{}.
 
+\item We use a finite state machine (FSM) as a formalism (\xref{sec:design}) to
+describe the behavior of \java\ \code{String} API, and apply it to drive the
+generation of exception-specific patches.
+
 \item We applied \tool\ to several hugely popular open-source libraries to patch
 $30$ bugs, several of them rated critical or major, resulting from unhandled
 runtime exceptions from \java\ \code{String} APIs. The results of our study

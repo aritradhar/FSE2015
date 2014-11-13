@@ -395,7 +395,7 @@ demonstrated by the high PQI.
 \hline
 \code{Checkstyle}& $58.0K$ & $1977$ & $88$\\
 \code{Jazzy Core}& $4.9K$ & $270$ & $26$\\
-\code{JEdit}& $108.2K$ & $185$ & $22$\\
+\code{JEdit}& $4.3K$ & $185$ & $22$\\
 
 \hline
 \end{tabular}
@@ -416,6 +416,14 @@ total number of tainted paths, \ie\ paths from a sensitive source to a sink and
 thus must not be patched. Table~\ref{tab:taintAnalysis} lists the results. We
 observe that the total number of tainted paths is less than $12\%$ across the
 applications.
+
+\myparagraph{Threats to validity} Note that \tool\ is dependent on \infoflow\
+for achieving precision about the points of instrumentation. However,
+\infoflow\ currently has a major limitation---it does not support taint
+analysis for multi-threaded programs. Moreover, since it is still under active
+development, we observed that when applied to certain applications, \infoflow\
+consumed inordinate amounts of memory and crashed. Thus, \tool's precision is
+limited by the accuracy of its dependent tools. 
 
 \item \textbf{Already handled exceptions}: \tool\ analyzes the call graph to
 determine if a potential runtime exception throwing statement is handled higher
