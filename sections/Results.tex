@@ -342,7 +342,7 @@ successfully patched the offending class file in the concerned library.
 
 \begin{mybullet}
 
- \item  We observe that PQI for \tool\ generated patches is high for most of
+ \item  We observed that PQI for \tool\ generated patches was high for most of
 the bugs, which indicates the effectiveness of the patches. Specifically, for
 $23$ out of $30$, \ie\ for more than $75\%$ cases, PQI for \tool-generated
 patches was within $7\%$ of the developer's fix. Note that there was one
@@ -359,7 +359,7 @@ conditional checks to avoid corner cases. Moreover, the developer's patch also
 had a completely different implementation of the method on which the bug was
 reported. Thus, the developer's fix was significantly larger than \tool's patch.
 
- \item We notice low PQI (between $0.5$ and $0.79$) for four of the patched
+ \item We noticed low PQI (between $0.5$ and $0.79$) for four of the patched
 libraries, which shows that the quality of the \tool-generated patch was
 significantly lower than the developer's fix. A major reason for this drop in
 PQI is the presence of cascaded exceptions observed in the patched versions of
@@ -415,7 +415,7 @@ a set of sources, sinks and taint propagators to \infoflow, which listed the
 total number of tainted paths, \ie\ paths from a sensitive source to a sink and
 thus must not be patched. Table~\ref{tab:taintAnalysis} lists the results. We
 observe that the total number of tainted paths is less than $12\%$ across the
-applications. \todo{Fix it.}
+applications.
 
 \item \textbf{Already handled exceptions}: \tool\ analyzes the call graph to
 determine if a potential runtime exception throwing statement is handled higher
