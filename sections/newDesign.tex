@@ -206,18 +206,24 @@ $str$\\
 Algorithm~\ref{algo:constraintCollection}$(CES_{str})$\\
 
   		\mytab \lIf{$str$ have sufficient constraints in $CS_{str}$} {\\
+			\mytab \mytab \code{/* Static constraint analysis */}\\
   			\mytab \mytab $str \longleftarrow$ output of
 Algorithm~\ref{algo:constraint}$(CS_{str})$
   		} \mytab \lElse {\\
-  			\mytab \mytab $str \longleftarrow$ output of   		
+  		        \mytab \mytab \code{/* Dynamic constraint analysis */}\\
+  		        \mytab \mytab $CS_{str} \longleftarrow$ output of
+Algorithm~\ref{algo:constraintCollection}$(CES_{str})$\\
+
+                        \mytab \mytab \lIf{$str$ have sufficient constraints in
+$CS_{str}$} {\\
+                        \mytab \mytab \mytab $str \longleftarrow$ output of
+Algorithm~\ref{algo:constraint}$(CS_{str})$
+  		} \mytab \mytab \lElse {\\
+  		        \mytab \mytab \mytab $str \longleftarrow$ output of
 Algorithm~\ref{algo:stringPatchParametr}$(S)$
   		}
-  		\mytab Invoke
-Algorithm~\ref{algo:constraintCollection}$(CES_{str})$ for dynamic constraint
-collection\\
-  		\mytab Invoke Algorithm~\ref{algo:constraint}$(CS_{str})$ for
-dynamic constraint evaluation
-  	}
+	}
+    }
   }
  }
 }
