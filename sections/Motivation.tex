@@ -1,14 +1,12 @@
 \section{Motivation and Overview}
 \label{sec:motivation}
 
-Ensuring correctness for a software application is undecidable and static
-analysis will invariably produce numerous
-false positives. Moreover, programming logic can be
-very complex and data coming from
-external sources can be diverse. As result,  successful execution of a
-real application cannot be guaranteed and unexpected failures may
-happen. These failures often result in
-runtime exceptions being thrown
+Ensuring correctness of a program is an undecidable problem. In order to achieve high scalability 
+a static analysis works by making sound approximations which typically leads to numerous
+false positives. To make the problem worse, programming logic can be complex and data coming from
+different sources can be diverse. As result,  successful execution of a
+real application can never be guaranteed and unexpected failures may
+happen. These failures often result in runtime exceptions being thrown
 by the applications which are generally not handled. The cost of these runtime
 failures can vary depending on the criticality
 of the applications which can be very high for mission-critical applications.
@@ -17,15 +15,15 @@ of the applications which can be very high for mission-critical applications.
 \code{String} APIs are commonly used in libraries. Common and diverse usage
 of strings in programs is known to be a significant source of errors \ref{}. In order to understand common
 types of exceptions thrown in case of failures, we mined
-the post repository on \texttt{stackoverflow}~\cite{stackoverflow}.
-The most prominent exception types with the percentage share of higher than 5\%
-are enumerated in Table~\ref{tab:stackoverlow}. The second column indicates
+the repository of posts on \texttt{stackoverflow}~\cite{stackoverflow}.
+The most prominent exceptions with the share of higher than 5\%
+are listed in Table~\ref{tab:stackoverlow}. The second column indicates
 the types of exceptions, whereas the third column indicates their overall
 percentage share. We observe that strings can play
 a role in generating all except \code{SecurityException}. This result coupled
 with the potentially heavy cost of program
-crashes motivated us to develop on-the-fly repairing support for \java\ programs
-regarding failures related to \code{String} APIs.
+crashes motivated us to develop our hybrid technique for automatic repairing of \java\ programs
+for failures related to \code{String} APIs.
 
 
 \begin{table}[t]
@@ -48,6 +46,149 @@ regarding failures related to \code{String} APIs.
 \label{tab:stackoverlow}
 % }
 \end{table}
+
+
+\subsection{Overview}
+\label{subsec:overview}
+
+\lstset{language=Java, caption=Example from \code{fileUtils} class of Apache Commons
+library. , label = snippet:exampleRepairing2}
+\begin{figure}[t]
+\centering
+\begin{lstlisting}
+public static String getPathNoEndSeparator
+        (String filename) {
+  return doGetPath(filename, 0);
+}
+private static String doGetPath
+        (String filename, int separatorAdd) {
+  if(filename == null) return null;
+  int prefix = getPrefixLength(filename);
+  if (prefix < 0) return null;
+  int index = indexOfLastSeparator(filename);
+  if ((prefix >= filename.length()) || (index < 0))
+        return "";
+  return filename.substring(prefix,
+        index + separatorAdd);
+}
+\end{lstlisting}
+\end{figure}
+
+The Code~\ref{snippet:exampleRepairing2} corresponds to methods from
+from \code{fileUtils} class of Apache Common IO library. The method
+\code{getPathNoEndSeparator()} throws
+a \code{StringIndexOutOfBounds} exception on Windows OS which originates from
+statement \code{return filename.substring(prefix, index + separatorAdd)} on
+line 13 when the method is called with parameter \code{"/foo.xml"}.  Here, the
+value of \code{prefix} as returned by the method \code{getPrefixLength} is 1.
+It fails to satisfy the constraint implied by the program condition
+\code{prefix <= index + separatorAdd} for \code{substring} method which 
+ensures that \code{beginIndex} cannot be greater than \code{endIndex}. As a result,
+the exception being thrown.
+
+
+\lstset{language=Java, caption=Patch for \code{fileUtils} class
+from Apache Commons Library bug., label = snippet:exampleRepairing3, firstnumber
+=13}
+\begin{figure}[t]
+\centering
+\begin{lstlisting}
+String temp = null;
+try {
+  temp = filename.substring(prefix, index + separatorAdd);
+} catch(IndexOutOfBoundsException ex) {
+  int length = filename.length;
+  int t = index + separatorAdd;
+  temp = filename.substring(
+    getStart(prefix,t,length), getEnd(prefix,t,length));
+}
+return temp;
+\end{lstlisting}
+\end{figure}
+
+A closer inspection of this code snippet tells that the string variable \code{filename} invokes two
+methods, namely \code{length} and \code{substring} on lines 11 and 13 respectively. \java\ \code{String} API documentation
+specifies that \code{length} does not throw any runtime exceptions. The only exception that can be thrown
+by this invoke statement is when the receiver object referenced by \code{filename} is \code{null}. However,
+the check on line 7 indicates that this situation would not arise. However, method \code{substring} can throw
+\code{IndexOutOfBoundsException} exception which can potentially crash the program. A good patch to handle
+this failure should take into account all of these observations. 
+
+Code~\ref{snippet:exampleRepairing3} presents the patch automatically
+generated by \tool\. This patch replaces the invoke statement on line 13 in Code~\ref{snippet:exampleRepairing2}.
+The invoke statement is now wrapped inside the \code{try} block and a \code{catch} corresponding to \code{IndexOutOfBoundsException}
+has been added on line 15. This would ensure that control would be passed to the catch block when and only when the exception is thrown.
+Line 20 shows two method calls namely \code{getStart} and \code{getEnd} that are inserted by \tool. 
+These methods, using the knowledge about the length of \code{filename} acquired with the help of the code on line 17,
+compute legally correct indexes required by \code{substring} method to satisfy the constraint related to \code{beginIndex}
+and \code{endIndex}. Method \code{substring} now can regenerate the substring ensuring that the method call would not fail. 
+
+The actual patch provided by the developers is semantically similar to the one developed by \tool\ and both versions
+of the program generate exactly the same output. Similarly, the patch developed 
+by \tool\ for the bug depicted in Code~\ref{snippet:exampleRepairing1}
+is semantically similar to the actual one provided by the developers and is presented in
+Code~\ref{snippet:exampleRepairing4}. Here the object referenced by the string
+variable \code{temp} is regenerated after adjusting the offset and ensuring that the constraint represented by the
+program condition \code{offset <= length}
+would never be violated.
+
+
+\ignore{
+
+By performing taint analysis, \tool\ identifies that statement 13 in
+Code~\ref{snippet:exampleRepairing2}
+can be vulnerable to a failure and it might throw \code{IndexOutOfBoundsException}
+or  \code{NullPointerException}
+which are not handled by any of its callers in the call-chain.
+\tool\ then tries to capture constraints on the involved variable \code{filename}.
+The only constraint on \code{filename} is \code{!(filename == null)} which is completely
+static indicating that providing a patch to deal with \code{NulPointerException} is
+not required. With a priori understanding of exception types and the invariants,
+associated with them the tool then only creates a patch for \code{IndexOutOfBoundsException}
+tweaking the API parameters as guided by the invariants to regenerate strings.
+As a result, \tool\ replaces statement 13 with the code depicted in Code~\ref{snippet:exampleRepairing3}. The statement 17 shows
+two methods namely \code{getStart} and \code{getEnd}
+which compute legally correct bounds required by \code{substring} method to satisfy the invariant
+\code{prefix <= index + separatorAdd}. Using these bounds \code{substring}
+regenerates the string referenced by variable \code{temp}. 
+
+The actual patch provided by the developers is semantically similar to the one
+developed by \tool\ and both versions
+of the code generate exactly the same output. Similarly, the patch developed 
+by \tool\ for the bug depicted in Code~\ref{snippet:exampleRepairing1}
+is semantically similar to the actual one provided by the developers and is presented in
+Code~\ref{snippet:exampleRepairing4}. Here the object referenced by the string
+variable \code{temp} is regenerated after adjusting the offset and ensuring that the invariant \code{offset <= length}
+is not violated.
+
+}
+
+\lstset{language=java, caption=Patch for the Appache Log4j bug,
+label = snippet:exampleRepairing4, firstnumber =4}
+\begin{figure}[t]
+\centering
+\begin{lstlisting}
+try {
+    temp = new String(chars, offset, length);
+} catch(StringIndexOutOfBoundsException ex) {
+    int i = chars.length;
+    temp = new String(chars,
+        IndexRepair.getStart(offset, length, i),
+            IndexRepair.getEnd(offset, length, i));
+}
+priorVariables.add(temp);
+\end{lstlisting}
+\end{figure}
+
+We present in detail the techniques and the algorithms used in our analysis that
+can produce patches to regenerate string variables under more
+complex scenarios in \xref{sec:tool} . Our study presented in
+\xref{sec:results} suggests that majority
+of the string generation scenarios in practice are less complex.
+
+
+
+%--------------------
 
 \ignore{
 \subsection{Problem and Challenges}
@@ -84,9 +225,6 @@ overhead during normal program execution and only negligible overhead in case of
 failures.
 }
 
-
-\subsection{Overview}
-\label{subsec:overview}
 
 \ignore{
 In order to achieve the goals enumerated in \xref{subsec:problem}, we
@@ -162,120 +300,6 @@ except if required resolve the dynamic constraints.
 As our study reveals~\xref{sec:evaluation} the constraints are typically few and simple, making
 the dynamic analysis light-weight.
 }
-	
-
-\lstset{language=Java, caption=Example from \code{fileUtils} of Apache Commons
-Library , label = snippet:exampleRepairing2}
-\begin{figure}[t]
-\centering
-\begin{lstlisting}
-public static String getPathNoEndSeparator
-        (String filename) {
-  return doGetPath(filename, 0);
-}
-private static String doGetPath
-        (String filename, int separatorAdd) {
-  if(filename == null) return null;
-  int prefix = getPrefixLength(filename);
-  if (prefix < 0) return null;
-  int index = indexOfLastSeparator(filename);
-  if ((prefix >= filename.length()) || (index < 0))
-        return "";
-  return filename.substring(prefix,
-        index + separatorAdd);
-}
-\end{lstlisting}
-\end{figure}
-
-We give an overview of the techniques described in \xref{subsec:overview}
-with the help of
-an example in Code~\ref{snippet:exampleRepairing2}. The snippet depicts
-some code
-from \code{fileUtils} class of Apache Common IO library. The method
-\code{getPathNoEndSeparator()} throws
-a \code{StringIndexOutOfBounds} exception on Windows OS which originates from
-statement 
-\code{return filename.substring(prefix, index + separatorAdd)} on
-line 13 when the method is called with parameter \code{"/foo.xml"}.  Here, the
-value of \code{prefix} as
-returned by the method \code{getPrefixLength} is 1 which fails to satisfy the
-invariant
-\code{prefix <= index + separatorAdd} for \code{substring} method. This results
-in the exception being thrown.
-
-
-\lstset{language=Java, caption=Patch for the \code{fileUtils}
-in Apache Commons Library bug, label = snippet:exampleRepairing3, firstnumber
-=13}
-\begin{figure}[t]
-\centering
-\begin{lstlisting}
-String temp = null;
-try {
-  temp = filename.substring(prefix, index + separatorAdd);
-} catch(IndexOutOfBoundsException ex) {
-  int length = filename.length;
-  int t = index + separatorAdd;
-  temp = filename.substring(
-    getStart(prefix,t,length), getEnd(prefix,t,length));
-}
-return temp;
-\end{lstlisting}
-\end{figure}
-
-
-Code~\ref{snippet:exampleRepairing3} presented the patch automatically
-generated by \tool\
-using our approach. By performing taint analysis, \tool\ identifies that statement 13 in
-Code~\ref{snippet:exampleRepairing2}
-can be vulnerable to a failure and it might throw \code{IndexOutOfBoundsException}
-or  \code{NullPointerException}
-which are not handled by any of its callers in the call-chain.
-\tool\ then tries to capture constraints on the involved variable \code{filename}.
-The only constraint on \code{filename} is \code{!(filename == null)} which is completely
-static indicating that providing a patch to deal with \code{NulPointerException} is
-not required. With a priori understanding of exception types and the invariants,
-associated with them the tool then only creates a patch for \code{IndexOutOfBoundsException}
-tweaking the API parameters as guided by the invariants to regenerate strings.
-As a result, \tool\ replaces statement 13 with the code depicted in Code~\ref{snippet:exampleRepairing3}. The statement 17 shows
-two methods namely \code{getStart} and \code{getEnd}
-which compute legally correct bounds required by \code{substring} method to satisfy the invariant
-\code{prefix <= index + separatorAdd}. Using these bounds \code{substring}
-regenerates the string referenced by variable \code{temp}. 
-
-The actual patch provided by the developers is semantically similar to the one
-developed by \tool\ and both versions
-of the code generate exactly the same output. Similarly, the patch developed 
-by \tool\ for the bug depicted in Code~\ref{snippet:exampleRepairing1}
-is semantically similar to the actual one provided by the developers and is presented in
-Code~\ref{snippet:exampleRepairing4}. Here the object referenced by the string
-variable \code{temp} is regenerated after adjusting the offset and ensuring that the invariant \code{offset <= length}
-is not violated.
-
-\lstset{language=java, caption=Patch for the Appache Log4j bug,
-label = snippet:exampleRepairing4, firstnumber =4}
-\begin{figure}[t]
-\centering
-\begin{lstlisting}
-try {
-    temp = new String(chars, offset, length);
-} catch(StringIndexOutOfBoundsException ex) {
-    int i = chars.length;
-    temp = new String(chars,
-        IndexRepair.getStart(offset, length, i),
-            IndexRepair.getEnd(offset, length, i));
-}
-priorVariables.add(temp);
-\end{lstlisting}
-\end{figure}
-
-We present in detail the techniques and the algorithms used in our analysis that
-can produce patches to regenerate string variables under more
-complex scenarios in \xref{sec:architecture} . Our study presented in
-\xref{sec:evaluation} suggests that majority
-of the string generation scenarios in practice are less complex.
-
-
 
 
 
