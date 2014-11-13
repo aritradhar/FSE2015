@@ -1,30 +1,15 @@
 \section{Motivation and Overview}
 \label{sec:motivation}
 
-Ensuring correctness of a program is an undecidable problem. In order to achieve high scalability 
-a static analysis works by making sound approximations which typically leads to numerous
-false positives. To make the problem worse, programming logic can be complex and data coming from
-different sources can be diverse. As result,  successful execution of a
-real application can never be guaranteed and unexpected failures may
-happen. These failures often result in runtime exceptions being thrown
-by the applications which are generally not handled. The cost of these runtime
-failures can vary depending on the criticality
-of the applications which can be very high for mission-critical applications.
-
-\java\ applications are typically built using libraries and 
-\code{String} APIs are commonly used in libraries. Common and diverse usage
-of strings in programs is known to be a significant source of errors \ref{}. In order to understand common
-types of exceptions thrown in case of failures, we mined
-the repository of posts on \texttt{stackoverflow}~\cite{stackoverflow}.
-The most prominent exceptions with the share of higher than 5\%
-are listed in Table~\ref{tab:stackoverlow}. The second column indicates
-the types of exceptions, whereas the third column indicates their overall
-percentage share. We observe that strings can play
-a role in generating all except \code{SecurityException}. This result coupled
-with the potentially heavy cost of program
-crashes motivated us to develop our hybrid technique for automatic repairing of \java\ programs
-for failures related to \code{String} APIs.
-
+Ensuring correctness of a program is an undecidable problem. In order to achieve
+high scalability static analysis works by making sound approximations, which
+typically lead to numerous false positives. Complex programming logic and data
+coming from diverse sources make the problem worse. As a result, successful
+execution of a real application can never be guaranteed, and unexpected failures
+may happen. These failures often result in runtime exceptions being thrown by
+the applications that are generally not handled. The cost of these runtime
+failures can vary depending on the criticality of the applications and can be
+very high for mission-critical applications.
 
 \begin{table}[t]
 \scriptsize
@@ -47,12 +32,24 @@ for failures related to \code{String} APIs.
 % }
 \end{table}
 
+\java\ applications are typically built using libraries, and \code{String} APIs
+are commonly used in third party libraries. Common and diverse usage of strings
+in programs is known to be a significant source of errors \ref{}. We mined the
+repository of posts on \texttt{stackoverflow}~\cite{stackoverflow} to understand
+common types of exceptions thrown in case of failures.
+Table~\ref{tab:stackoverlow} lists the most prominent exceptions with the share
+of higher than $5\%$. The second column indicates the types of exceptions,
+whereas the third column indicates their overall percentage share. We observe
+that strings can play a role in generating all except \code{SecurityException}.
+This result coupled with the potentially heavy cost of program crashes motivated
+us to develop a hybrid technique for automatic repairing of \java\ programs
+for failures related to \code{String} APIs.
 
 \subsection{Overview}
 \label{subsec:overview}
 
-\lstset{language=Java, caption=Example from \code{fileUtils} class of Apache Commons
-library. , label = snippet:exampleRepairing2}
+\lstset{language=Java, caption=Snippet from \code{fileUtils} class of Apache
+Commons library. , label = snippet:exampleRepairing2}
 \begin{figure}[t]
 \centering
 \begin{lstlisting}
@@ -74,17 +71,16 @@ private static String doGetPath
 \end{lstlisting}
 \end{figure}
 
-The Code~\ref{snippet:exampleRepairing2} corresponds to methods from
-from \code{fileUtils} class of Apache Common IO library. The method
-\code{getPathNoEndSeparator()} throws
-a \code{StringIndexOutOfBounds} exception on Windows OS which originates from
-statement \code{return filename.substring(prefix, index + separatorAdd)} on
-line 13 when the method is called with parameter \code{"/foo.xml"}.  Here, the
-value of \code{prefix} as returned by the method \code{getPrefixLength} is 1.
-It fails to satisfy the constraint implied by the program condition
-\code{prefix <= index + separatorAdd} for \code{substring} method which 
-ensures that \code{beginIndex} cannot be greater than \code{endIndex}. As a result,
-the exception being thrown.
+Code~\ref{snippet:exampleRepairing2} corresponds to methods from from
+\code{fileUtils} class of Apache Common IO library. The method
+\code{getPathNoEndSeparator()} throws a \code{StringIndexOutOfBounds} exception
+on Windows OS, which originates from statement \code{return
+filename.substring(prefix, index + separatorAdd)} on line 13 when the method is
+called with parameter \code{"/foo.xml"}.  Here, the value of \code{prefix} as
+returned by the method \code{getPrefixLength} is 1. It fails to satisfy the
+constraint implied by the program condition \code{prefix <= index +
+separatorAdd} for \code{substring} method which  ensures that \code{beginIndex}
+cannot be greater than \code{endIndex}. As a result, the exception being thrown.
 
 
 \lstset{language=Java, caption=Patch for \code{fileUtils} class
@@ -106,30 +102,38 @@ return temp;
 \end{lstlisting}
 \end{figure}
 
-A closer inspection of this code snippet tells that the string variable \code{filename} invokes two
-methods, namely \code{length} and \code{substring} on lines 11 and 13 respectively. \java\ \code{String} API documentation
-specifies that \code{length} does not throw any runtime exceptions. The only exception that can be thrown
-by this invoke statement is when the receiver object referenced by \code{filename} is \code{null}. However,
-the check on line 7 indicates that this situation would not arise. However, method \code{substring} can throw
-\code{IndexOutOfBoundsException} exception which can potentially crash the program. A good patch to handle
-this failure should take into account all of these observations. 
+A closer inspection of this code snippet shows that the string variable
+\code{filename} invokes two methods, namely \code{length} and \code{substring}
+on lines 11 and 13 respectively. \java\ \code{String} API documentation
+specifies that \code{length} does not throw any runtime exceptions. The only
+exception that this invoke statement can throw is when the receiver object
+referenced by \code{filename} is \code{null}. However, the check on line 7
+indicates that this situation would not arise. However, method \code{substring}
+can throw \code{IndexOutOfBoundsException} exception that can potentially crash
+the program. A good patch to handle this failure should take into account all of
+these observations. 
 
-Code~\ref{snippet:exampleRepairing3} presents the patch automatically
-generated by \tool\. This patch replaces the invoke statement on line 13 in Code~\ref{snippet:exampleRepairing2}.
-The invoke statement is now wrapped inside the \code{try} block and a \code{catch} corresponding to \code{IndexOutOfBoundsException}
-has been added on line 15. This would ensure that control would be passed to the catch block when and only when the exception is thrown.
-Line 20 shows two method calls namely \code{getStart} and \code{getEnd} that are inserted by \tool. 
-These methods, using the knowledge about the length of \code{filename} acquired with the help of the code on line 17,
-compute legally correct indexes required by \code{substring} method to satisfy the constraint related to \code{beginIndex}
-and \code{endIndex}. Method \code{substring} now can regenerate the substring ensuring that the method call would not fail. 
+Code~\ref{snippet:exampleRepairing3} presents the patch automatically generated
+by \tool\. This patch replaces the invoke statement on line 13 in
+Code~\ref{snippet:exampleRepairing2}. The invoke statement is now wrapped inside
+the \code{try} block and a \code{catch} corresponding to
+\code{IndexOutOfBoundsException} is added on line 15. This ensures that
+control passes to the catch block only when the exception is thrown. Line 20
+shows two method calls namely \code{getStart} and \code{getEnd} that are
+inserted by \tool. These methods, using the knowledge about the length of
+\code{filename} acquired with the help of the code on line 17, compute legally
+correct indexes required by \code{substring} method to satisfy the constraint
+related to \code{beginIndex} and \code{endIndex}. Method \code{substring} now
+can regenerate the substring ensuring that the method call would not fail. 
 
-The actual patch provided by the developers is semantically similar to the one developed by \tool\ and both versions
-of the program generate exactly the same output. Similarly, the patch developed 
-by \tool\ for the bug depicted in Code~\ref{snippet:exampleRepairing1}
-is semantically similar to the actual one provided by the developers and is presented in
+The actual patch provided by the developers is semantically similar to the one
+developed by \tool\ and both versions of the program generate exactly the same
+output. Similarly, the patch developed by \tool\ for the bug depicted in
+Code~\ref{snippet:exampleRepairing1} is semantically similar to the actual one
+provided by the developers and is presented in
 Code~\ref{snippet:exampleRepairing4}. Here the object referenced by the string
-variable \code{temp} is regenerated after adjusting the offset and ensuring that the constraint represented by the
-program condition \code{offset <= length}
+variable \code{temp} is regenerated after adjusting the offset and ensuring that
+the constraint represented by the program condition \code{offset <= length}
 would never be violated.
 
 
@@ -137,18 +141,25 @@ would never be violated.
 
 By performing taint analysis, \tool\ identifies that statement 13 in
 Code~\ref{snippet:exampleRepairing2}
-can be vulnerable to a failure and it might throw \code{IndexOutOfBoundsException}
+can be vulnerable to a failure and it might throw
+\code{IndexOutOfBoundsException}
 or  \code{NullPointerException}
 which are not handled by any of its callers in the call-chain.
-\tool\ then tries to capture constraints on the involved variable \code{filename}.
-The only constraint on \code{filename} is \code{!(filename == null)} which is completely
-static indicating that providing a patch to deal with \code{NulPointerException} is
+\tool\ then tries to capture constraints on the involved variable
+\code{filename}.
+The only constraint on \code{filename} is \code{!(filename == null)} which is
+completely
+static indicating that providing a patch to deal with \code{NulPointerException}
+is
 not required. With a priori understanding of exception types and the invariants,
-associated with them the tool then only creates a patch for \code{IndexOutOfBoundsException}
+associated with them the tool then only creates a patch for
+\code{IndexOutOfBoundsException}
 tweaking the API parameters as guided by the invariants to regenerate strings.
-As a result, \tool\ replaces statement 13 with the code depicted in Code~\ref{snippet:exampleRepairing3}. The statement 17 shows
+As a result, \tool\ replaces statement 13 with the code depicted in
+Code~\ref{snippet:exampleRepairing3}. The statement 17 shows
 two methods namely \code{getStart} and \code{getEnd}
-which compute legally correct bounds required by \code{substring} method to satisfy the invariant
+which compute legally correct bounds required by \code{substring} method to
+satisfy the invariant
 \code{prefix <= index + separatorAdd}. Using these bounds \code{substring}
 regenerates the string referenced by variable \code{temp}. 
 
@@ -156,9 +167,11 @@ The actual patch provided by the developers is semantically similar to the one
 developed by \tool\ and both versions
 of the code generate exactly the same output. Similarly, the patch developed 
 by \tool\ for the bug depicted in Code~\ref{snippet:exampleRepairing1}
-is semantically similar to the actual one provided by the developers and is presented in
+is semantically similar to the actual one provided by the developers and is
+presented in
 Code~\ref{snippet:exampleRepairing4}. Here the object referenced by the string
-variable \code{temp} is regenerated after adjusting the offset and ensuring that the invariant \code{offset <= length}
+variable \code{temp} is regenerated after adjusting the offset and ensuring that
+the invariant \code{offset <= length}
 is not violated.
 
 }
@@ -180,11 +193,10 @@ priorVariables.add(temp);
 \end{lstlisting}
 \end{figure}
 
-We present in detail the techniques and the algorithms used in our analysis that
-can produce patches to regenerate string variables under more
-complex scenarios in \xref{sec:tool} . Our study presented in
-\xref{sec:results} suggests that majority
-of the string generation scenarios in practice are less complex.
+We next present in detail the techniques and the algorithms used in our analysis
+that can produce patches to regenerate string variables under more complex
+scenarios. Our study presented in \xref{sec:results} suggests that majority of
+the string generation scenarios in practice are less complex.
 
 
 
@@ -195,30 +207,40 @@ of the string generation scenarios in practice are less complex.
 \label{subsec:problem}
 
 In this work, we present a technique which automatically repairs programs
-that otherwise would crash due to failures related to malformed strings or incorrect handling of
+that otherwise would crash due to failures related to malformed strings or
+incorrect handling of
 the string.  The technique i) identifies
 the statements which might be vulnerable to string-related errors,
 and are less critical to the functionality of the application such that
-suboptimal behavior might be acceptable, ii) operates in non-invasive mode by ensuring no
+suboptimal behavior might be acceptable, ii) operates in non-invasive mode by
+ensuring no
 side-effects during normal program execution and activating patches only when
-the program is guaranteed to crash, iii) generates patches, iv) optimizes the number of
+the program is guaranteed to crash, iii) generates patches, iv) optimizes the
+number of
 statements to be patched,  v) keeps program behavior as close as possible to the
-intended behavior, and vi) incurs no runtime overhead during normal program execution
+intended behavior, and vi) incurs no runtime overhead during normal program
+execution
 and only negligible overhead in case of failures.
 }
 
 
 \ignore{
-In this work, we present a technique and its implementation to automatically repair programs
-that otherwise would crash due to failures related to malformed strings or incorrect handling of
+In this work, we present a technique and its implementation to automatically
+repair programs
+that otherwise would crash due to failures related to malformed strings or
+incorrect handling of
 the string.  The technique i) identifies
 the statements which might be vulnerable to string-related errors,
 and are less critical to the functionality of the application such that
-suboptimal behavior might be acceptable, ii) operates in non-invasive mode by ensuring no
+suboptimal behavior might be acceptable, ii) operates in non-invasive mode by
+ensuring no
 side-effects during normal program execution and activating patches only when
-the program is guaranteed to crash, iii) generates patches by identifying constraints on the string
-data and if required, tweaks \code{String} API  parameters to regenerate legally correct
-string data, iv) optimizes the number of statements to be patched by retaining only the ones that need to
+the program is guaranteed to crash, iii) generates patches by identifying
+constraints on the string
+data and if required, tweaks \code{String} API  parameters to regenerate legally
+correct
+string data, iv) optimizes the number of statements to be patched by retaining
+only the ones that need to
 be protected,  v) keeps program behavior as close as possible to the
 intended behavior by developing precise patches, and vi) incurs no runtime
 overhead during normal program execution and only negligible overhead in case of
@@ -235,7 +257,8 @@ several techniques which are outlined below.
 to identify sensitive data which are leaving the system via database, network
 stream, file stream or console. Providing patches to the
 statements that manipulate this data would be undesirable, since
-activation of the patches in case failures may allow altered sensitive data to eventually
+activation of the patches in case failures may allow altered sensitive data to
+eventually
 reach users. Hence, we only mark those program statements which do 
 not manipulate these data.
 
@@ -260,7 +283,8 @@ program execution.
 
 \paragraph{Patch Generation.} We first perform an
 intra-procedural static analysis
-to identify constraints on the string objects under consideration. By identifying
+to identify constraints on the string objects under consideration. By
+identifying
 the type of exceptions that can be thrown in case of a failure, we
 develop patches that
 regenerate string objects by tweaking \java\ \code{String} API used in
@@ -283,9 +307,11 @@ instrumentation points in a program.
 firstly, by targeting only strings
 for patching which allows us to develop more specialized patches, secondly, by
 patching programs very
-close to the points of potential failures which avoids unnecessary patching of other
+close to the points of potential failures which avoids unnecessary patching of
+other
 unaffected variables and their potential
-side effects, thirdly, by analyzing the types of exceptions that can be thrown which
+side effects, thirdly, by analyzing the types of exceptions that can be thrown
+which
 provides valuable insights into
 origins of failures, and finally, by considering all the constraints
 on the strings. This would result
@@ -297,7 +323,8 @@ normal execution which results in no runtime overhead. Even when they get
 activated in case of failures,
 they still cause negligible overhead since we perform no analysis during runtime
 except if required resolve the dynamic constraints.
-As our study reveals~\xref{sec:evaluation} the constraints are typically few and simple, making
+As our study reveals~\xref{sec:evaluation} the constraints are typically few and
+simple, making
 the dynamic analysis light-weight.
 }
 
