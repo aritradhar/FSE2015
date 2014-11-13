@@ -66,14 +66,15 @@ patch is governed by the similarity between a \tool\ generated patch and the
 developer's fix for the same bug. We define \textbf{Patch Quality Index (PQI)}
 as a measure of the effectiveness of the patch.
 $$PQI = \frac{\#~Constraints_{Similar}}{\#~Constraints_{Developer}} *
-\frac{\#~LOC_{\tool}}{\#~LOC_{Developer}} *
+\frac{\#~LOC_{Developer}}{\#~LOC_{\tool}} *
 \frac{Output_{\tool}}{Output_{Developer}}$$
 
 Specifically, PQI compares the similarities in constraints and source line of
 code in \tool's patch against the developer's version, as well as the actual
 output generated from both the patches, thereby considering both the logic and
 the technique to construct an effective patch. A higher value of PQI is
-preferred.
+preferred. Thus, if \tool's patch has fewer constraints, or has more lines of
+code, or has fewer similarities in the output, the PQI will be lesser. 
 
 % is the This matrix is for
 % the qualitative analysis of our auto generated patches. By this measurement we
@@ -86,16 +87,43 @@ preferred.
 % compared the patches to see how much they are similar and dissimilar with the
 % developers' patch.
 
-Determining PQI is a three step process. First, we visually compare \tool's
+Determining PQI is a three step process. First, we visually compared \tool's
 patch with the developer's version and count the exact similar constraints
 observed in both patches to determine the closeness in terms of the set of
 constraints. Second, we disassembled the developer's patch and compared the
-count of bytecodes generated using \tool's patch. Lastly, we observed the actual
+count of bytecodes generated using \tool's patch. Third, we observed the actual
 output of using the \tool\ patched class files against the developer provided
 patch in a later version of the same library. In case the output is primitive or
 strings, an exact match is considered successful, else we iterate over the
-properties of the complex object to determine number of similarities in the two
+properties of the complex object to determine number of exact matches in the two
 outputs.
+
+Table~\ref{tab:results} lists $30$ real-world bugs mined from bug repositories
+of popular Apache and Eclipse libraries. We wrote a driver program to recreate
+the bug, and then applied \tool\ to patch it. We observed that in all cases,
+\tool\ successfully patched the offending class file in the concerned library.
+
+\begin{mylist}
+
+ \item  We observe that PQI for \tool\ generated patches is high for most of
+the bugs, which indicates the effectiveness of the patches. Specifically, for
+$23$ out of $30$, \ie\ $>75\%$, PQI for \tool-generated patches was within $7\%$
+of the developer's fix. Note that there was one instance where the concerned
+bug~\ref{} was still unpatched. In such cases, we looked for the potential or
+suggested patches in comments and discussion forums, and compared \tool's patch
+with them.
+
+ \item We observe that for $4$ of the patches, the PQI was off by over $25\%$.
+On manual inspection of these patches, we found that \todo{Add more details
+later}.
+
+ \item Note that taint analysis only works when sources and sinks are defined.
+Since our library benchmarks have no notion of sources or sinks, \tool's
+bytecode analysis of the libraries did not involve the taint analysis phase.
+However, even without taint analysis, \tool's patches were of high quality, as
+demonstrated by the high PQI.
+
+\end{mylist}
 
 % In case the results were either primitive or string type, we
 % compared the output. In case the output is some complex object we compare
@@ -120,53 +148,6 @@ outputs.
 % less than the developer one the we assign PSI as high. In case the size varies
 % in $\pm5\%$ we assign PSI as medium. If our patch is more than $5\%$ bigger than
 % the develops' one then PSI is assigned to low.
-
-\item \textbf{Already handled exceptions}: \tool\ analyzes the call graph to
-determine if a potential runtime exception throwing statement is handled higher
-up in the call chain or in the same method. In such cases \tool\ must abort the
-patching effort considering that the exception is caught with exact exception
-type or its base type, else it will disrupt the normal control flow of the 
-program. We measure the extent of this optimization, which prevents disruption
-of the control flow using the \textbf{Flow Consistency Index (FCI)} which is
-calculated as $$FCI = \frac{Patch_{HE}}{Stmt_{HE}}$$ where $Patch_{HE}$ = \#
-patches placed in already handled exceptions, and $Stmt_{HE}$ =  \# statements
-in the program which are already handled. We observe that $0 \le FCI \le 1$,
-and a lower value of $FCI$ is desirable.
-
-\item \textbf{Cascaded exceptions}: A cascaded exception arises if the
-\tool-generated patch creates objects that when used as inputs to other \java\
-APIs result in further exceptions.
-% patched objects
-% are used as a input
-% to other methods and violates the specification there.
-\tool\ is prone to cascading exceptions because of the limitation of its
-intra-procedural analysis and a simple constraint evaluation mechanism. However,
-\tool's constraint solver is pluggable and a more sophisticated third party
-solvers can easily be integrated.
-% This is the limitation
-% in our technique in the some complicated cases where it requires develops' 
-% attention. The limitation is due to the fact that the analysis for the
-% repairing 
-% technique is a intra-procedural analysis and the constraint evaluation method is
-% very simple. For the constraint evaluation part, the solver is pluggable, we can
-% easily replace it with a third party solver.
-Specifically, cascaded exceptions may arise if the patch generates \code{String}
-objects that represent a malformed string. Further, if we keep the optimization
-in \xref{subsubsec:minimizePatchInstrumentation}, then cascaded failures may
-occur even for subsequent \code{String} APIs handling the malformed
-string following the point of patching. If the optimization is turned
-off, \tool\ will automatically patch all relevant \code{String} APIs and thus
-handle all cascaded failures involving malformed \code{String} objects.
-% 
-% Cascaded exception can be noticed
-% when the string object we are patching is generation some specific URI or driver
-% string which would be used to load or configure something. In such scenario, the
-% patch may produce some malformed string. In case there is a cascaded exception 
-% in string object, our analysis will take care of it, other wise it would abort. 
-\end{mylist}
-
-% \subsection{Experimental Results}
-% \label{subsec:experimentalResults}
 
 \begin{table*}[t]
 % \setlength{\tabcolsep}{3pt}
@@ -199,65 +180,65 @@ handle all cascaded failures involving malformed \code{String} objects.
 \code{Aries} & \cite{ARIES1204} & Major &$3.5K$ &$129$  & $ 1.02$ & $0$  &$42$&
 $5$
 
-%$3.1/10$ & $0.6/31$ & $12.8/146$ &$2.3/142$ 
+%$3.1/10$ & $0.6/31$ & $12.8/146$ &$2.3/142$
 & $\checkmark$ \\
 %% 0.791666667
 \code{Commons CLI1.x} & \cite{CLI193} & Critical & $3.2K$ & $53$  & $0.79
  $ & $0$  & $19$& $19$
 
-%& $2.8/5$ & $0.5/30$ & $11.6/149$ & $1.9/133$ 
+%& $2.8/5$ & $0.5/30$ & $11.6/149$ & $1.9/133$
 & $\checkmark$ \\
 %% 0.5
 \code{Commons CLI2.x} & \cite{CLI46} & Major & $3.2K$ & $21$ & $0.50
  $ & $1$  & $13$
-&$2$  
-%& $2.8/5$ & $0.6/32$ & $12/212$ & $2/131$ 
+&$2$
+%& $2.8/5$ & $0.6/32$ & $12/212$ & $2/131$
 & $\times$ \\
 %% 0.992753623
 \code{Commons Compress} & \cite{COMPRESS26} & Blocker & $4K$ & $134$  & $0.99
  $ & $0$& $46$& $4$
-%$2.7/5$ & $0.5/30$ & $11.5/209$ & $1.8/130$ 
+%$2.7/5$ & $0.5/30$ & $11.5/209$ & $1.8/130$
 &$\checkmark$\\
 %% 1.015873016
 \code{Commons IO} & \cite{IO179} & Major & $3.3K$ & $125$ & $ 1.01
-$ & $0$  & $76$ & $1$  
-%$3/11$ & $0.5/33$ & $12/209$ & $2/141$ 
+$ & $0$  & $76$ & $1$
+%$3/11$ & $0.5/33$ & $12/209$ & $2/141$
 & $\checkmark$\\
 %% 0.983870968
 \code{Commons Lang} & \cite{LANG457} & Major & $5.1K$ & $240$ & $0.98
  $ & $0$  & $168$&
-$8$  
-%$3/19$ & $0.57/30$ & $16.5/209$ & $2.8/158$ 
+$8$
+%$3/19$ & $0.57/30$ & $16.5/209$ & $2.8/158$
 & $\checkmark$ \\
 %% 1
 \code{Commons Math} & \cite{MATH198} & Major & $3.4K$ & $300$ & $1.00
  $ & $0$  & $36$
-&$2$   
-%$3/20$ & $0.5/30$ & $11.9/209$ & $2.9/152$ 
+&$2$
+%$3/20$ & $0.5/30$ & $11.9/209$ & $2.9/152$
 & $\checkmark$ \\
 %% 1.066666667
 \code{Commons Net} & \cite{NET442} & Major & $3.3K$ & $14$ & $ 1.07
 $ & $0$  & $6$ &
-$1$  
-%$2.8/6$ & $0.5/33$ & $11.4/212$ & $1.9/132$ 
+$1$
+%$2.8/6$ & $0.5/33$ & $11.4/212$ & $1.9/132$
 & $\checkmark$ \\
 %% 1
 \code{Commons VFS} & \cite{VFS338} & Major &$4.5K$ & $37$ & $1.00
  $ & $0$  & $20$ & $2$
 
-%$3.7/13$ & $1.4/7$ & $46.1/151$ & $3.1/143$ 
+%$3.7/13$ & $1.4/7$ & $46.1/151$ & $3.1/143$
 & $\checkmark$ \\
 %% 0.956521739
 \code{Derby} & \cite{DERBY4748} & Major & $4.4K$ &$40$ & $0.96
  $ & $0$  & $47$ & $6$
-%$3.3/15$ & $0.5/31$ & $19.9/208$ & $2.7/146$ 
+%$3.3/15$ & $0.5/31$ & $19.9/208$ & $2.7/146$
 & $\checkmark$ \\
-%% 0.942857143
+% %% 0.942857143
 \code{DUMMY 4 compilation} & \cite{DUMMY} & Major & $3.3K$ & $33$ & $0.94$ &
 $0$ & $13$ & $2$
 %& $2.7/8$ & $0.5/33$ & $13.5/213$ & $2.2/131$
 & $\checkmark$ \\
-%% 0.519607843
+% 0.519607843
 \code{Eclipse AJ Weaver} & \cite{EclipseBug432874} & Major & $20.6K$ & $50$ & $
 0.52 $ &$0$  & $4$ & $1$
 %& $3.1/18$ & $0.6/34$ & $41.2/212$ &$1.6/142$
@@ -269,13 +250,13 @@ $0$ & $13$ & $2$
 &$\checkmark$ \\
 %% 0.960
 \code{FlexDK 3.4} &\cite{SDK14417} & Minor & $6.3K$ & $600$ & $0.96$ & $0$ &
-$207$ & $25$   
-%$4.8/40$ & $0.4/31$ & $12.9/209$ & $2.6/189$ 
+$207$ & $25$
+%$4.8/40$ & $0.4/31$ & $12.9/209$ & $2.6/189$
 & $\checkmark$ \\
 %% 0.956521739
 \code{Hama 0.2.0} &\cite{HAMA212}  & Critical & $3.7K$ & $35$ & $1.38$ & $0$ &
-$28$ & $5$  
-%$2.6/5$ & $0.5/33$ & $14.4/210$ & $3.1/134$ 
+$28$ & $5$
+%$2.6/5$ & $0.5/33$ & $14.4/210$ & $3.1/134$
 & $\checkmark$ \\
 %% 1.015873016
 \code{HBase 0.92.0} &\cite{HBASE4481}  & Critical & $4.8K$ & $61$ & $ 1.01
@@ -284,77 +265,77 @@ $ & $0$ & $13$ & $2$
 & $\checkmark$\\
 %% 1.015873016
 \code{Hive} &\cite{HIVE6986} & Trivial &$4.4K$ & $23$ & $1.01$ & $0$  & $8$ &$1$
-%$3.4/12$ & $1.5/11$ & $20/121$ & $1.6/143$ 
+%$3.4/12$ & $1.5/11$ & $20/121$ & $1.6/143$
 & $\checkmark$ \\
 %% 0.956521739
 \code{HttpClient} &\cite{HTTPCLIENT150} & Major & $3.3K$ & $14$ & $1.13$ & $0$ &
-$6$& $1$  
-%$2.8/6$ & $0.5/33$ & $12.3/212$ & $2.7/131$ 
+$6$& $1$
+%$2.8/6$ & $0.5/33$ & $12.3/212$ & $2.7/131$
 & $\checkmark$ \\
 %% 1.133333333
 \code{jUDDI} & \cite{JUDDI292} & Major &$3.2K$ & $70$ & $ 1.13$ & $0$  & $10$ &
-$2$ 
-%$3.1/11$ & $0.5/34$ & $13.6/209$ & $2.9/138$ 
+$2$
+%$3.1/11$ & $0.5/34$ & $13.6/209$ & $2.9/138$
 & $ \checkmark$ \\
 %% 0.972222222
 \code{Log4j} & \cite{ApacheLog4jBug} & Major & $3.2K$ & $17$ & $ 0.97$ & $0$  &
-$6$ &$1$  
-%$2.8/4$ & $0.5/32$ & $13/212$ & $2.5/131$ 
+$6$ &$1$
+%$2.8/4$ & $0.5/32$ & $13/212$ & $2.5/131$
 & $\checkmark$ \\
 %% 1
 \code{MyFaces Core} & \cite{MYFACES416} & Major  & $4.5K$ & $50$ & $1.00 $ &
 $0$ & $4$& $2$
-%$3.8/4$ & $0.5/30$ & $17/218$ & $1.6/130$ 
+%$3.8/4$ & $0.5/30$ & $17/218$ & $1.6/130$
 & $\checkmark$ \\
 %% 0.980769231
 \code{Nutch} & \cite{NUTCH1547} & Major & $4.5K$ & $90$ & $0.98$ & $0$  & $8$&
-$1$   
-%$3.2/15$ & $1.2/30$ & $32.9/215$ & $3.9/147$ 
+$1$
+%$3.2/15$ & $1.2/30$ & $32.9/215$ & $3.9/147$
 & $\checkmark$ \\
 %% 1.010989011
 \code{Ofbiz} & \cite{OFBIZ4237} & Minor & $4.4K$ & $28$ & $1.01 $ & $1$ & $6$
-&$1$  
-%$3.1/15$ & $1.3/14$ & $18.9/215$ & $2.8/149$ 
+&$1$
+%$3.1/15$ & $1.3/14$ & $18.9/215$ & $2.8/149$
 & $\checkmark$ \\
 %% 1.137931034
 \code{PDFBox} & \cite{PDFBOX467} & Major &$4.4K$ & $23$ & $ 1.14$ & $0$  & $8$&
 $1$
-%$3.3/12$ & $1.5/1$ & $20/212$ & $2.6/143$ 
+%$3.3/12$ & $1.5/1$ & $20/212$ & $2.6/143$
 & $\checkmark$ \\
 %\code{Servicemix-soap} & \cite{SMXCOMP156} & Major & High & $0$ & $$ & $$&
 %$$ & $$ & $$ & $$ & $$ & $$ & $\checkmark$ \\
 %% 1
 \code{Sling Eclipse IDE} & \cite{SLING3095} & Major & $4.5K$ & $58$ & $ 1.00
-$ & $0$ &$39$ & $6$ 
-%$3/14$ & $0.5/34$ & $21.3/208$ & $3.5/147$ 
+$ & $0$ &$39$ & $6$
+%$3/14$ & $0.5/34$ & $21.3/208$ & $3.5/147$
 & $\checkmark$\\
 %% 0.96875
 \code{SOAP} & \cite{SOAP130} & Major &$5K$ & $165$ & $0.97$ & $0$  & $32$ & $5$
-%$3.4/19$ & $0.6/30$ & $14/209$ & $2.3/148$ 
+%$3.4/19$ & $0.6/30$ & $14/209$ & $2.3/148$
 & $\checkmark$ \\
 %% 0.976470588
 \code{SOLR 1.2} & \cite{SOLR331} & Major & $11K$ & $200$& $0.98$ & $0$  & $25$
-& $4$  
-%$4.4/21$ & $0.6/32$ & $24/219$ & $2.7/139$ 
+& $4$
+%$4.4/21$ & $0.6/32$ & $24/219$ & $2.7/139$
 & $\checkmark$ \\
 %% 1.024509804
 \code{Struts2} & \cite{WW650} & Major &$16K$ & $80$ & $1.03$ & $0$  & $25$ & $2$
-%$3/14$ & $0.5/32$ & $25.9/210$ & $1.3/140$ 
+%$3/14$ & $0.5/32$ & $25.9/210$ & $1.3/140$
 & $\checkmark$ \\
 %% 0.975609756
 \code{Tapestry 5} & \cite{TAP51770} & Major & $6.2K$  & $71$ & $0.98 $ & $0$ &
-$31$ &$5$   
-%$2.9/10$ & $0.5/34$ & $2.4/211$ & $1.9/136$ 
+$31$ &$5$
+%$2.9/10$ & $0.5/34$ & $2.4/211$ & $1.9/136$
 & $\checkmark$ \\
 %% 0.960526316
 \code{Wicket} & \cite{WICKET4387} & Major & $70K$ & $68$ & $0.96$ & $0$  & $16$
-& $1$  
-%$3/14$ & $0.5/32$ & $52.4/210$ & $1.4/142$ 
+& $1$
+%$3/14$ & $0.5/32$ & $52.4/210$ & $1.4/142$
 & $\checkmark$ \\
 %% 1.028985507
 \code{XalanJ2} & \cite{XALANJ836} & Major & $3.3K$ & $33$ & $ 1.03$ & $0$  &$13$
-& $2$  
-%$2.7/8$ & $0.5/33$ & $13.5/213$ & $2.2/131$ 
+& $2$
+%$2.7/8$ & $0.5/33$ & $13.5/213$ & $2.2/131$
 & $\checkmark$ \\
 
 \hline
@@ -373,57 +354,71 @@ $\mathcal{N}_{Unit}$ & \# \code{Units} analyzed & $FCI$ & Flow Consistency
 Index & $\mathcal{IC}_{WO}$ & Instrumentation w/ optimization & &\\
 \end{tabular}
 }
-\caption{Experimental results.}
+\caption{\tool's accuracy results when applied to $30$ bugs in popular Apache
+and Eclipse libraries.}
 \label{tab:results}
 \end{table*}
 
-% \begin{table}[t]
-% \centering
-% \scriptsize
-% \begin{tabular}{|l|l|}
-% \hline
-% \multicolumn{1}{|c|}{\textbf{Notation}} &
-% \multicolumn{1}{c|}{\textbf{Meaning}} \\
+\item \textbf{Precision of taint analysis}: \tool\ leverages off-the-shelf
+tools (\infoflow) to perform the taint analysis. We measure precision of our
+choice of tool by measuring the number of statements in the analyzed code that
+are deemed unsafe to patch. Since we could not measure the precision of our
+taint analysis on the library benchmarks listed in Table~\ref{tab:results}, we
+select $x$ diverse applications and apply \tool\ in its entirety to obtain a
+measure of the precision of the taint analysis.
+
+Table~\ref{tab:taintAnalysis} lists the results. We observe that in all
+\todo{fix it.}
+
+\item \textbf{Already handled exceptions}: \tool\ analyzes the call graph to
+determine if a potential runtime exception throwing statement is handled higher
+up in the call chain or in the same method. In such cases \tool\ must abort the
+patching effort considering that the exception is caught with exact exception
+type or its base type, else it will disrupt the normal control flow of the 
+program. We measure the extent of this optimization, which prevents disruption
+of the control flow using the \textbf{Flow Consistency Index (FCI)} which is
+calculated as $$FCI = \frac{Patch_{HE}}{Stmt_{HE}}$$ where $Patch_{HE}$ = \#
+patches placed in already handled exceptions, and $Stmt_{HE}$ =  \# statements
+in the program which are already handled. We observe that $0 \le FCI \le 1$,
+and a lower value of $FCI$ is desirable.
+
+\todo{details about FCI}
+
+\item \textbf{Cascaded exceptions}: A cascaded exception arises if the
+\tool-generated patch creates objects that when used as inputs to other \java\
+APIs result in further exceptions.
+% patched objects
+% are used as a input
+% to other methods and violates the specification there.
+\tool\ is prone to cascading exceptions because of the limitation of its
+intra-procedural analysis and a simple constraint evaluation mechanism. However,
+\tool's constraint solver is pluggable and a more sophisticated third party
+solvers can easily be integrated.
+% This is the limitation
+% in our technique in the some complicated cases where it requires develops' 
+% attention. The limitation is due to the fact that the analysis for the
+% repairing 
+% technique is a intra-procedural analysis and the constraint evaluation method is
+% very simple. For the constraint evaluation part, the solver is pluggable, we can
+% easily replace it with a third party solver.
+Specifically, cascaded exceptions may arise if the patch generates \code{String}
+objects that represent a malformed string. Further, if we keep the optimization
+in \xref{subsubsec:minimizePatchInstrumentation}, then cascaded failures may
+occur even for subsequent \code{String} APIs handling the malformed
+string following the point of patching. If the optimization is turned
+off, \tool\ will automatically patch all relevant \code{String} APIs and thus
+handle all cascaded failures involving malformed \code{String} objects.
 % 
-% \hline
-% API & Analyzed library\\
-% BugID & Unique ID in bug repository\\
-% Priority & Severity of bug \\
-% $PQI$ & Program Quality Index\\
-% $PSI$ & Program Size Index\\
-% $PFCI$ & Program Flow Consistency Index\\
-% $\mathcal{N}_{Unit}$ & Total \#\code{Units} analyzed\\
-% $\mathcal{IC}_{NO}$ & Instrumentation without optimization\\
-% $\mathcal{IC}_{WO}$ & Instrumentation with optimization\\
-% $\mathcal{N}_{CG}$ & Size of the call graph\\
-% %$\mathcal{PF}_{CA}$ & Profiling data of constraint analysis(sec/MB)\\
-% %$\mathcal{PF}_{TA}$ & Profiling data of taint analysis(sec/MB)\\
-% %$\mathcal{PF}_{CG}$ & Profiling data of call graph(sec/MB)\\
-% %$\mathcal{PF}_{IN}$ & Profiling data of instrumentation phase(sec/MB)\\
-% $\mathcal{RS}_{CE}$ & If cascaded exception exists\\
-% 
-% \hline
-% \end{tabular}
-% 
-% \caption{Notations used in Table~\ref{tab:results}}
-% \label{tab:Notation}
-% \end{table}
+% Cascaded exception can be noticed
+% when the string object we are patching is generation some specific URI or driver
+% string which would be used to load or configure something. In such scenario, the
+% patch may produce some malformed string. In case there is a cascaded exception 
+% in string object, our analysis will take care of it, other wise it would
+% abort.
 
-\todo{Describe in detail the results.}
+We observe that $3$ benchmarks throw
 
-Table~\ref{tab:results} lists $30$ real-world and $5$ synthetic bugs that we
-have patched using \tool, along with the several accuracy metrics described
-above. We observe that PQI for \tool\ generated patches is high for most of
-the bugs, which indicates the effectiveness of the patches. However, we also
-note that for $x$ bugs the PQI was low. This is because \todo{Add more details
-later}.
-
-24 out of 30 patches were within 7\% of the developer's fix, while only 4 were 
-
-However, there were instances where the concerned bug
-was still unpatched. In such cases, we looked for the potential or suggested
-patches in comments and discussion forums for the specific product.
-
+\end{mylist}
 
 \subsection{Overhead}
 \label{sub:overhead}
