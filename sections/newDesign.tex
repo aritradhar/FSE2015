@@ -474,7 +474,8 @@ achieved with the help of a constraint representation model.
 
 %-------------------
 
-\myparagraph{Constraint representation model}  We use a finite state machine
+\myparagraph{Constraint representation model}  We use a finite state
+machine
 (FSM) as a formalism to describe the behavior of \java\ \code{String} API, and 
 apply it to drive the generation of exception-specific \code{catch} blocks. The
 model is precomputed based on the API documentation of \java\ \code{Strings}.
@@ -501,18 +502,32 @@ transition and $safe \rightarrow error$ corresponds to the constraint violation.
 \begin{figure}[t]
 \centering
 \includegraphics[scale=.25]{images/automataString.pdf}
-\caption{Constraint representation model.}
+\caption{Partial constraint representation model.}
 \label{fig:constraintautomata}
 \end{figure}
 
-An abstract constraint representation model is depicted in
-Figure~\ref{fig:constraintautomata}. A concrete model be constructed using an
-exception-specific information that is available in the API documentation. The
-repairing mechanism gets triggered when some $\eta$ is thrown while performing
-$\zeta$ after at least one of the constraints from $\Lambda$ on the structure of
-the associated string is violated. The patches essentially support the same
-semantics using multiple \code{catch} blocks corresponding to various
-exceptions.
+% An abstract constraint representation model is depicted in
+% Figure~\ref{fig:constraintautomata}. A concrete model be constructed using an
+% exception-specific information that is available in the API documentation. The
+% repairing mechanism gets triggered when some $\eta$ is thrown while performing
+% $\zeta$ after at least one of the constraints from $\Lambda$ on the structure of
+% the associated string is violated. The patches essentially support the same
+% semantics using multiple \code{catch} blocks corresponding to various
+% exceptions.
+
+
+A partial constraint representation model is depicted in
+Figure~\ref{fig:constraintautomata}. It essentially specifies the constraints
+that are associated with \code{substring}
+method and \code{IndexOutofBoundException} exception that can be thrown by the
+method. A complete model would
+have several such self-looping transitions corresponding to other \java\
+\code{String} API methods. The
+repairing mechanism gets triggered when an exception is thrown while performing
+a string operation after at least one of the constraints on the structure of
+the associated string is violated. This is represented by the transition labeled
+by \code{other}. The patches essentially support the same
+semantics identified by the transitions with the help of \code{catch} blocks.
 
 %------------------------
 
