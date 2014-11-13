@@ -224,11 +224,13 @@ required, since the constraint would have been satisfied in the beginning and it
 as long as the variable is not changed. Similarly, when the API usage is same and none of 
 the method parameters are changed, no further patching would be required. This reduces the 
 total number of possible
-instrumentations required. Further, a string object that involves methods
-capable of throwing runtime exceptions, may not encounter any exceptions during
-execution. Thus, we defer the actual instrumentation required for patching until
-the first exception is thrown, which also minimizes the total amount of code
-instrumentation.
+instrumentations required. 
+
+%Further, a string object that involves methods
+%capable of throwing runtime exceptions, may not encounter any exceptions during
+%execution. Thus, we defer the actual instrumentation required for patching until
+%the first exception is thrown, which also minimizes the total amount of code
+%instrumentation.
 
 
 \ignore{
