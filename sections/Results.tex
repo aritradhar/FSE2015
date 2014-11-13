@@ -98,33 +98,6 @@ strings, an exact match is considered successful, else we iterate over the
 properties of the complex object to determine number of exact matches in the two
 outputs.
 
-Table~\ref{tab:results} lists $30$ real-world bugs mined from bug repositories
-of popular Apache and Eclipse libraries. We wrote a driver program to recreate
-the bug, and then applied \tool\ to patch it. We observed that in all cases,
-\tool\ successfully patched the offending class file in the concerned library.
-
-\begin{mylist}
-
- \item  We observe that PQI for \tool\ generated patches is high for most of
-the bugs, which indicates the effectiveness of the patches. Specifically, for
-$23$ out of $30$, \ie\ $>75\%$, PQI for \tool-generated patches was within $7\%$
-of the developer's fix. Note that there was one instance where the concerned
-bug~\ref{} was still unpatched. In such cases, we looked for the potential or
-suggested patches in comments and discussion forums, and compared \tool's patch
-with them.
-
- \item We observe that for $4$ of the patches, the PQI was off by over $25\%$.
-On manual inspection of these patches, we found that \todo{Add more details
-later}.
-
- \item Note that taint analysis only works when sources and sinks are defined.
-Since our library benchmarks have no notion of sources or sinks, \tool's
-bytecode analysis of the libraries did not involve the taint analysis phase.
-However, even without taint analysis, \tool's patches were of high quality, as
-demonstrated by the high PQI.
-
-\end{mylist}
-
 % In case the results were either primitive or string type, we
 % compared the output. In case the output is some complex object we compare
 % the properties of them.
@@ -358,6 +331,33 @@ Index & $\mathcal{IC}_{WO}$ & Instrumentation w/ optimization & &\\
 and Eclipse libraries.}
 \label{tab:results}
 \end{table*}
+
+Table~\ref{tab:results} lists $30$ real-world bugs mined from bug repositories
+of popular Apache and Eclipse libraries. We wrote a driver program to recreate
+the bug, and then applied \tool\ to patch it. We observed that in all cases,
+\tool\ successfully patched the offending class file in the concerned library.
+
+\begin{mylist}
+
+ \item  We observe that PQI for \tool\ generated patches is high for most of
+the bugs, which indicates the effectiveness of the patches. Specifically, for
+$23$ out of $30$, \ie\ $>75\%$, PQI for \tool-generated patches was within $7\%$
+of the developer's fix. Note that there was one instance where the concerned
+bug~\ref{} was still unpatched. In such cases, we looked for the potential or
+suggested patches in comments and discussion forums, and compared \tool's patch
+with them.
+
+ \item We observe that for $4$ of the patches, the PQI was off by over $25\%$.
+On manual inspection of these patches, we found that \todo{Add more details
+later}.
+
+ \item Note that taint analysis only works when sources and sinks are defined.
+Since our library benchmarks have no notion of sources or sinks, \tool's
+bytecode analysis of the libraries did not involve the taint analysis phase.
+However, even without taint analysis, \tool's patches were of high quality, as
+demonstrated by the high PQI.
+
+\end{mylist}
 
 \item \textbf{Precision of taint analysis}: \tool\ leverages off-the-shelf
 tools (\infoflow) to perform the taint analysis. We measure precision of our
