@@ -222,12 +222,11 @@ In \xref{sub:overhead}, we measure the relative performance and resource
 penalties incurred with \tool. In \xref{sub:casestudies}, we describe our
 experiences with $x$ major bugs from our data set.
 
-\myparagraph{Data Set} We mined bug repositories of several \java-based
-applications from hugely popular product suites including Apache, Eclipse,
-JBoss, etc., and selected $30$ bugs, majority of them being rated either major,
-critical or blocking. These bugs involved usage of $64+$ different APIs from
-\java's \code{String}, \code{StringBuffer}, \code{StringBuilder}, and Apache
-\code{StringUtils} and Google Guava \code{StringUtils} classes.
+\myparagraph{Data Set} We mined bug repositories of several open-source
+\java-based applications and selected $30$ bugs, majority of them being rated
+either major, critical or blocking. These bugs involved usage of $64+$ different
+APIs from \java's \code{String}, \code{StringBuffer}, \code{StringBuilder}, and
+Apache \code{StringUtils} and Google Guava \code{StringUtils} classes.
 
 % \begin{mylist}
 % 
@@ -246,8 +245,8 @@ critical or blocking. These bugs involved usage of $64+$ different APIs from
 with $2.9$ GHz dual core Intel i$5$ CPU, and $8$ GB of RAM, and running
 Microsoft Windows $8.1$. We used JDK v$1.7$ running with $2$ GB of allocated
 heap space. All bug reproduction was done on Eclipse Juno IDE. We used \soot\
-v$2.5.0$ for bytecode analysis and instrumentation, and \soot\ \infoflow\ v$xxx$
-for static taint analysis.
+v$2.5.0$ for bytecode analysis and instrumentation, and \soot\ \infoflow\
+snapshot from May'14 for static taint analysis.
 % We have also used \java\ decompiler JD v0.7.
 
 % 
@@ -381,28 +380,21 @@ demonstrated by the high PQI.
 
 \end{mybullet}
 
-\item \textbf{Precision of taint analysis}: \tool\ leverages off-the-shelf
-tools (\infoflow) to perform the taint analysis. We measure precision of our
-choice of tool by measuring the number of statements in the analyzed code that
-are deemed unsafe to patch. Since we could not measure the precision of our
-taint analysis on the library benchmarks listed in Table~\ref{tab:results}, we
-select $x$ diverse applications and apply \tool\ in its entirety to obtain a
-measure of the precision of the taint analysis.
-
-%%%%Table for the taint analysis stats
 \begin{table}[t]
 \centering
 \scriptsize
-\begin{tabular}{|l|c|c|c|}
+\begin{tabular}{|l|r|r|r|}
 \hline
 \multicolumn{1}{|c|}{\textbf{Application}} &
 \multicolumn{1}{c|}{\textbf{KLOC}} &
-\multicolumn{1}{c|}{\textbf{Statements}} &
-\multicolumn{1}{c|}{\textbf{Flagged by taint analysis}}\\
+\multicolumn{1}{c|}{\textbf{Total paths}} &
+\multicolumn{1}{c|}{\textbf{Tainted paths}}\\
 
 \hline
-\code{checkstyle4j}& $58K$ & $66K$ & $28$\\
-\code{Jazzy}& $4.9K$ & $5.5K$ & $26$\\
+\code{Checkstyle}& $58.0K$ & $1977$ & $88$\\
+\code{Jazzy Core}& $4.9K$ & $270$ & $26$\\
+\code{JEdit}& $108.2K$ & $185$ & $22$\\
+
 \hline
 \end{tabular}
 
@@ -410,33 +402,32 @@ measure of the precision of the taint analysis.
 \label{tab:taintAnalysis}
 \end{table}
 
-Table~\ref{tab:taintAnalysis} lists the results. We observe that in all
-\todo{fix it.}
+\item \textbf{Precision of taint analysis}: \tool\ leverages off-the-shelf
+tools (\infoflow) to perform the taint analysis. We measure precision of our
+choice of tool by measuring the number of statements in the analyzed code that
+are deemed unsafe to patch. Since we could not measure the precision of our
+taint analysis on the library benchmarks (as discussed earlier), we select $3$
+diverse applications and apply \tool\ in its entirety to obtain a measure of the
+precision of the taint analysis. Specifically, for each application we provided
+a set of sources, sinks and taint propagators to \infoflow, which listed the
+total number of tainted paths, \ie\ paths from a sensitive source to a sink and
+thus must not be patched. Table~\ref{tab:taintAnalysis} lists the results. We
+observe that the total number of tainted paths is less than $12\%$ across the
+applications. \todo{Fix it.}
 
 \item \textbf{Already handled exceptions}: \tool\ analyzes the call graph to
 determine if a potential runtime exception throwing statement is handled higher
 up in the call chain or in the same method. In such cases \tool\ must abort the
 patching effort considering that the exception is caught with exact exception
-type or its base type, else it will disrupt the normal control flow of the 
-program. We measure the extent of this optimization, which prevents disruption
-of the control flow using the \textbf{Flow Consistency Index (FCI)} which is
-calculated as $$FCI = \frac{Patch_{HE}}{Stmt_{HE}}$$ where $Patch_{HE}$ = \#
-patches placed in already handled exceptions, and $Stmt_{HE}$ =  \# statements
-in the program which are already handled. We observe that $0 \le FCI \le 1$,
-and a lower value of $FCI$ is desirable.
+type or its base type. This is required else patching will disrupt the normal
+control flow of the program.
 
-\todo{details about FCI}
-
-If there is exist some developers' exception handling mechanism in the method or
-in any methods upper in the call chain, the patching module will skip that as it
-may change natural program flow. In some cases we have seen this where the buggy
-string handling statement is inside the try block and handled by wrong exception
-type (often \code{Exception} class which is the base type). In such cases to
-evaluate the effectiveness of our patching technique, we disabled the call graph
-analysis phase and do a force patch in the methods. In such cases the
-developer's \code{catch} block couldn't handle that and we deviated from natural
-flow. In such cases PFCI = n, where n is the number of developer's exception
-handling we ignore for force update.
+We measure the extent of this optimization, which prevents disruption of the
+control flow using the \textbf{Flow Consistency Index (FCI)} which is calculated
+as $$FCI = n$$ where $n$ is the number of exceptions in the application that
+must be ignored \tool\ for forced patching of the bug. Note that $FCI \ge 0$,
+and a lower value of $FCI$ is desirable. We observe that patching four bugs
+required \tool\ to ignore at most one exception.
 
 \item \textbf{Cascaded exceptions}: A cascaded exception arises if the
 \tool-generated patch creates objects that when used as inputs to other \java\
@@ -470,7 +461,9 @@ handle all cascaded failures involving malformed \code{String} objects.
 % in string object, our analysis will take care of it, other wise it would
 % abort.
 
-We observe that $3$ benchmarks throw
+We observe that two benchmarks throw cascaded exceptions even after being
+repaired. The cascading was one level deep and triggered exception in another
+non-String code (and thus unpatched), which caused the application to crash.
 
 \end{mylist}
 
