@@ -247,8 +247,8 @@ Apache \code{StringUtils} and Google Guava \code{StringUtils} classes.
 with $2.9$ GHz dual core Intel i$5$ CPU, and $8$ GB of RAM, and running
 Microsoft Windows $8.1$. We used JDK v$1.7$ running with $2$ GB of allocated
 heap space. All bug reproduction was done on Eclipse Juno IDE. We used \soot\
-v$2.5.0$ for bytecode analysis and instrumentation, and \soot\ \infoflow\
-snapshot from May'14 for static taint analysis.
+v$2.5.0$ for bytecode analysis and instrumentation, and \infoflow\ snapshot
+from May'14 for static taint analysis.
 % We have also used \java\ decompiler JD v0.7.
 
 % 
@@ -433,11 +433,11 @@ type or its base type. This is required else patching will disrupt the normal
 control flow of the program.
 
 We measure the extent of this optimization, which prevents disruption of the
-control flow using the \textbf{Flow Consistency Index (FCI)} which is calculated
-as $$FCI = n$$ where $n$ is the number of exceptions in the application that
+control flow using the \textbf{Flow Consistency Index (FCI)} that is calculated
+as $FCI = n$, where $n$ is the number of exceptions in the application that
 must be ignored \tool\ for forced patching of the bug. Note that $FCI \ge 0$,
 and a lower value of $FCI$ is desirable. We observe that patching four bugs
-required \tool\ to ignore at most one exception.
+required \tool\ to ignore at most one exception; rest required no changes.
 
 \item \textbf{Cascaded exceptions}: A cascaded exception arises if the
 \tool-generated patch creates objects that when used as inputs to other \java\
