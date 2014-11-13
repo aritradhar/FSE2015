@@ -337,7 +337,7 @@ of popular Apache and Eclipse libraries. We wrote a driver program to recreate
 the bug, and then applied \tool\ to patch it. We observed that in all cases,
 \tool\ successfully patched the offending class file in the concerned library.
 
-\begin{mylist}
+\begin{mybullet}
 
  \item  We observe that PQI for \tool\ generated patches is high for most of
 the bugs, which indicates the effectiveness of the patches. Specifically, for
@@ -357,7 +357,7 @@ bytecode analysis of the libraries did not involve the taint analysis phase.
 However, even without taint analysis, \tool's patches were of high quality, as
 demonstrated by the high PQI.
 
-\end{mylist}
+\end{mybullet}
 
 \item \textbf{Precision of taint analysis}: \tool\ leverages off-the-shelf
 tools (\infoflow) to perform the taint analysis. We measure precision of our
@@ -366,6 +366,27 @@ are deemed unsafe to patch. Since we could not measure the precision of our
 taint analysis on the library benchmarks listed in Table~\ref{tab:results}, we
 select $x$ diverse applications and apply \tool\ in its entirety to obtain a
 measure of the precision of the taint analysis.
+
+%%%%Table for the taint analysis stats
+\begin{table}[t]
+\centering
+\scriptsize
+\begin{tabular}{|l|c|c|c|}
+\hline
+\multicolumn{1}{|c|}{\textbf{Application}} &
+\multicolumn{1}{c|}{\textbf{KLOC}} &
+\multicolumn{1}{c|}{\textbf{Statements}} &
+\multicolumn{1}{c|}{\textbf{Flagged by taint analysis}}\\
+
+\hline
+\code{checkstyle4j}& $58K$ & $66K$ & $28$\\
+\code{Jazzy}& $4.9K$ & $5.5K$ & $26$\\
+\hline
+\end{tabular}
+
+\caption{Taint analysis result}
+\label{tab:taintAnalysis}
+\end{table}
 
 Table~\ref{tab:taintAnalysis} lists the results. We observe that in all
 \todo{fix it.}
@@ -426,6 +447,29 @@ We observe that $3$ benchmarks throw
 We measure the overhead of \tool\ using different parameters as identified
 below.
 
+\begin{figure*}[t]
+\centering
+\begin{tabular}{ccc}
+\subfloat[Prob. of false alarms with variation in $\tau$ and
+flows.\label{fig:perf:callgraph}]
+{\includegraphics[width=.3\linewidth]{images/CgSizeVsTime.pdf}}
+\hfill
+&
+\subfloat[Prob. of lack of genuine alarms vs $\tau$ and loss
+rate.\label{fig:perf:constraints}]
+{\includegraphics[width=.3\linewidth]{images/ConstraintsVsTime.pdf}
+}
+\hfill
+&
+\subfloat[Comparison of ping latencies with varying
+hosts.\label{figure:perf:strings}]
+{\includegraphics[width=.3\linewidth]{images/InstrumentationVsTime.pdf}}
+\hfill
+\\
+\end{tabular}
+\caption{\tool\ evaluation.}
+\end{figure*}
+
 \begin{mylist}
 
  \item \textbf{Execution overhead}: We determine the execution overhead of the
@@ -457,54 +501,32 @@ requires $52.4$s and $210$MB memory for complete end-to-end analysis.
 
 \end{mylist}
 
-%%%%Table for the taint analysis stats
-\begin{table}[t]
-\centering
-\scriptsize
-\begin{tabular}{|l|c|c|c|}
-\hline
-\multicolumn{1}{|c|}{\textbf{Application}} &
-\multicolumn{1}{c|}{\textbf{KLOC}} & 
-\multicolumn{1}{c|}{\textbf{Statements}} & 
-\multicolumn{1}{c|}{\textbf{Flagged by taint analysis}}\\
-
-\hline
-\code{checkstyle4j}& $58K$ & $66K$ & $28$\\
-\code{Jazzy}& $4.9K$ & $5.5K$ & $26$\\
-\hline
-\end{tabular}
-
-\caption{Taint analysis result}
-\label{tab:taintAnalysis}
-\end{table}
-
-
 \subsection{Case studies}
 \label{sub:casestudies}
 
 \todo{Select interesting benchmarks for a detailed study.}
 
-\begin{figure}[t]
-\centering
-\includegraphics[scale = .45]{images/CgSizeVsTime.pdf}
-\caption{Performance statistics of call graph size vs. time}
-\label{fig:perf:callgraph}
-\end{figure}
-
-
-\begin{figure}[t]
-\centering
-\includegraphics[scale = .31]{images/ConstraintsVsTime.pdf}
-\caption{Performance statistics of constraint vs. time}
-\label{fig:perf:constraints}
-\end{figure}
-
-\begin{figure}[t]
-\centering
-\includegraphics[scale = .48]{images/InstrumentationVsTime.pdf}
-\caption{Performance statistics of instrumentation size vs time}
-\label{fig:constraintHisto}
-\end{figure}
+% \begin{figure}[t]
+% \centering
+% \includegraphics[scale = .45]{images/CgSizeVsTime.pdf}
+% \caption{Performance statistics of call graph size vs. time}
+% \label{fig:perf:callgraph}
+% \end{figure}
+% 
+% 
+% \begin{figure}[t]
+% \centering
+% \includegraphics[scale = .31]{images/ConstraintsVsTime.pdf}
+% \caption{Performance statistics of constraint vs. time}
+% \label{fig:perf:constraints}
+% \end{figure}
+% 
+% \begin{figure}[t]
+% \centering
+% \includegraphics[scale = .48]{images/InstrumentationVsTime.pdf}
+% \caption{Performance statistics of instrumentation size vs time}
+% \label{fig:constraintHisto}
+% \end{figure}
 
 
 %not required
