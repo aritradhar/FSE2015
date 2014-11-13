@@ -477,25 +477,24 @@ We observe that $3$ benchmarks throw
 \subsection{Overhead}
 \label{sub:overhead}
 
-We measure the overhead of \tool\ using different parameters as identified
-below.
+We measure the overhead of \tool\ across different metrics identified below.
 
 \begin{figure*}[t]
 \centering
 \begin{tabular}{ccc}
-\subfloat[Prob. of false alarms with variation in $\tau$ and
-flows.\label{fig:perf:callgraph}]
+\subfloat[Variation in call graph analysis time with size of call
+graph.\label{fig:perf:callgraph}]
 {\includegraphics[width=.3\linewidth]{images/CgSizeVsTime.pdf}}
 \hfill
 &
-\subfloat[Prob. of lack of genuine alarms vs $\tau$ and loss
-rate.\label{fig:perf:constraints}]
+\subfloat[Variation in static constraint analysis time with number of
+constraints.\label{fig:perf:constraints}]
 {\includegraphics[width=.3\linewidth]{images/ConstraintsVsTime.pdf}
 }
 \hfill
 &
-\subfloat[Comparison of ping latencies with varying
-hosts.\label{figure:perf:strings}]
+\subfloat[Variation in instrumentation time with \code{Units}
+instrumented.\label{figure:perf:strings}]
 {\includegraphics[width=.3\linewidth]{images/InstrumentationVsTime.pdf}}
 \hfill
 \\
@@ -532,6 +531,8 @@ higher number of constraints and their complexity increases the duration of
 \tool's analysis. Figure~\ref{fig:perf:constraints} compares the time required
 for analysis with an increasing number of constraints for the benchmarks used in
 our data set.
+
+\item \textbf{Instrumentation overhead}:
 
 %  \item \textbf{Number of \code{String} objects}: \tool\ performs exhaustive
 % optimizations to limit the static and dynamic instrumentations at points of
