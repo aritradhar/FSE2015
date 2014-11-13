@@ -169,28 +169,13 @@ the patches. We describe a few of them below.
 \subsubsection{Checked exceptions \todo{remove redundancy}}
 \label{subsubsec:callChainLookUp}
 ~\newline
-Although unlikely, it is possible that the developers may themselves incorporate
-code to handle some runtime exceptions. In such cases, \tool\ must not override
-the intended program behavior by patching the offending bytecodes. There are two
-instances where such exception handling can happen, and we briefly describe
-our approach of handling them.
-
-\begin{mylist}
-
- \item \textbf{Intra-method exception handling}: \soot\ uses the \code{Trap}
-class to manage exception handling. Each \code{Trap} object has start, end and
-handler unit.  We tagged every \code{Unit} in a \code{HashMap} if it belonged
-to an existing \code{Trap}, so as to exclude it from instrumentation during the
+\tool\ handles both inter- and intra-method checked runtime exceptions (recall
+\xref{sec:tool:stage1}) leveraging \soot\ generated call graph. \soot\ uses the
+\code{Trap} class to manage exception handling for both classes of
+exceptions discussed above. Each \code{Trap} object has start, end and handler
+unit.  We tagged every \code{Unit} in a \code{HashMap} if it belonged to an
+existing \code{Trap}, so as to exclude it from instrumentation during the
 repairing phase.
-
- \item \textbf{Inter-method exception handling}: It is possible that the
-developed handled the exception higher up in the call chain. In such scenarios,
-we identify call chains (in the call graph) involving the concerned method
-perform reverse Breadth First search (BFS) to determine ancestor methods where
-the call site was wrapped in \code{try-catch} block or not. In such cases, we
-tag the corresponding \code{Unit} in the \code{HashMap} mentioned before.
-
-\end{mylist}
 
 % \textbf{Call Graph Analysis} : To detect already handled exception we
 %  see higher in the call chain if the call site of any one of the ancestors is
