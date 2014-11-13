@@ -504,7 +504,36 @@ requires $52.4$s and $210$MB memory for complete end-to-end analysis.
 \subsection{Case studies}
 \label{sub:casestudies}
 
-\todo{Select interesting benchmarks for a detailed study.}
+We now report on experiences gained when using \tool\ to patch several of the
+bugs reported in Table~\ref{tab:results}.
+
+\begin{mylist}
+
+ \item The bug~\ref{ARIES1204} as reported in the repository for Apache Aries
+cited String related issues. However, our investigation showed that the bug was
+actually in the ASM framework that was invoked by Aries, and not in the was
+actually not in the Aries framework as originally reported. Thus, we patched the
+particular ASM methods containing the bugs, and retested it with the Aries
+framework to ensure conformance.
+
+ \item The Apache Commons Compress, Commons Lang, Commons Math and Ofbiz
+libraries, each had string operations wrapped in \code{try-catch} block that
+was handled by \code{Exception} class, \ie\ the base type of all exceptions. For
+these cases, as per the standard procedure, our repairing module did not handle
+those patching as we avoided patching in already handled codes. To measure
+effectiveness we turned off the call graph analysis module and to a force patch
+so compare it with the developers' patch.
+
+ \item In some libraries like Math, the bug was that for a wrong formatted
+input, the
+library was throwing a string exception which is completely irrelevant.
+According to the API documentation, the method supposed to throw a very specific
+type of exception (\code{NumberFormatException})which contains the information
+of the malformed string. In such cases we see if the patch version also throws
+that specific exception which is the correct behavior.
+ 
+\end{mylist}
+
 
 % \begin{figure}[t]
 % \centering
