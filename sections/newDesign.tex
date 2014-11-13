@@ -1,5 +1,5 @@
 \section{\tool}
-\label{sec:tool}
+\label{sec:design}
 
 \subsection{Goals}
 \label{sec:tool:goals}
@@ -46,10 +46,10 @@ repairing programs with potential runtime exceptions, while still satisfying
 goals mentioned in \xref{sec:tool:goals}.
 
 Figure~\ref{fig:overallDesign} shows \tool's workflow, which involves three
-main stages. First, \tool\ uses precise program analysis techniques to identify
-points of interest, \ie\ string objects or API arguments that must be repaired
-to prevent runtime exceptions. In the second stage, \tool\ leverages custom
-algorithms to generate relevant patches. Specifically, \tool\ performs
+main stages. First, \tool\ uses program analysis techniques to precisely
+identify points of interest, \ie\ string objects or API arguments that must be
+repaired to prevent runtime exceptions. In the second stage, \tool\ leverages
+custom algorithms to generate relevant patches. Specifically, \tool\ performs
 intra-procedural static and dynamic analyses to identify and evaluate
 constraints on the string objects under consideration. Third, \tool\ uses the
 constraints evaluated in the earlier stage to programatically generate and embed
@@ -178,11 +178,12 @@ patch generation mechanism in detail.
 % 
 
 \myparagraph{Constraint collection and evaluation} \tool\ leverages a hybrid
-approach to collect all possible constraints that must be satisfied and thus generates a high quality
-patch to repair the program. A constraint on a string object is defined as a set
-of permissible values that can uniquely define the string. \tool\ uses a simple
-constraint set that includes minimum and maximum length, along with set of
-permissible prefixes and substrings, as shown in Figure~\ref{fig:constraint}.
+approach to collect all possible constraints that must be satisfied, and thus
+generates a high quality patch to repair the program. A constraint on a string
+object is defined as a set of permissible values that can uniquely define the
+string. \tool\ uses a simple constraint set that includes minimum and maximum
+length, along with set of permissible prefixes and substrings, as shown in
+Figure~\ref{fig:constraint}.
 
 \begin{algorithm}[t]
 \scriptsize
@@ -192,9 +193,9 @@ permissible prefixes and substrings, as shown in Figure~\ref{fig:constraint}.
 \Begin
 {
  \For{$\forall$ node $N \in CFG$} {
-  Statement $S$ in node $N$
-  \lIf{$S$ constraints \code{String} API call} {\\
-  	$str \longleftarrow$ \code{String} reference on $S$
+  Statement $S$ in node $N$\\
+  \lIf{$S$ contains \code{String} API call} {\\
+  	\mytab $str \longleftarrow$ \code{String} reference on $S$
   	
   	\lIf{$S$ can throw \code{RuntimeException}} {\\
   	  \mytab Exception class $EC \longleftarrow$ \code{RuntimeException} of
@@ -205,18 +206,24 @@ $str$\\
 Algorithm~\ref{algo:constraintCollection}$(CES_{str})$\\
 
   		\mytab \lIf{$str$ have sufficient constraints in $CS_{str}$} {\\
+			\mytab \mytab \code{/* Static constraint analysis */}\\
   			\mytab \mytab $str \longleftarrow$ output of
 Algorithm~\ref{algo:constraint}$(CS_{str})$
   		} \mytab \lElse {\\
-  			\mytab \mytab $str \longleftarrow$ output of   		
+  		        \mytab \mytab \code{/* Dynamic constraint analysis */}\\
+  		        \mytab \mytab $CS_{str} \longleftarrow$ output of
+Algorithm~\ref{algo:constraintCollection}$(CES_{str})$\\
+
+                        \mytab \mytab \lIf{$str$ have sufficient constraints in
+$CS_{str}$} {\\
+                        \mytab \mytab \mytab $str \longleftarrow$ output of
+Algorithm~\ref{algo:constraint}$(CS_{str})$
+  		} \mytab \mytab \lElse {\\
+  		        \mytab \mytab \mytab $str \longleftarrow$ output of
 Algorithm~\ref{algo:stringPatchParametr}$(S)$
   		}
-  		\mytab Invoke
-Algorithm~\ref{algo:constraintCollection}$(CES_{str})$ for dynamic constraint
-collection\\
-  		\mytab Invoke Algorithm~\ref{algo:constraint}$(CS_{str})$ for
-dynamic constraint evaluation
-  	}
+	}
+    }
   }
  }
 }
@@ -485,7 +492,7 @@ transition and $init \rightarrow error$ corresponds to the constraint violation.
 
 \begin{figure}[t]
 \centering
-\includegraphics[scale=.25]{images/automata.pdf}
+\includegraphics[scale=.25]{images/automataString.pdf}
 \caption{Constraint representation model.}
 \label{fig:constraintautomata}
 \end{figure}
