@@ -417,7 +417,7 @@ condition\\
         }\vspace{-1em}
     }
 }
-\caption{String patching based on parameters passed}
+\caption{Parameter tweaking based String patching.}
 \label{algo:stringPatchParametr}
 \end{algorithm}
 
@@ -457,14 +457,14 @@ side-effects of repairing and preventing any inadvertent changes to the
 program's intended control flow.
 
 An important task in the instrumentation stage is to determine the kind of
-exceptions that may be thrown, and appropriately constructing the
-\code{catch} blocks. While most APIs throw only a single subclass of
-\code{RuntimeException}, it is possible that a statement may throw more than one subclasses
-such as \code{NullPointerException} and \code{StringIndexOutOfBoundsException}.
-\tool\ generates a \code{catch} ladder for each kind of exception, which also
-facilitates exception-specific repairing as well. In other words, a single patch may get
-distributed over multiple \code{catch} blocks. This mechanism is achieved
-with the help of a constraint representation model.
+exceptions that may be thrown, and appropriately construct the \code{catch}
+blocks. While most APIs throw only a single subclass of \code{RuntimeException},
+it is possible that a statement may throw more than one subclasses such as
+\code{NullPointerException} and \code{StringIndexOutOfBoundsException}. \tool\
+generates a \code{catch} ladder for each kind of exception, which also
+facilitates exception-specific repairing as well. In other words, a single patch
+may get distributed over multiple \code{catch} blocks. This mechanism is
+achieved with the help of a constraint representation model.
 
 %-------------------
 
