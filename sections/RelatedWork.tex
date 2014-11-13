@@ -3,11 +3,14 @@
 \section{Related Work}
 \label{sec:relatedWork}
 
-\subsection{Recent Works on Data Structure Repairing}
-\label{subsec:RecWorksDataStructure}
+There has been considerable amount of research work done in the area of 
+automated program repairing technique. Researchers have proposed several
+approaches that include both static as well as dynamic approaches.
 
-Automated data-structure repairing techniques are there in the literature for a
-while. In the papers~\cite{
+\paragraph{Data Structure Repairing}
+%\label{subsec:RecWorksDataStructure}
+
+Demsky and Rinard have proposed approaches that repair data structures ~\cite{
 Demsky03automaticdata, conf/issre/DemskyR03,conf/oopsla/DemskyR03,
 conf/issta/DemskyEGMPR06} the authors mostly concentrated on specific data-structures like \emph{FAT-32}, \emph{ext2},
 \emph{CTAS} (a set of air-traffic control tools developed at the NASA Ames
@@ -28,8 +31,8 @@ technique to some well known data structures like singly linked list, sorted
 list, doubly liked list, N-ary tree, AVL tree, binary search tree, disjoint set,
 red-black tree, Fibonacci heap etc.
 
-\subsection{Works on Software Patching}
-\label{subsec:RecWorksSoftPatch}
+\paragraph{Works on Software Patching}
+%\label{subsec:RecWorksSoftPatch}
 
 In their paper~\cite{conf/sosp/PerkinsKLABCPSSSWZER09}, authors Perkins et al.
 presented their \emph{Clear view} system which works on windows x86 binaries
@@ -37,7 +40,7 @@ without requiring any source code. They used invariants analysis for which
 they used Daikon~\cite{DBLP:journals/scp/ErnstPGMPTX07}. They mostly patched
 security vulnerabilities by some candidate repair patches.
 
-Fan Long et al in their paper~\cite{conf/pldi/LongSR14} presented their new
+Fan Long et al. in their paper~\cite{conf/pldi/LongSR14} presented their new
 system \emph{RCV} which recovers applications from divide-by-zero and
 null-deference error. Their tool replaces \emph{SIGFPE} and \emph{SIGSEGV}
 signal handler with its own handler. The approach simply works by assigning zero
@@ -48,8 +51,8 @@ their
 patching until the program stabilizes which they called as \emph{error
 shepherding}.
 
-\subsection{Genetic Programming, Evolutionary Computation}
-\label{subsec:RecWorksGeneric}
+\paragraph{Genetic Programming, Evolutionary Computation}
+%\label{subsec:RecWorksGeneric}
 
 Reserch works on program repair based on genetic programming and evolutionary
 computation can be found in the paper of Forrest
