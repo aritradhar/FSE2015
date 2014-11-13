@@ -475,7 +475,7 @@ model is precomputed based on the API documentation of \java\ \code{Strings}.
 Formally, we define the constraint representation FSM model $(Q, \Sigma, \delta,
 q_0, F)$ as follows:
 \begin{mybullet}
- \item $Q$: Set of states where $|Q| = 2$, \emph{legal state}(init) and
+ \item $Q$: Set of states where $|Q| = 2$, \emph{legal state}(safe) and
 \emph{illegal state} (error).
 
  \item $\Sigma$: Set of symbols. Each symbol is defined as a tuple ($\zeta$,
@@ -484,10 +484,10 @@ the type of an exception and $\Lambda = \{\lambda_1, \ldots, \lambda_n\}$  is
 the set of constraints. A constraint $\lambda_i$ is defined as a constraint on
 a string that must be satisfied to allow successful execution of $\zeta$.
 
- \item $\delta$: Transition function. $init \rightarrow init$ is a safe
-transition and $init \rightarrow error$ corresponds to the constraint violation.
+ \item $\delta$: Transition function. $safe \rightarrow safe$ is a safe
+transition and $safe \rightarrow error$ corresponds to the constraint violation.
 
- \item $q_0$: Starting state, here $q_0 = init$.
+ \item $q_0$: Starting state, here $q_0 = safe$.
 
  \item $F$: Singleton set of accept states which contains $q_0$.
 \end{mybullet}
