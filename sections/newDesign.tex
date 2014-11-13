@@ -80,8 +80,9 @@ an I/O sink, like file system, console, network, GUI, etc.
 \centering
 \scriptsize
 % \setlength{\tabcolsep}{3pt}
-\begin{tabular}{l|l}
-\multicolumn{1}{c|}{\textbf{Class}} & \multicolumn{1}{c}{\textbf{Source}}\\
+\hrule
+\begin{tabular}{|l|l|}
+\multicolumn{1}{|c|}{\textbf{Class}} & \multicolumn{1}{c|}{\textbf{Source}}\\
 \hline
 \code{java.io.InputStream} & \code{read()}\\
 \code{java.io.BufferedReader} & \code{readLine()}\\
@@ -93,6 +94,7 @@ an I/O sink, like file system, console, network, GUI, etc.
 \code{org.apache.http.util.EntityUtils} & \code{toString()}\\
 \code{org.apache.http.util.EntityUtils} & \code{toByteArray()}\\
 \code{org.apache.http.util.EntityUtils} & \code{getContentCharSet()}\\
+\hline
 \end{tabular}
 \caption{Common sensitive sources in \java.}
 \label{table:TaintSources}
@@ -102,14 +104,16 @@ an I/O sink, like file system, console, network, GUI, etc.
 \centering
 \scriptsize
 % \setlength{\tabcolsep}{3pt}
-\begin{tabular}{l|l}
-\multicolumn{1}{c|}{\textbf{Class}} & \multicolumn{1}{c}{\textbf{Sink}}\\
+\begin{tabular}{|l|l|}
+\hline
+\multicolumn{1}{|c|}{\textbf{Class}} & \multicolumn{1}{c|}{\textbf{Sink}}\\
 \hline
 \code{java.io.FileOutputStream} & \code{write()}\\
 \code{java.io.OutputStream} & \code{write()}\\
 \code{java.io.PrintStream} & \code{printf()}\\
 \code{java.net.Socket} & \code{connect()}\\
 \code{java.io.Writer} & \code{write()}\\
+\hline
 \end{tabular}
 \caption{Common sensitive sinks in \java.}
 \label{table:TaintSinks}
