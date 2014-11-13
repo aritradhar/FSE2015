@@ -163,7 +163,7 @@ $ & $0$ &$39$ & $6$
 %$3/14$ & $0.5/34$ & $21.3/208$ & $3.5/147$
 & $\checkmark$\\
 %% 0.96875
-\code{SOAP} & \cite{SOAP130} & Major &$5.0K$ & $165$ & $0.97$ & $0$  & $32$ &
+\code{SOAP} & \cite{SOAP130} & Major &$5.0K$ & $165$ & $0.97$ & $1$  & $32$ &
 $5$
 %$3.4/19$ & $0.6/30$ & $14/209$ & $2.3/148$
 & $\checkmark$ \\
@@ -308,7 +308,7 @@ output of using the \tool\ patched class files against the developer provided
 patch in a later version of the same library. In case the output is primitive or
 strings, an exact match is considered successful, else we iterate over the
 properties of the complex object to determine number of exact matches in the two
-outputs.
+outputs. In case of exception(s), we select the similarity ratio to be $0.5$.
 
 % In case the results were either primitive or string type, we
 % compared the output. In case the output is some complex object we compare
@@ -349,10 +349,6 @@ instance where the concerned bug~\ref{} was still unpatched. In such cases, we
 looked for the potential or suggested patches in comments and discussion forums,
 and compared \tool's patch with them.
 
- \item We observe that for $4$ of the patches, the PQI was off by over $25\%$.
-On manual inspection of these patches, we found that \todo{Add more details
-later}.
-
  \item We observed that PQI for bug in Hama $0.2.0$~\cite{HAMA212} was as high
 as $1.38$. We visually inspected both the \tool-generated patch and the
 developer's fix and observed that \tool's patch was considerably smaller.
@@ -362,17 +358,20 @@ conditional checks to avoid corner cases. Moreover, the developer's patch also
 had a completely different implementation of the method on which the bug was
 reported. Thus, the developer's fix was significantly larger than \tool's patch.
 
- \item For couple of the applications we experienced low PQI index which is as
-low as .5 which shows that the quality of the auto generated patch was surpassed
-significantly by the develops' one. The only explanation of such scenario is the
-cascaded exception we got after executing the patched library. Though the
-repairing technique able to patch the buggy string api usage, but the patched
-version of the string was later used to load some configuration of used as a
-driver string to some place else. For the auto generated patch, it is not always
-guaranteed that the patch will make sure all the required specification. In such
-cases, we considered our patches have lower quality then the original ones. But
-for all of the cascaded exceptions were checked exception and it is expected
-that the application developers would take care of those.
+ \item We notice low PQI (between $0.5$ and $0.79$) for four of the patched
+libraries, which shows that the quality of the \tool-generated patch was
+significantly lower than the developer's fix. A major reason for this drop in
+PQI is the presence of cascaded exceptions observed in the patched versions of
+these libraries upon execution.
+% Though the
+% repairing technique able to patch the buggy string api usage, but the patched
+% version of the string was later used to load some configuration of used as a
+% driver string to some place else.
+We note that \tool\ in its present shape does not guarantee that the patch will
+never raise cascaded exceptions. Thus, in these four cases \tool's patches were
+of lower quality then the original ones. However, we also note that all the
+cascaded exceptions were in fact checked exceptions, and it is expected that the
+application developers would handle them appropriately.
 
  \item Note that taint analysis only works when sources and sinks are defined.
 Since our library benchmarks have no notion of sources or sinks, \tool's
@@ -427,6 +426,17 @@ in the program which are already handled. We observe that $0 \le FCI \le 1$,
 and a lower value of $FCI$ is desirable.
 
 \todo{details about FCI}
+
+If there is exist some developers' exception handling mechanism in the method or
+in any methods upper in the call chain, the patching module will skip that as it
+may change natural program flow. In some cases we have seen this where the buggy
+string handling statement is inside the try block and handled by wrong exception
+type (often \code{Exception} class which is the base type). In such cases to
+evaluate the effectiveness of our patching technique, we disabled the call graph
+analysis phase and do a force patch in the methods. In such cases the
+developer's \code{catch} block couldn't handle that and we deviated from natural
+flow. In such cases PFCI = n, where n is the number of developer's exception
+handling we ignore for force update.
 
 \item \textbf{Cascaded exceptions}: A cascaded exception arises if the
 \tool-generated patch creates objects that when used as inputs to other \java\
@@ -495,12 +505,20 @@ hosts.\label{figure:perf:strings}]
 
 \begin{mylist}
 
- \item \textbf{Execution overhead}: We selected randomly selected and patched
-$5$ libraries (\todo{names}) from Table~\ref{tab:results} to determine the
-execution overhead of the patched class files. We observed that for execution
-runs of $100K$, the $5$ benchmarks reported an average overhead of $x\%$, with
-the maximum absolute overhead being $x\mu$s, which is imperceptible at human
-response time scales.
+% Apache wicket 100K run patched -> 1090ms, dev fix -> 929 ms
+% Eclipse AspectJ weaver 50K run patched -> 8ms, dev fix -> 2 ms
+% Apache Tapestry 50K run patched -> 200ms, dev fix -> 178 ms
+% Nutch -> 50k run, patched ->183ms, dev patched-> 12 ms
+% Hive -> 50k run, patched ->297ms, dev patched-> 99ms
+
+ \item \textbf{Execution overhead}: We randomly selected and patched $5$
+libraries (Apache Tapestry, Apache Wicket, Eclipse AspectJ Weaver, Hive and
+Nutch) from Table~\ref{tab:results} to determine the execution overhead of the
+patched class files. We observed that \tool\ reports an average overhead of
+$\sim$$2.32\mu$s per call across the $5$ benchmarks for $50K$ runs of the
+patched functionality in both the developer's version and \tool's patched
+library. The maximum absolute overhead was observed for Hive at $\sim$$3.96\mu$s
+per call. The above overhead is imperceptible at human response time scales.
 
  \item \textbf{Call graph}: The size of the call graph directly governs the time
 and memory consumption for \tool. Figure~\ref{fig:perf:callgraph} shows the
@@ -515,14 +533,12 @@ higher number of constraints and their complexity increases the duration of
 for analysis with an increasing number of constraints for the benchmarks used in
 our data set.
 
- \item \textbf{Number of \code{String} objects}: \tool\ performs exhaustive
-optimizations to limit the static and dynamic instrumentations at points of
-interest. Thus, \tool's performance is also dependent on the number of
-\code{String} objects. Figure~\ref{fig:perf:strings} plots the trend in analysis
-time as a function of the \code{String} objects generated for our benchmarks.
-We observer that \todo{Add details later.}.
-
-
+%  \item \textbf{Number of \code{String} objects}: \tool\ performs exhaustive
+% optimizations to limit the static and dynamic instrumentations at points of
+% interest. Thus, \tool's performance is also dependent on the number of
+% \code{String} objects. Figure~\ref{fig:perf:strings} plots the trend in analysis
+% time as a function of the \code{String} objects generated for our benchmarks.
+% We observer that \todo{Add details later.}.
 
 \end{mylist}
 
@@ -541,22 +557,37 @@ actually not in the Aries framework as originally reported. Thus, we patched the
 particular ASM methods containing the bugs, and retested it with the Aries
 framework to ensure conformance.
 
- \item Commons Math had a bug related to incorrect formatting of the input
-string, while the library was throwing a string exception which is completely
-irrelevant.
-According to the API documentation, the method supposed to throw a very specific
-type of exception (\code{NumberFormatException})which contains the information
-of the malformed string. In such cases we see if the patch version also throws
-that specific exception which is the correct behavior.
+ \item The bug in Commons Math~\cite{MATH198} had a bug related to incorrect
+formatting of the input string. However, it threw a completely irrelevant
+exception (\code{IndexOutOfBound}) instead of the \code{NumberFormatException},
+which contains the information of the malformed string. The \tool-generated
+patch fixes the undesirable behavior.
+
+ \item The bug in OfBiz~\cite{OFBIZ4237} throws a custom shutdown exception,
+when in fact it should throw a \code{StringIndexOutOfBoundsException} due to a
+\code{substring} invocation with incorrect bounds. This ultimately causes the
+library to throw some high priority exception and ultimately crash if not handed
+properly by the application. The patched version of the library catches the
+correct exception.
 
  \item The code to trigger bugs in some libraries, including Apache Commons
 Compress, Commons Lang, Commons Math and Ofbiz, each had string operations
 wrapped in \code{try-catch} block that were handled by \code{Exception} class,
 \ie\ the base type of all exceptions. However, \tool\ checks for already
 handled runtime exceptions during its call graph analysis, and thus did not
-patch the bugs. In order to measure the effectiveness, we turned off the call
-graph analysis module and thus forced \tool\ to generate a patch for the bug so
-as to compare it with the developer's fix.
+patch the bugs. We turned off the call graph analysis module to force \tool\ to
+generate the relevant patch for the bug.
+
+ \item We also noticed several instances where the developer code does not
+follow proper programming practices regarding exception handling. For example,
+the SOAP bug~\cite{SOAP130} was reported for a faulty \code{substring} call that
+threw a \code{StringIndexOutOfBoundsException}. The entire method was wrapped in
+a \code{try-catch} that included the faulty substring call along with other
+servlet operations. However, the \code{catch} block handled the generic
+\code{Exception}, which is the base class of all exceptions. Thus, both servlet
+exceptions or \code{IndexOutOfBoundException} from the \code{substring} call
+were handled in a generic fashion. \tool's patched library ensures that
+exceptions originating from the \code{substring} call are handled properly.
 
 \end{mylist}
 
