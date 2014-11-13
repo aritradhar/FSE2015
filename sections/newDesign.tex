@@ -209,7 +209,7 @@ Algorithm~\ref{algo:constraintCollection}$(CES_{str})$\\
 			\mytab \mytab \code{/* Static constraint analysis */}\\
   			\mytab \mytab $str \longleftarrow$ output of
 Algorithm~\ref{algo:constraint}$(CS_{str})$
-  		} \mytab \lElse {\\
+  		} \mytab \lElseIf {$str$ encountered exception} {\\
   		        \mytab \mytab \code{/* Dynamic constraint analysis */}\\
   		        \mytab \mytab $CS_{str} \longleftarrow$ output of
 Algorithm~\ref{algo:constraintCollection}$(CES_{str})$\\
@@ -221,7 +221,7 @@ Algorithm~\ref{algo:constraint}$(CS_{str})$
   		} \mytab \mytab \lElse {\\
   		        \mytab \mytab \mytab $str \longleftarrow$ output of
 Algorithm~\ref{algo:stringPatchParametr}$(S)$
-  		}
+  		}\vspace{-4em}
 	}
     }
   }
@@ -405,14 +405,16 @@ the repaired object, respectively.
         \lIf{$i \textgreater j$} {\\
            \mytab $Ri \longleftarrow j - 1$
         }
-        \lIf{$i \textgreater Lengrh$ \bf{OR} $j \textgreater Lengrh$} {\\
+        \lIf{$i \textgreater Length$ \bf{OR} $j \textgreater Length$} {\\
            \mytab $Ri \longleftarrow Length - 1$ or $Rj \longleftarrow Length -
-1$ based on condition
+1$ based on condition\\
+           \mytab \code{/* more conditions possible */}
         }
         \lIf{$i \textless 0$ \bf{OR} $j \textless 0$} {\\
           \mytab $Ri \longleftarrow 0$ or $Rj \longleftarrow 0$ based on
-condition
-        }
+condition\\
+          \mytab \code{/* more conditions possible */}
+        }\vspace{-1em}
     }
 }
 \caption{String patching based on parameters passed}
