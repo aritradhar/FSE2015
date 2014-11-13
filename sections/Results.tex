@@ -494,7 +494,7 @@ constraints.\label{fig:perf:constraints}]
 \hfill
 &
 \subfloat[Variation in instrumentation time with \code{Units}
-instrumented.\label{figure:perf:strings}]
+instrumented.\label{figure:perf:units}]
 {\includegraphics[width=.3\linewidth]{images/InstrumentationVsTime.pdf}}
 \hfill
 \\
@@ -509,6 +509,13 @@ instrumented.\label{figure:perf:strings}]
 % Apache Tapestry 50K run patched -> 200ms, dev fix -> 178 ms
 % Nutch -> 50k run, patched ->183ms, dev patched-> 12 ms
 % Hive -> 50k run, patched ->297ms, dev patched-> 99ms
+
+% Constraint analysis dependency : soot invoke + it flashes jimple files.
+% 
+% Instrumentation dependency : soot overhead for instrumentation  + flashes
+% instrumented class files to disk.
+% 
+% call graph dependency : apart from soot none
 
  \item \textbf{Execution overhead}: We randomly selected and patched $5$
 libraries (Apache Tapestry, Apache Wicket, Eclipse AspectJ Weaver, Hive and
@@ -531,9 +538,19 @@ analysis to gather and evaluate the set of constraints for generating patches. A
 higher number of constraints and their complexity increases the duration of
 \tool's analysis. Figure~\ref{fig:perf:constraints} compares the time required
 for static constraint collection and evaluation with an increasing number of
-constraints for the benchmarks used in our data set. We observe that 
+constraints for the benchmarks used in our data set. We observe that across
+all the benchmarks used, \tool\ required at most $\sim$$5$s for collecting and
+evaluating the constraints.
 
-\item \textbf{Instrumentation overhead}:
+\item \textbf{Instrumentation overhead}: \tool\ performs bytecode
+instrumentation for actual patching. Figure~\ref{fig:perf:units} shows the
+variation in instrumentation time with increasing number of \code{Units} to be
+patched. We observe that even without optimization discussed in
+\xref{subsec:optimizations}, \tool\ takes under $4$s to instrument all
+\code{Units} across all benchmarks. We believe that this time would be even
+less with the optimizations enabled, which significantly decrease the number of
+\code{Units} to be instrumented, and is evident in Table~\ref{tab:results} where
+column $\mathcal{IC}_{WO}$ is much less than $\mathcal{IC}_{NO}$.
 
 %  \item \textbf{Number of \code{String} objects}: \tool\ performs exhaustive
 % optimizations to limit the static and dynamic instrumentations at points of
