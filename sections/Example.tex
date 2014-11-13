@@ -101,3 +101,28 @@ associated to it.
 \caption{Constraint collection for \code{String} objects}
  \label{algo:constraintCollection}
 \end{algorithm}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%Table for the taint analysis stats
+\begin{table}[t]
+\centering
+\scriptsize
+\begin{tabular}{|l|c|c|c|}
+\hline
+\multicolumn{1}{|c|}{\textbf{Application}} &
+\multicolumn{1}{c|}{\textbf{KLOC}} &
+\multicolumn{1}{c|}{\textbf{Statements from Source}} &
+\multicolumn{1}{c|}{\textbf{Flagged by taint analysis}}\\
+
+\hline
+\code{checkstyle 6.0}& $58K$ & $1977K$ & $88$\\
+\code{Jazzy Core}& $4.9K$ & $270K$ & $26$\\
+\code{JEdit}& $108.2K$ & $185$ & $26$\\
+
+\hline
+\end{tabular}
+
+\caption{Taint analysis result}
+\label{tab:taintAnalysis}
+\end{table}
