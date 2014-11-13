@@ -178,11 +178,12 @@ patch generation mechanism in detail.
 % 
 
 \myparagraph{Constraint collection and evaluation} \tool\ leverages a hybrid
-approach to collect all possible constraints that must be satisfied and thus generates a high quality
-patch to repair the program. A constraint on a string object is defined as a set
-of permissible values that can uniquely define the string. \tool\ uses a simple
-constraint set that includes minimum and maximum length, along with set of
-permissible prefixes and substrings, as shown in Figure~\ref{fig:constraint}.
+approach to collect all possible constraints that must be satisfied, and thus
+generates a high quality patch to repair the program. A constraint on a string
+object is defined as a set of permissible values that can uniquely define the
+string. \tool\ uses a simple constraint set that includes minimum and maximum
+length, along with set of permissible prefixes and substrings, as shown in
+Figure~\ref{fig:constraint}.
 
 \begin{algorithm}[t]
 \scriptsize
@@ -192,9 +193,9 @@ permissible prefixes and substrings, as shown in Figure~\ref{fig:constraint}.
 \Begin
 {
  \For{$\forall$ node $N \in CFG$} {
-  Statement $S$ in node $N$
-  \lIf{$S$ constraints \code{String} API call} {\\
-  	$str \longleftarrow$ \code{String} reference on $S$
+  Statement $S$ in node $N$\\
+  \lIf{$S$ contains \code{String} API call} {\\
+  	\mytab $str \longleftarrow$ \code{String} reference on $S$
   	
   	\lIf{$S$ can throw \code{RuntimeException}} {\\
   	  \mytab Exception class $EC \longleftarrow$ \code{RuntimeException} of
