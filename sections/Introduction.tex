@@ -65,18 +65,18 @@ fixed in the later versions.
 Several approaches have been proposed in the past to ensure that programs can
 recover from failures. Some of the approaches are based on static repairing
 where the patches are synthesized automatically based on the counter examples
-found in the field and using techniques such as model-checking that can be
-applied at the compilation-time \cite{}. However, it is not always desirable to
-shut down the system for the post-mortem analysis and then relaunch it
+found in the field and using techniques such as model-checking to ensure the
+correctness of the patches \cite{}.
+However, it is not always desirable to shut down the system for the post-mortem analysis and then relaunch it
 after fixing the defect. In order to overcome this weakness,
 dynamic approaches have been proposed to deal with problems that are
 related to memory, data, and incorrect programming constructs such as infinite
 loops \cite{}. Most of these approaches work either by identifying and isolating
 damaged data or memory portions, or by delaying the execution until the program
 self-stabilizes, or by disabling suppressing signals and hoping that the
-program can recover automatically from the errors. These approaches are
-optimistic and work on the assumption that some suboptimal behavior for finite
-time under certain conditions is acceptable.
+program can recover automatically from the errors. Static approaches strive
+for correctness whereas dynamic approaches are optimistic and work on the
+assumption that some suboptimal behavior under certain conditions is acceptable.
 
 \ignore{Recent approach proposed by Long et al. \cite{} uses technique that
 suppresses failures caused by
