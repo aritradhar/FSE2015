@@ -123,7 +123,7 @@ that support string manipulation, including \code{StringBuffer} and
 \code{StringBuilder}. All \code{String} objects (whether generated or assigned)
 that lie along the tainted path from a sensitive source to a sensitive sink are
 marked as \textit{unsafe} to patch. Subsequently, \tool\ does not repair such
-\code{String} objects. Figures~\ref{table:TaintSources} and
+\code{String} objects. Tables~\ref{table:TaintSources} and
 \ref{table:TaintSinks} list some common sensitive sources and sinks for several
 classes in \java.
 
@@ -460,11 +460,11 @@ with the help of a constraint representation model.
 %-------------------
 
 \myparagraph{Constraint representation model}  We use a finite state machine
-(FSM) as a formalism to describe the behavior of \java\ \code{String} API, and
-then apply it to drive the generation of exception-specific catch blocks. the
-model is precomputed based on the API documentation of \java\ Strings. Formally,
-we define the constraint representation FSM model $(Q, \Sigma, \delta, q_0, F)$
-as follows:
+(FSM) as a formalism to describe the behavior of \java\ \code{String} API, and 
+apply it to drive the generation of exception-specific \code{catch} blocks. The
+model is precomputed based on the API documentation of \java\ \code{Strings}.
+Formally, we define the constraint representation FSM model $(Q, \Sigma, \delta,
+q_0, F)$ as follows:
 \begin{mybullet}
  \item $Q$: Set of states where $|Q| = 2$, \emph{legal state}(init) and
 \emph{illegal state} (error).
@@ -491,12 +491,12 @@ transition and $init \rightarrow error$ corresponds to the constraint violation.
 \end{figure}
 
 An abstract constraint representation model is depicted in
-Figure~\ref{fig:constraintautomata}. A concrete model will be constructed  using
-an exception-specific information which is available in the API documentation.
-The repairing mechanism gets triggered when some $\eta$ is thrown while
-performing $\zeta$ after at least one of the constraints from $\Lambda$ on the
-structure of the associated string is violated. The patches essentially support
-the same semantics using multiple \code{catch} blocks corresponding to various
+Figure~\ref{fig:constraintautomata}. A concrete model be constructed using an
+exception-specific information that is available in the API documentation. The
+repairing mechanism gets triggered when some $\eta$ is thrown while performing
+$\zeta$ after at least one of the constraints from $\Lambda$ on the structure of
+the associated string is violated. The patches essentially support the same
+semantics using multiple \code{catch} blocks corresponding to various
 exceptions.
 
 %------------------------

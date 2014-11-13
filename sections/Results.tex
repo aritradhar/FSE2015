@@ -168,7 +168,7 @@ $5$
 %& $2.8/5$ & $0.6/32$ & $12/212$ & $2/131$
 & $\times$ \\
 %% 0.992753623
-\code{Commons Compress} & \cite{COMPRESS26} & Blocker & $4K$ & $134$  & $0.99
+\code{Commons Compress} & \cite{COMPRESS26} & Blocker & $4.0K$ & $134$  & $0.99
  $ & $0$& $46$& $4$
 %$2.7/5$ & $0.5/30$ & $11.5/209$ & $1.8/130$
 &$\checkmark$\\
@@ -217,7 +217,7 @@ $1$
 %& $3.1/18$ & $0.6/34$ & $41.2/212$ &$1.6/142$
 & $\times$ \\
 %% 1.025
-\code{Eclipse AJ} & \cite{EclipseBug333066} & Major & $25K$ &$39$ & $1.03
+\code{Eclipse AJ} & \cite{EclipseBug333066} & Major & $25.0K$ &$39$ & $1.03
  $ & $0$ & $6$ & $1$
 %$3.8/24$ & $0.5/34$ & $43.6/214$ & $1.6/156$
 &$\checkmark$ \\
@@ -246,7 +246,8 @@ $6$& $1$
 %$2.8/6$ & $0.5/33$ & $12.3/212$ & $2.7/131$
 & $\checkmark$ \\
 %% 1.133333333
-\code{jUDDI} & \cite{JUDDI292} & Major &$3.2K$ & $70$ & $ 1.13$ & $0$  & $10$ &
+\code{jUDDI} & \cite{JUDDI292} & Major &$3.2K$ & $70$ & $ 1.13$ & $0$  & $10$
+&
 $2$
 %$3.1/11$ & $0.5/34$ & $13.6/209$ & $2.9/138$
 & $ \checkmark$ \\
@@ -283,16 +284,18 @@ $ & $0$ &$39$ & $6$
 %$3/14$ & $0.5/34$ & $21.3/208$ & $3.5/147$
 & $\checkmark$\\
 %% 0.96875
-\code{SOAP} & \cite{SOAP130} & Major &$5K$ & $165$ & $0.97$ & $0$  & $32$ & $5$
+\code{SOAP} & \cite{SOAP130} & Major &$5.0K$ & $165$ & $0.97$ & $0$  & $32$ &
+$5$
 %$3.4/19$ & $0.6/30$ & $14/209$ & $2.3/148$
 & $\checkmark$ \\
 %% 0.976470588
-\code{SOLR 1.2} & \cite{SOLR331} & Major & $11K$ & $200$& $0.98$ & $0$  & $25$
+\code{SOLR 1.2} & \cite{SOLR331} & Major & $11.0K$ & $200$& $0.98$ & $0$  & $25$
 & $4$
 %$4.4/21$ & $0.6/32$ & $24/219$ & $2.7/139$
 & $\checkmark$ \\
 %% 1.024509804
-\code{Struts2} & \cite{WW650} & Major &$16K$ & $80$ & $1.03$ & $0$  & $25$ & $2$
+\code{Struts2} & \cite{WW650} & Major &$16.0K$ & $80$ & $1.03$ & $0$  & $25$ &
+$2$
 %$3/14$ & $0.5/32$ & $25.9/210$ & $1.3/140$
 & $\checkmark$ \\
 %% 0.975609756
@@ -301,8 +304,8 @@ $31$ &$5$
 %$2.9/10$ & $0.5/34$ & $2.4/211$ & $1.9/136$
 & $\checkmark$ \\
 %% 0.960526316
-\code{Wicket} & \cite{WICKET4387} & Major & $70K$ & $68$ & $0.96$ & $0$  & $16$
-& $1$
+\code{Wicket} & \cite{WICKET4387} & Major & $70.0K$ & $68$ & $0.96$ & $0$  &
+$16$ & $1$
 %$3/14$ & $0.5/32$ & $52.4/210$ & $1.4/142$
 & $\checkmark$ \\
 %% 1.028985507
@@ -327,15 +330,15 @@ $\mathcal{N}_{Unit}$ & \# \code{Units} analyzed & $FCI$ & Flow Consistency
 Index & $\mathcal{IC}_{WO}$ & Instrumentation w/ optimization & &\\
 \end{tabular}
 }
-\caption{\tool's accuracy results when applied to $30$ bugs in popular Apache
-and Eclipse libraries.}
+\caption{\tool's accuracy results when applied to $30$ bugs in popular
+open-source libraries.}
 \label{tab:results}
 \end{table*}
 
 Table~\ref{tab:results} lists $30$ real-world bugs mined from bug repositories
-of popular Apache and Eclipse libraries. We wrote a driver program to recreate
-the bug, and then applied \tool\ to patch it. We observed that in all cases,
-\tool\ successfully patched the offending class file in the concerned library.
+of popular open-source libraries. We wrote a driver program to recreate the bug,
+and then applied \tool\ to patch it. We observed that in all cases, \tool\
+successfully patched the offending class file in the concerned library.
 
 \begin{mybullet}
 
@@ -516,14 +519,6 @@ actually not in the Aries framework as originally reported. Thus, we patched the
 particular ASM methods containing the bugs, and retested it with the Aries
 framework to ensure conformance.
 
- \item The Apache Commons Compress, Commons Lang, Commons Math and Ofbiz
-libraries, each had string operations wrapped in \code{try-catch} block that
-was handled by \code{Exception} class, \ie\ the base type of all exceptions. For
-these cases, as per the standard procedure, our repairing module did not handle
-those patching as we avoided patching in already handled codes. To measure
-effectiveness we turned off the call graph analysis module and to a force patch
-so compare it with the developers' patch.
-
  \item In some libraries like Math, the bug was that for a wrong formatted
 input, the
 library was throwing a string exception which is completely irrelevant.
@@ -531,7 +526,16 @@ According to the API documentation, the method supposed to throw a very specific
 type of exception (\code{NumberFormatException})which contains the information
 of the malformed string. In such cases we see if the patch version also throws
 that specific exception which is the correct behavior.
- 
+
+ \item The code to trigger bugs in some libraries, including Apache Commons
+Compress, Commons Lang, Commons Math and Ofbiz, each had string operations
+wrapped in \code{try-catch} block that were handled by \code{Exception} class,
+\ie\ the base type of all exceptions. However, \tool\ checks for already
+handled runtime exceptions during its call graph analysis, and thus did not
+patch the bugs. In order to measure the effectiveness, we turned off the call
+graph analysis module and thus forced \tool\ to generate a patch for the bug so
+as to compare it with the developer's fix.
+
 \end{mylist}
 
 
