@@ -218,6 +218,21 @@ statements analyzed for instrumentation.
 \label{subsubsec:minimizePatchInstrumentation}
 % 
 \tool\ makes a forward pass over all bytecodes to determine if a specific string
+object is modified after it has been patched. If the object is not modified then
+no further patching of statements capable of throwing \code{NullPointerException} exceptions is
+required, since the constraint would have been satisfied in the beginning and it would be valid
+as long as the variable is not changed. Similarly, when the API usage is same and none of 
+the method parameters are changed, no further patching would be required. This reduces the 
+total number of possible
+instrumentations required. Further, a string object that involves methods
+capable of throwing runtime exceptions, may not encounter any exceptions during
+execution. Thus, we defer the actual instrumentation required for patching until
+the first exception is thrown, which also minimizes the total amount of code
+instrumentation.
+
+
+\ignore{
+\tool\ makes a forward pass over all bytecodes to determine if a specific string
 object is modified after it as been patched. If the object is not modified then
 no further patching of statements capable of throwing runtime exceptions is
 required, since all constraints will have been satisfied and no exceptions
@@ -227,3 +242,4 @@ capable of throwing runtime exceptions, may not encounter any exceptions during
 execution. Thus, we defer the actual instrumentation required for patching until
 the first exception is thrown, which also minimizes the total amount of code
 instrumentation.
+}
