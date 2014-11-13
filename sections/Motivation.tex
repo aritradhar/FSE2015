@@ -34,16 +34,16 @@ very high for mission-critical applications.
 
 \java\ applications are typically built using libraries, and \code{String} APIs
 are commonly used in third party libraries. Common and diverse usage of strings
-in programs is known to be a significant source of errors \ref{}. We mined the
-repository of posts on \texttt{stackoverflow}~\cite{stackoverflow} to understand
-common types of exceptions thrown in case of failures.
-Table~\ref{tab:stackoverlow} lists the most prominent exceptions with the share
-of higher than $5\%$. The second column indicates the types of exceptions,
-whereas the third column indicates their overall percentage share. We observe
-that strings can play a role in generating all except \code{SecurityException}.
-This result coupled with the potentially heavy cost of program crashes motivated
-us to develop a hybrid technique for automatic repairing of \java\ programs
-for failures related to \code{String} APIs.
+in programs is a significant source of errors. We mined the repository of posts
+on \texttt{stackoverflow}~\cite{stackoverflow} to understand common types of
+exceptions thrown in case of failures. Table~\ref{tab:stackoverlow} lists the
+most prominent exceptions with the share of higher than $5\%$. The second column
+indicates the types of exceptions, whereas the third column indicates their
+overall percentage share. We observe that strings can play a role in generating
+all except \code{SecurityException}. This result coupled with the potentially
+heavy cost of program crashes motivated us to develop a hybrid technique for
+automatic repairing of \java\ programs for failures related to \code{String}
+APIs.
 
 \subsection{Overview}
 \label{subsec:overview}
