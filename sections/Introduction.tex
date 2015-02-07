@@ -5,7 +5,7 @@
 %\textcolor{red}{\textbf{Changes done}}\newline
 
 
-Modern software applications are large and complex. In addition, they run in
+\ignore{Modern software applications are large and complex. In addition, they run in
 diverse environments and get inputs from variety of data sources. As a result,
 predicting safe behavior for them at runtime can be difficult.
 Moreover, giving assurances about the quality of service becomes practically
@@ -17,14 +17,35 @@ that all data elements are correctly validated and processed. Any deficiencies
 in this process makes applications prone to failures. Such defects can be hard
 to detect at the compilation-time, and irrespective of the validation techniques
 used, some of them may go undetected and exist in the applications even when the
-applications are in production.
+applications are in production.}
 
-The cost of failures can vary considerably depending on the mission-critical
+Software systems form a functional backbone of business organizations and their successful operation in turn determines
+the success of the organizations. Therefore, there is hardly a surprise that companies
+invest substantial amount of time and effort in testing and verifying the software products and applications
+that they develop. However, in spite of this effort and the tools used to
+ensure their safety and security, the software invariably carries subtle bugs, the presence of
+which is often evident only when the software responds to them by throwing an
+exception and then crashing as a result.
+
+\ignore{The cost of failures can vary considerably depending on the mission-critical
 nature of applications. In particular, it would be extremely undesirable for an
 unmanned aerial vehicle on its mission to allow the control system to crash in
 case of a failure. Instead a suboptimal functioning for a short while might be
-acceptable until the system fully stabilizes.
-Generally speaking, expectations about the quality of service would largely
+acceptable until the system fully stabilizes.}
+
+Such a failure is undesirable and its cost varies considerably depending on the degree
+of the criticality of the software. This cost would depend on whether the failure 
+occurred during production or testing. A failure that occurs during production might
+have an adverse effect on the business of an organizarion running the software, and also on the business
+of the company that developed the software. On the other hand,
+crashes happened during internal acceptance testing may hamper the 
+testing progress, since the testers would waste their time logging few bugs at a time and rerunning the software.
+This would negatively impact the testing efficiency lowering the overall quality of the software.
+Similarly, crashes during beta testing of a software product if performed by public might frustrate them 
+resulting in the rejection of the product from the market.
+
+
+\ignore{The expectations about the quality of service would largely
 depend on how a failure may impact the business. For example, a commercial
 online store may not afford a crash while it is listing its products to a
 customer. Such unpleasant experiences might result in customers moving to other
@@ -35,7 +56,8 @@ negative feedback from the users and loss in the business. To make the matter wo
 failures may occur in software components that do not possess critical
 functionality, and hence, may even get less attention to their quality at the
 time of development. Nevertheless, irrespective of the criticality of these
-components, if the crash occurs it is equally undesirable.
+components, if the crash occurs it is equally undesirable.}
+
 
 \lstset{language=Java , caption=Apache Log4j bug example.,
 label=snippet:exampleRepairing1}
@@ -50,20 +72,22 @@ private int substitute() {
 \end{lstlisting}
 \end{figure}
 
-As an example, consider Code ~\ref{snippet:exampleRepairing1} which depicts a
+The crashes are particularly annoying when they arise from non-critical modules
+of the software. For example, consider Code ~\ref{snippet:exampleRepairing1} which depicts a
 bug that
 existed in Apache Log4j library version 2.0-beta9~\cite{ApacheLog4jBug} and crashed
 the logging framework. It was reported as a major bug in
 spite of the fact that it occurred in logging component. The object
 \code{priorVariables} is a \code{List} of String. On line 4, there is no check on the variables to ensure
 that invariants such as \code{offset + length <= chars.length}, \code{offset > 0}, and \code{length
-> 0} hold. In case of a failure, rather than allowing the application to crash, organizations would
-like to collect diagnostic information to identify the defects and allow the system to run suboptimal behavior
-for a while until it stabilizes. As long as such suboptimal behavior is within acceptable
-limits, the program survival would get higher preference. The bug can then be
-fixed in the later versions.
+> 0} hold. In case of such a failure, rather than allowing the application to crash, organizations would
+prefer to collect diagnostic information to identify the defect and proceed with the execution at times
+allowing the system to run sub-optimally for a while until it stabilizes. During production, as long as such suboptimal
+behavior is within acceptable limits, the program survival would get higher preference. The bug can then be
+fixed in the later version as soon as possible. This would be particularly useful if the shutting down the system is
+not an option.
 
-Several approaches have been proposed in the past to ensure that programs can
+\ignore{Several approaches have been proposed in the past to ensure that programs can
 recover from failures. Some of the approaches are based on static repairing
 where the patches are synthesized automatically based on the counter examples
 found in the field \cite{wei-issta-2010}.
@@ -75,6 +99,17 @@ loops \cite{Carbin:2011, KlingMCR12, conf/sosp/PerkinsKLABCPSSSWZER09}. Some of 
 damaged data or memory portions \cite{conf/issre/DemskyR03, conf/icse/DemskyR05, conf/issta/DemskyEGMPR06}, or by delaying the execution until the program
 self-stabilizes \cite{Eom:2012}, or by finding the alternative execution paths \cite{PezzeRWZ11}, or by disabling suppressing signals and hoping that the
 program can recover automatically from the errors \cite{conf/pldi/LongSR14}. Static approaches strive
+for correctness whereas dynamic approaches are typically optimistic and work on the
+assumption that some suboptimal behavior under certain conditions is acceptable.}
+
+Several approaches have been proposed in the past to generate patches . Some of the approaches are based on static repairing
+where the patches are synthesized automatically based on the counter examples
+found in the field \cite{wei-issta-2010}.
+However, it is not always desirable to shut down the system for the post-mortem analysis and then relaunch it
+after fixing the defect. In order to overcome this weakness,
+dynamic approaches have been proposed to deal with problems that are
+related to memory, data, and incorrect programming constructs such as infinite
+loops \cite{Carbin:2011, KlingMCR12, conf/sosp/PerkinsKLABCPSSSWZER09}. Static approaches strive
 for correctness whereas dynamic approaches are typically optimistic and work on the
 assumption that some suboptimal behavior under certain conditions is acceptable.
 
@@ -149,181 +184,5 @@ community at \url{http://goo.gl/d1zcXD}.
 
 
 
-%------------- Deleted part of the section
-
-\ignore{Exception handling attributes to the response of program during runtime
-to some
-exceptional condition encounter.
-Most of the time it changes normal flow of program. In many cases exception
-handling is natural part of software execution due to the nature of the
-software.
-An application which constantly accesses I/O which also includes share resources
-may throw exception if another application blocks it.
-Here in this paper we discuss and analyze \java\ exceptions and produce repair
-patch based on that. \java\  supports two types of exceptions :
-\begin{mylist}
-	
-\item \textbf{Checked exception} which requires explicit \code{throws}
-declaration at the method declaration or \code{try-catch} block by the
-developers. Such exceptions are handled carefully as they often involves
-accessing resources like network, database, file system, I/O etc.
-	
-\item \textbf{Unchecked exception} which does not enforce similar handing
-mechanism as the former one. \code{java.lang.RuntimeException} and its
-subclasses and \code{java.lang.Error} are types of unchecked exceptions.
-\code{NullPointerException}, \code{ArrayIndexOutOfBound},
-\code{ArithmeticException} are examples of common \java\ runtime exceptions.
-
-\end{mylist}
-
-Oracle official documentation says that ``\emph{Here's the bottom line
-guideline: If a client can reasonably be expected to recover from an exception,
- make it a checked exception. If a client cannot do anything to recover from the
- exception, make it an unchecked exception}".
- Unchecked exception, particularly runtime exceptions can be thrown from any
- point in the program making them quite unpredictable in nature.
- Due to this extensive testing phase is required to eliminate any bugs and solve
- corner cases.
- Yet many applications suffer unexpected runtime exception causing system crash
- which leads to shutdown or restart.
-
-We find out many applications where system shutdown/restart is expensive due to
-their nature.
-Notable examples are air traffic control, auto pilot, life support system, smart
-power grids, telephone networks, robots like UAV and rovers deployed for
-surveillance, reconnaissance and knowledge acquisition in remote locations etc.
-These applications are real-time sensitive and there is no room for exception
-handling in such system.
-Sudden crash involves risk of human life, expensive equipments and critical
-services.
-Other example includes web applications which uses scrips to dynamically
-generate websites and interfaces as per customer preferences.
-Many E-commerce websites handles queries, access and process customer and
-shopping items data and commits large amount of transactions.
-Sudden system crash may result in loss of precious time and data which
-eventually may result in a frustrated customers move to other websites.
-Many time bad or malicious code leads to some vulnerability to critical
-applications and website which can be exploited by attack to orchestrate system
-crash. Thought these examples cover a large variety of applications, all of them
-point to some concern of \emph{availability}.
-
-Usually, developers tests their code in series of verifications which involves
-code review, static and dynamic analysis of the code, generate test cases to
-cover as much potential input .Yet may corner cases can be left overlooked which
-can cause runtime exceptions.
-Multi-threaded applications are also susceptible to erroneous thread
-interleaving. One such exception is
-\code{java.lang.IllegalMonitorStateException}, when a thread has attempted to
-wait on an object's monitor or to notify other threads waiting on an object's
-monitor without owning the specified monitor. Applications under adversarial
-situation should be considered where deliberate malicious input may cause it to
-fail. To recover from such situation, a mechanism is needed which can predict
-failure by doing invariant and symbolic analysis. Invariant analysis will detect
-particular variables outside legal/safe bound. Static analysis will indicate
-to the potential point of failure.
-}
 
 
-
-
-
-
-\ignore{
-\lstset{language=\java\ , caption=Repairing technique on Appache Log4j bug,
-label = snippet:exampleRepairingPatched} \begin{figure}[t]
-\begin{lstlisting}
-private int substitute()
-{
-  if (priorVariables == null) 
-  {
-    priorVariables = new ArrayList<String>();
-    String temp = null;
-    try
-    {
-    	temp = new String(chars, offset, length);
-    }
-    catch(StringIndexOutOfBoundsException ex)
-    {
-     int i = chars.length;
-     temp = new String(chars, IndexRepair.getI(offset, length, i),
-     IndexRepair.getJ(offset, length, i) length); 
-    }
-    priorVariables.add(temp);
-  }
-}
-\end{lstlisting}
-\end{figure}
-
-Here in the example~\ref{snippet:exampleRepairing}, the object
-\code{priorVariables} is a \code{List} of String. In the line 6, there is bug in
-Apache Log4j library version 2.0-beta9~\cite{ApacheLog4jBug} which made the
-logging framework to crash and was a major bug. In the code there is no check if
-\code{offset + length >
-chars.lenth} or if \code{offset > 0} or \code{length > 0 }which can throw a 
-\code{StringIndexOutOfBounds} exception. . Here the bug was for some cases the
-length value passed in the constructor was $0$. In the patched version, our 
-patching tool detected the statement automatically and wrap in a try catch 
-block with appropiate \code{RunTimeException} type in the
-code~\ref{snippet:exampleRepairingPatched}. \code{getI()} and \code{getJ()} are
-two static methods defined in the class \code{IndexRepair} which are
-instrumented in the byte code.  These two methods repair the last two parameters
-of the \code{String(char[]. int, int)} constructor so that it no longer throws
-an
-Exception. Out automated patch and developers' patch in Apache Log4j version
-2.0-rc2.
-Behaves exactly the same. Both of them modified the last parameter i.e
-\code{length}
-so that \code{offset + length = chars.length}.
-
-In this paper we proposed two solution to suppress runtime example and ensure
-system survivability. The approach consists of six primary phases
-
-\begin{mylist}
-\item \textbf{Taint analysis}: We performed static taint analysis before the
-repairing modules to detect the sensitive objects which are leaving the system
-via database, network stream, file stream or console. Patching these statements
-involving these objects may introduce security concern. We only patch those
-objects which never leaves the system. We have used \soot\ \infoflow\ framework
-for static taint analysis. We have defined potential taint source and sinks in
-the
-configuration file. The \infoflow\ frameworks returns all the program
-statements which lies in any of the program path from source and sink. We tag
-these
-statements as unsafe to patch.
-
-\item \textbf{Already handled exception detection using call graph}: There may
-be cases where an exception has been handled for a particular statement in its
-caller or any predecessor in the call chain. In such scenario the patching would
-change the normal program behavior. We have generated call graph using \soot\
-call-graph phase (\code{cg}) to detect such instances and exclude those
-statements.
-
-\item \textbf{Static constraint evaluation}: We considered constraints in the
-program for the objects for effective repairing. In the implementation, we
-considered \java\ SE \code{String} API and constraints for a \code{String}
-objects
-can be length, prefix, suffix etc. We have evaluated these constraints
-statically for which the information is also statically available. We regenerate
-these objects by solving the constraints.
-	
-\item \textbf{Dynamic constraint evaluation}: The constraints which can not be
-evaluated statically are deferred and special function calls are instrumented in
-the byte code which will take care of extracting the constraints and solving
-them at the runtime.
-	
-\item \textbf{Determine type of exception and patching}: The characteristics of
-patching is dependent on the type of runtime exception encountered by the
-program. A piece of code may throws multiple types of exceptions and all of them
-are handled at the time of patching by instrumenting multiple catch blocks.
-	
-\item \textbf{Optimizing instrumentation}: We introduce couple of optimization
-technique to reduce number of instrumentation in the byte code and keep the
-overhead of repairing calls at bare minimum so that it does not affect the
-application/library performance.
-
-\end{mylist}
-
-The object of the patching is to repair the problem closest to it to minimize
-any collateral damage to other parts of the applications hence minimizing the
-chance of unintentional data loss/corruption.
-}

@@ -1,16 +1,17 @@
 \section{Motivation and Overview}
 \label{sec:motivation}
 
-Ensuring correctness of a program is an undecidable problem. In order to achieve
+Ensuring correctness of a program in general is an undecidable problem. In order to achieve
 high scalability static analysis works by making sound approximations, which
 typically lead to numerous false positives. Complex programming logic and data
 coming from diverse sources make the problem worse. As a result, successful
 execution of a real application can never be guaranteed, and unexpected failures
 may happen. These failures often result in runtime exceptions being thrown by
-the applications that are generally not handled. The cost of these runtime
-failures can vary depending on the criticality of the applications and can be
-very high for mission-critical applications.
+the applications that are generally not handled. %The cost of these runtime
+%failures can vary depending on the criticality of the applications and can be
+%very high for mission-critical applications.
 
+\ignore{
 \begin{table}[t]
 \scriptsize
 \centering
@@ -32,7 +33,9 @@ very high for mission-critical applications.
 \label{tab:stackoverlow}
 % }
 \end{table}
+}
 
+\ignore{
 \java\ applications are typically built using libraries, and \code{String} APIs
 are commonly used in third party libraries. Common and diverse usage of strings
 in programs is a significant source of errors. We mined the repository of posts
@@ -42,6 +45,19 @@ most prominent exceptions with the share of higher than $5\%$. The second column
 indicates the types of exceptions, whereas the third column indicates their
 overall percentage share. We observe that strings can play a role in generating
 all except \code{SecurityException}. This result coupled with the potentially
+heavy cost of program crashes motivated us to develop a hybrid technique for
+automatic repairing of \java\ programs for failures related to \code{String}
+APIs.}
+
+\java\ applications are typically built using libraries, and \code{String} APIs
+are commonly used in third party libraries. Common and diverse usage of strings
+in programs is a significant source of errors. We mined the repository of posts
+on \texttt{stackoverflow}~\cite{stackoverflow} to understand \java\ string objects'
+involvement in the exceptions thrown in case of failures. We realised that out
+of the total $60K$ posts in which the exception was thrown, about $33K$ posts were
+related to the \java string objects. This data indicates that strings play a vital
+role in generating exceptions and potentially crashing programs. This result
+coupled with the potentially
 heavy cost of program crashes motivated us to develop a hybrid technique for
 automatic repairing of \java\ programs for failures related to \code{String}
 APIs.
@@ -472,3 +488,4 @@ return temp;
 \end{figure}
 }
 
+CTTSKY14
