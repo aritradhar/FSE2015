@@ -149,7 +149,7 @@ the conditions befor it, which can be safely evaluated. When we reach line
 number \code{16}, then the variable \code{tt} would be available and can be
 used to reevaluate the string \code{str}.
 
-\subsubsection{Constraint Storage}
+\subsection{Constraint Storage}
 \label{subsubsec:constraintStorage}
 
 For each of the string object, we store in the way illustrated in the
@@ -167,7 +167,7 @@ When to evaluate a new string object we need bounds like the minimuma and maximu
 length, the prefixes and the candidate characters and their relative position.
 We keep minimum information to safely evaluate the string.
 
-\subsubsection{Constraint Evaluation Strategy}
+\subsection{Constraint Evaluation Strategy}
 \label{subsubsec:constraintStorage}
 
 \begin{algorithm}
@@ -213,7 +213,7 @@ We keep minimum information to safely evaluate the string.
  \label{algo:constraint}
 \end{algorithm}
 
-\subsubsection{Repairing Strategy using Constraint Evaluation}
+\subsection{Repairing Strategy using Constraint Evaluation}
 \label{subsubsec:repairingStrategyConstraint}
 
 The patching is evaluated in two ways, static and dynamic. We evaluated those

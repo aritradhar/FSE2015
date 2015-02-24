@@ -56,7 +56,7 @@ constraints evaluated in the earlier stage to programatically generate and embed
 patches inside \texttt{catch} blocks to ensure that they do not get activated
 during normal program execution.
 
-\subsubsection{Precise Identification of Instrumentation Points: }
+\subsection{Precise Identification of Instrumentation Points: }
 \label{sec:tool:stage1}
 
 In this stage, \tool\ leverages a combination of program analyses to accurately
@@ -154,7 +154,7 @@ upstream in the method, and (ii) the variables have not been redefined along any
 path that originates from the patched statement. This analysis further reduces
 instrumentation points in a program.
 
-\subsubsection{Patch Generation: }
+\subsection{Patch Generation: }
 \label{sec:tool:stage2}
 % 
 The output from the first stage is essentially a set of program points,
@@ -375,7 +375,7 @@ on string \code{st}.
 
 \end{mylist}
 
-\subsubsection{Code generation: }
+\subsection{Code generation: }
 \label{sec:tool:stage2:generation}
 
 Code generation can be done either statically or dynamically depending on how
@@ -458,7 +458,7 @@ the mechanism to correctly set the parameters for the offending string API.
 
 \end{mylist}
 
-\subsubsection{Instrumentation: }
+\subsection{Instrumentation: }
 \label{sec:tool:stage3}
 
 \tool\ embeds the repair in a \code{try-catch} ladder to ensure that the patches

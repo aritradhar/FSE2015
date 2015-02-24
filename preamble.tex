@@ -1,6 +1,6 @@
 \usepackage{color}
 
-%%\newcommand{\subparagraph}{}
+\newcommand{\subparagraph}{}
 
 % You can tweak clickable link colors here:
 \definecolor{linkcol}{rgb}{0,0,1}
@@ -11,7 +11,10 @@
 \setlength{\pdfpagewidth}{8.5in}
 \setlength{\pdfpageheight}{11in}
 
-%%\usepackage{cite}
+\let\proof\relax
+\let\endproof\relax
+
+% \usepackage{cite}
 \usepackage{amsthm}
 \usepackage{amsmath}
 \usepackage{amsfonts}
@@ -223,7 +226,7 @@ pdfproducer = {pdflatex}}
 
 \renewcommand{\thetable}{\arabic{table}}
 
-%\newcommand*{\refname}{Bibliography}
+\newcommand*{\refname}{Bibliography}
 
 \def\yes{\ding{51}}
 \def\no{\ding{55}}

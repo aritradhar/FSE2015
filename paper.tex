@@ -1,4 +1,4 @@
-\documentclass[pldi]{sigplanconf-pldi15}
+\documentclass{sig-alternate}
 
 % \newcommand{\ignore}[1]{}
 
@@ -110,10 +110,10 @@ the programmers in the later versions shows that they are semantically similar.
 
 \input{sections/Introduction}
 \input{sections/Motivation}
-%\input{sections/ProblemFormulation}
-%\input{sections/TaintAnalysis}
-%\input{sections/BoundedAnalysis}
-%\input{sections/RepairingStrategyConstrainAutomata}
+\input{sections/ProblemFormulation}
+\input{sections/TaintAnalysis}
+\input{sections/BoundedAnalysis}
+\input{sections/RepairingStrategyConstrainAutomata}
 \input{sections/newDesign}
 \input{sections/Implementation}
 \input{sections/Results}
@@ -122,9 +122,12 @@ the programmers in the later versions shows that they are semantically similar.
 
 %%\acks
 
-\softraggedright
+\newpage
+
+\raggedright
+\small
 %\bibliographystyle{abbrvnat}
-\bibliographystyle{abbrv}
+\bibliographystyle{plain}
 \bibliography{paper}
 
 \end{document}
