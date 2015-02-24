@@ -190,9 +190,9 @@ of the patches.
 % articular
 %  \code{Unit} was handled.
 
-\subsection{Minimize constraint analysis: }
+\subsubsection{Minimize constraint analysis}
 \label{subsubsec:minimizeConstrintInstrumentation}
-%
+
 \tool\ collects constraints only for those string literals that may be involved
 in a runtime exception. For example, if a string object does not involve API
 methods that can throw runtime exception, then it is not required to collect and
@@ -216,9 +216,9 @@ statements analyzed for instrumentation.
 % \code{System.err.print()}. We only consider the conditional expressions in the
 % branches having no exception or error path.
 
-\subsection{Minimize patch instrumentation: }
+\subsubsection{Minimize patch instrumentation}
 \label{subsubsec:minimizePatchInstrumentation}
-% 
+
 \tool\ makes a forward pass over all bytecodes to determine if a specific string
 object is modified after it has been patched. If the object is not modified then
 no further patching of statements capable of throwing \code{NullPointerException} exceptions is
