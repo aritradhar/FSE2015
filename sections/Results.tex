@@ -5,7 +5,7 @@
 % \setlength{\tabcolsep}{3pt}
 \centering
 \scriptsize
-\begin{tabular}{|l|l|l|r|r||r|c|r|r|c|}
+\begin{tabular}{|l|l|l|r|r||r|c|r|r|c|c|c|c|c|}
 
 \hline
 \multicolumn{1}{|c|}{\textbf{API}} &
@@ -19,96 +19,103 @@
 %optimization
 \multicolumn{1}{c|}{\textbf{$\mathcal{IC}_{WO}$}} & %instrumentation without
 % optimization
-\multicolumn{1}{c|}{\textbf{$\mathcal{RS}_{CE}$}}\\ % cascaded exception
+\multicolumn{1}{c|}{\textbf{$\mathcal{RS}_{CE}$}} & % cascaded exception
+%new added col
+\multicolumn{1}{c|}{\textbf{$\mathcal{S}_{U}$}} &
+\multicolumn{1}{c|}{\textbf{$\mathcal{F}_{U}$}} &
+\multicolumn{1}{c|}{\textbf{$\mathcal{S}_{P}$}} &
+\multicolumn{1}{c|}{\textbf{$\mathcal{F}_{P}$}} \\
 
 \hline
 \code{Aries} & \cite{ARIES1204} & Major &$3.5K$ &$129$  & $ 1.02$ & $0$  &$42$&
-$5$ & $\checkmark$ \\
+$5$ & $\checkmark$ & $17$ & $0$ & $17$ & $0$ \\
 
 \code{Commons CLI1.x} & \cite{CLI193} & Critical & $3.2K$ & $53$  & $0.79
- $ & $0$  & $19$& $19$ & $\checkmark$ \\
+ $ & $0$  & $19$& $19$ & $\checkmark$ & $13$ & $0$ & $13$ & $0$ \\
 
 \code{Commons CLI2.x} & \cite{CLI46} & Major & $3.2K$ & $21$ & $0.50
- $ & $1$  & $13$ &$2$ & $\times$ \\
+ $ & $1$  & $13$ &$2$ & $\times$ & $13$ & $0$ & $13$ & $0$ \\
 
 \code{Commons Compress} & \cite{COMPRESS26} & Blocker & $4.0K$ & $134$  & $0.99
- $ & $0$& $46$& $4$ &$\checkmark$\\
+ $ & $0$& $46$& $4$ &$\checkmark$ & $30$ & $0$ & $30$ & $0$ \\
 
 \code{Commons IO} & \cite{IO179} & Major & $3.3K$ & $125$ & $ 1.01
-$ & $0$  & $76$ & $1$ & $\checkmark$\\
+$ & $0$  & $76$ & $1$ & $\checkmark$ & $25$ & $0$ & $25$ & $0$ \\
 
 \code{Commons Lang} & \cite{LANG457} & Major & $5.1K$ & $240$ & $0.98
- $ & $0$  & $168$& $8$ & $\checkmark$ \\
+ $ & $0$  & $168$& $8$ & $\checkmark$ & $15$ & $0$ & $15$ & $0$ \\
 
 \code{Commons Math} & \cite{MATH198} & Major & $3.4K$ & $300$ & $1.00
- $ & $1$  & $36$ &$2$ & $\checkmark$ \\
+ $ & $1$  & $36$ &$2$ & $\checkmark$ & $18$ & $0$ & $18$ & $0$ \\
+ 
 \code{Commons Net} & \cite{NET442} & Major & $3.3K$ & $14$ & $ 1.07
-$ & $0$  & $6$ & $1$ & $\checkmark$ \\
+$ & $0$  & $6$ & $1$ & $\checkmark$ & $20$ & $0$ & $20$ & $0$ \\
+
 \code{Commons VFS} & \cite{VFS338} & Major &$4.5K$ & $37$ & $1.00
- $ & $0$  & $20$ & $2$ & $\checkmark$ \\
+ $ & $0$  & $20$ & $2$ & $\checkmark$ & $16$ & $0$ & $16$ & $0$ \\
 
 \code{Derby} & \cite{DERBY4748} & Major & $4.4K$ &$40$ & $0.96
- $ & $0$  & $47$ & $6$ & $\checkmark$ \\
+ $ & $0$  & $47$ & $6$ & $\checkmark$ & $29$ & $0$ & $29$ & $0$ \\
 
 \code{Eclipse AJ Weaver} & \cite{EclipseBug432874} & Major & $20.6K$ & $50$ & $
-0.52 $ &$0$  & $4$ & $1$ & $\times$ \\
+0.52 $ &$0$  & $4$ & $1$ & $\times$ & $16$ & $0$ & $16$ & $0$ \\
 
 \code{Eclipse AJ} & \cite{EclipseBug333066} & Major & $25.0K$ &$39$ & $1.03
- $ & $0$ & $6$ & $1$ &$\checkmark$ \\
+ $ & $0$ & $6$ & $1$ &$\checkmark$ & $13$ & $0$ & $13$ & $0$ \\
 
 \code{FlexDK 3.4} &\cite{SDK14417} & Minor & $6.3K$ & $600$ & $0.96$ & $0$ &
-$207$ & $25$ & $\checkmark$ \\
+$207$ & $25$ & $\checkmark$ & $12$ & $0$ & $12$ & $0$ \\
 
 \code{Hama 0.2.0} &\cite{HAMA212}  & Critical & $3.7K$ & $35$ & $1.38$ & $0$ &
-$28$ & $5$ & $\checkmark$ \\
+$28$ & $5$ & $\checkmark$ & $11$ & $0$ & $11$ & $0$ \\
 
 \code{HBase 0.92.0} &\cite{HBASE4481}  & Critical & $4.8K$ & $61$ & $ 1.01
-$ & $0$ & $13$ & $2$ & $\checkmark$\\
+$ & $0$ & $13$ & $2$ & $\checkmark$ & $22$ & $0$ & $22$ & $0$ \\
 
 \code{Hive} &\cite{HIVE6986} & Trivial &$4.4K$ & $23$ & $1.01$ & $0$  & $8$ &$1$
-& $\checkmark$ \\
+& $\checkmark$ & $16$ & $0$ & $16$ & $0$ \\
 
 \code{HttpClient} &\cite{HTTPCLIENT150} & Major & $3.3K$ & $14$ & $1.13$ & $0$ &
-$6$& $1$ & $\checkmark$ \\
+$6$& $1$ & $\checkmark$ & $20$ & $0$ & $20$ & $0$ \\
 
 \code{jUDDI} & \cite{JUDDI292} & Major &$3.2K$ & $70$ & $ 1.13$ & $0$  & $10$
-& $2$ & $ \checkmark$ \\
+& $2$ & $ \checkmark$ & $26$ & $0$ & $26$ & $0$ \\
 
 \code{Log4j} & \cite{ApacheLog4jBug} & Major & $3.2K$ & $17$ & $ 0.97$ & $0$  &
-$6$ &$1$ & $\checkmark$ \\
+$6$ &$1$ & $\checkmark$ & $8$ & $0$ & $8$ & $0$ \\
 
 \code{MyFaces Core} & \cite{MYFACES416} & Major  & $4.5K$ & $50$ & $1.00 $ &
-$0$ & $4$& $2$ & $\checkmark$ \\
+$0$ & $4$& $2$ & $\checkmark$ & $11$ & $0$ & $11$  & $0$ \\
 
 \code{Nutch} & \cite{NUTCH1547} & Major & $4.5K$ & $90$ & $0.98$ & $0$  & $8$&
-$1$ & $\checkmark$ \\
+$1$ & $\checkmark$ & $8$ & $0$ & $8$ & $0$ \\
 
 \code{Ofbiz} & \cite{OFBIZ4237} & Minor & $4.4K$ & $28$ & $1.01 $ & $1$ & $6$
-&$1$ & $\checkmark$ \\
+&$1$ & $\checkmark$ & $20$ & $0$ & $20$ & $0$ \\
 
 \code{PDFBox} & \cite{PDFBOX467} & Major &$4.4K$ & $23$ & $ 1.14$ & $0$  & $8$&
-$1$ & $\checkmark$ \\
+$1$ & $\checkmark$ & $15$ & $0$ & $15$ & $0$ \\
 
 \code{Sling Eclipse IDE} & \cite{SLING3095} & Major & $4.5K$ & $58$ & $ 1.00
-$ & $0$ &$39$ & $6$ & $\checkmark$\\
+$ & $0$ &$39$ & $6$ & $\checkmark$ & $3$ & $0$ & $3$ & $0$ \\
 
 \code{SOAP} & \cite{SOAP130} & Major &$5.0K$ & $165$ & $0.97$ & $1$  & $32$ &
-$5$ & $\checkmark$ \\
+$5$ & $\checkmark$ & $18$ & $0$ & $18$ & $0$ \\
 
 \code{SOLR 1.2} & \cite{SOLR331} & Major & $11.0K$ & $200$& $0.98$ & $0$  & $25$
-& $4$ & $\checkmark$ \\
+& $4$ & $\checkmark$ & $11$ & $0$ & $11$ & $0$ \\
 
 \code{Struts2} & \cite{WW650} & Major &$16.0K$ & $80$ & $1.03$ & $0$  & $25$ &
-$2$ & $\checkmark$ \\
+$2$ & $\checkmark$ & $10$ & $0$ & $10$ & $0$ \\
 
 \code{Tapestry 5} & \cite{TAP51770} & Major & $6.2K$  & $71$ & $0.98 $ & $0$ &
-$31$ &$5$ & $\checkmark$ \\
+$31$ &$5$ & $\checkmark$ & $17$ & $0$ & $17$ & $0$ \\
 
 \code{Wicket} & \cite{WICKET4387} & Major & $70.0K$ & $68$ & $0.96$ & $0$  &
-$16$ & $1$ & $\checkmark$ \\
+$16$ & $1$ & $\checkmark$ & $20$ & $0$ & $20$ & $0$ \\
 
 \code{XalanJ2} & \cite{XALANJ836} & Major & $3.3K$ & $33$ & $ 1.03$ & $0$  &$13$
-& $2$ & $\checkmark$ \\
+& $2$ & $\checkmark$ & $11$ & $0$ & $11$ & $0$ \\
 
 \hline
 
