@@ -5,7 +5,7 @@
 % \setlength{\tabcolsep}{3pt}
 \centering
 \scriptsize
-\begin{tabular}{|l|c|l|r|c||c|c|c|c||c|c|c|c|}
+\begin{tabular}{|l|c|l|r|r||r|r|r|r||r|r|r|c|}
 
 \hline
 \multicolumn{1}{|c|}{\textbf{API}} &
@@ -126,19 +126,21 @@ $11$ & $0$ & $11$ & $0$ & $0$ &$13$ & $2$ & $\checkmark$ \\
 \scriptsize
 \centering
 \setlength{\tabcolsep}{3pt}
-\begin{tabular}{ll|ll|ll|ll}
+\begin{tabular}{ll|ll|ll}
 
-$\mathcal{N}_{CG}$ & \# nodes in call graph & $\mathcal{F}_{U}$ & \#fail tests
-in unpatched & $FCI$ & Flow Consistency Index & $\mathcal{RS}_{CE}$ & Cascaded
-exception exists\\
+$\mathcal{N}_{CG}$ & \# nodes in call graph & $\mathcal{F}_{U}$ & \# fail tests
+in unpatched & $\mathcal{IC}_{NO}$ & Instrumentation w/o optimization (recall
+\xref{subsec:optimizations})\\
 
-$\mathcal{N}_{Unit}$& \# \code{Units} analyzed & $\mathcal{S}_{P}$ &
-\#successful tests in patched version & $\mathcal{IC}_{NO}$ & Instrumentation
-w/o optimization (recall \xref{subsec:optimizations}) & &\\
+$\mathcal{N}_{Unit}$& \# \code{Units} analyzed & $\mathcal{S}_{P}$ & \#
+successful tests in patched version & $\mathcal{IC}_{WO}$ & Instrumentation w/
+optimization (recall \xref{subsec:optimizations})\\
 
-$\mathcal{S}_{U}$ & \#successful tests in unpatched & $\mathcal{F}_{P}$ & \#fail
-tests in patched version & $\mathcal{IC}_{WO}$ & Instrumentation w/ optimization
-(recall \xref{subsec:optimizations}) & &\\
+$\mathcal{S}_{U}$ & \# successful tests in unpatched & $\mathcal{F}_{P}$ & \#
+fail tests in patched version & $\mathcal{RS}_{CE}$ & Cascaded exception
+exists\\
+
+ & & $FCI$ & Flow Consistency Index\\
 
 \end{tabular}
 }
