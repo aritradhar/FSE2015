@@ -40,6 +40,7 @@ citecolor=citecol,%
 urlcolor=urlcol,%
 hypertexnames=true,%
 pdfpagelabels,
+draft
 ]{hyperref}
 
 \usepackage{sty/multirow}
@@ -201,6 +202,7 @@ pdfproducer = {pdflatex}}
 \sloppy
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+\newcommand{\comment}[1]{{\color{red}#1}}
 \newcommand{\code}[1]{\texttt{\scriptsize{#1}}}
 \newcommand{\mycomment}[1]{}
 \newcommand{\todo}[1]{\textbf{TODO: #1}}
