@@ -130,7 +130,8 @@ of errors, and secondly, because by targeting a specific type of data
 the approach can develop patches that are more precise and result in the
 behavior that would be close to the intended behavior. In other words, we try to exploit our
 knowledge about the string behavior and its well-defined API to automatically synthesize 
-effective patches.
+effective patches that have higher likelihood of generating a program behavior under failure that
+would be close to the intended behavior.
 
 Our approach first identifyies program statements statically
 that might be vulnerable to string-related failures, and then developes patches
