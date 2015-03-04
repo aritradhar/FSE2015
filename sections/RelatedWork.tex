@@ -1,53 +1,126 @@
 \section{Related Work}
 \label{sec:relatedWork}
 
-There has been considerable amount of research done in the area of 
-automated program repairing. The approaches that have been proposed by the researchers
+There has been considerable amount of research done in the area of automated
+program repairing. The approaches that have been proposed by the researchers
 broadly fall into two categories namely, static and dynamic.
 
-The static approaches work based on the counter-example or the violated invariants that
-are reported from the field. These approaches then repair the program by automatically developing a patch
-and then ensure its correctness using computationally intensive techniques such as model-checking \cite{biere2014, wei-issta-2010}.
+The static approaches work based on the counter-example or the violated
+invariants that are reported from the field. These approaches then repair the
+program by automatically developing a patch and then ensure its correctness
+using computationally intensive techniques such as model-checking
+\cite{biere2014, wei-issta-2010}.
 These techniques are effective in producing accurate patches. However, shutting
-down the system to produce and apply patches is not always feasible 
-or desirable. To overcome these problems, several promising dynamic approaches have been proposed. These approaches
-typically develop either suboptimal patches or isolate the data structure that is damaged which allows at least part of the system
-to be functional \cite{conf/issre/DemskyR03, conf/icse/DemskyR05, conf/issta/DemskyEGMPR06}. The advantage of these approaches
-is that they are light-weight and can fix the system on-the-fly. Long et al. \cite{conf/pldi/LongSR14} have developed
-an approach that deals with two most commonly observed software errors, and then suppressing the errors with the help 
-of a runtime that operates by first invoking a  signal handlers, and then by running a dynamic symbolic execution to ensure no side-effects.
-This approach is light-weight and like our approach fixes the errors on-the-fly potentially allowing some sub-optimal behaviour for a finite time until the systems self-stabilizes.
-In contrast our approach targets only string objects for repairing allowing it generate highly precise program patches which generate very few or none cascading exceptional events and 
-produces a program behavior which is very close to the expected behavior under the event of crashing. 
-In addition, our approach is hybrid with a heavy static component which enables all the analysis including the side-effect analysis
-based on a taint analysis to perform dynamically. It incurs negligible overhead even in the event of crashing.
+down the system to produce and apply patches is not always feasible or
+desirable. To overcome these problems, several promising dynamic approaches have
+been proposed. These approaches typically develop either suboptimal patches or
+isolate the data structure that is damaged which allows at least part of the
+system to be functional \cite{conf/issre/DemskyR03, conf/icse/DemskyR05,
+conf/issta/DemskyEGMPR06}. The advantage of these approaches is that they are
+light-weight and can fix the system on-the-fly. Long et al.
+\cite{conf/pldi/LongSR14} have developed an approach that deals with two most
+commonly observed software errors, and then suppressing the errors with the help
+of a runtime that operates by first invoking a  signal handlers, and then by
+running a dynamic symbolic execution to ensure no side-effects.
+This approach is light-weight and like our approach fixes the errors on-the-fly
+potentially allowing some sub-optimal behaviour for a finite time until the
+systems self-stabilizes.
+In contrast our approach targets only string objects for repairing allowing it
+generate highly precise program patches which generate very few or none
+cascading exceptional events and produces a program behavior which is very close
+to the expected behavior under the event of crashing.
+In addition, our approach is hybrid with a heavy static component which enables
+all the analysis including the side-effect analysis based on a taint analysis to
+perform dynamically. It incurs negligible overhead even in the event of
+crashing.
 
 
-\ignore{
+\ignore {
+% % added from the mail : from PLDI author response
+
+Automated repair of HTML generation errors in PHP applications using string
+constraint solving
+
+In this paper the authors proposed a technique to repair the auto generated
+malformed HTML codes from the PHP scrips. Often the HTML codes do not have
+proper tags which are silently corrected by the browser but the result is
+different across browsers. The authors employed an efficient SAT solver named
+Kodkod using cost optimization to find the best repair.
+%%%%%%%%%%%%%%%%%%%%%%
+Deep Typechecking and Refactoring
+
+Here the authors focused on the java database API and related query string. They
+proposed the solution of type errors which is caused due to the type mismatch in
+the database and the type assigned in the program. The authors also proposed a
+solution for refactoring where changing a class name associated with some
+queries will reflect all the strings system wide.
+%%%%%%%%%%%%%%%%%%%%%%%%
+GenProg: A Generic Method for Automatic Software Repair
+
+The author used genetic programming technique which is a stochastic search
+method inspired by biological evolution. The technique generated program patch
+by using already existing test cases to deal with bugs like infinite loop, null
+string, segmentation fault, buffer overflow etc.
+%%%%%%%%%%%%%%%%%%%%%%%%%
+Automatic Program Repair with Evolutionary Computation
+
+Same paper as the above (Journal version) written by same authors.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+A Systematic Study of Automated Program Repair: Fixing 55 out of 105 Bugs for $8
+Each
+
+Extended work of the above. The paper deals with the real life feasibility if
+GenProg like what fraction of the bugs it can repair and the cost associated
+with it.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Automating String Processing in Spreadsheets Using Input-Output Examples
+
+The author considered Microsoft Excel programs as the use case scenario and
+identified string processing as the major class of programming problem which
+includes names/phone-numbers/dates from one format to another, data cleansing,
+extracting data from several text files or web pages into a single document,
+etc. The author designed a learning algorithm for learning a string expression
+that is consistent with input output examples. The input output example is
+generated from a mapping which maps a set of string to a string defining a
+operation like concatenation.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+Learning Semantic String Transformations from Examples
+
+The authors deals with semantic transformation of the string like manipulating
+strings that need to be interpreted as more than a sequence of characters, e.g.,
+as a column entry from some relational table, or as some standard data-type like
+date, time, currency, etc.
+
+
+% %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 Several approaches have been proposed in the past to ensure that programs can
 recover from failures. Some of the approaches are based on static repairing
 where the patches are synthesized automatically based on the counter examples
 found in the field \cite{wei-issta-2010}.
-However, it is not always desirable to shut down the system for the post-mortem analysis and then relaunch it
-after fixing the defect. In order to overcome this weakness,
-dynamic approaches have been proposed to deal with problems that are
+However, it is not always desirable to shut down the system for the post-mortem
+analysis and then relaunch it after fixing the defect. In order to overcome this
+weakness, dynamic approaches have been proposed to deal with problems that are
 related to memory, data, and incorrect programming constructs such as infinite
-loops \cite{Carbin:2011, KlingMCR12, conf/sosp/PerkinsKLABCPSSSWZER09}. Some of the approaches work either by identifying and isolating
-damaged data or memory portions \cite{conf/issre/DemskyR03, conf/icse/DemskyR05, conf/issta/DemskyEGMPR06}, or by delaying the execution until the program
-self-stabilizes \cite{Eom:2012}, or by finding the alternative execution paths \cite{PezzeRWZ11}, or by disabling suppressing signals and hoping that the
-program can recover automatically from the errors \cite{conf/pldi/LongSR14}. Static approaches strive
-for correctness whereas dynamic approaches are typically optimistic and work on the
-assumption that some suboptimal behavior under certain conditions is acceptable.
+loops \cite{Carbin:2011, KlingMCR12, conf/sosp/PerkinsKLABCPSSSWZER09}. Some of
+the approaches work either by identifying and isolating damaged data or memory
+portions \cite{conf/issre/DemskyR03, conf/icse/DemskyR05,
+conf/issta/DemskyEGMPR06}, or by delaying the execution until the program
+self-stabilizes \cite{Eom:2012}, or by finding the alternative execution paths
+\cite{PezzeRWZ11}, or by disabling suppressing signals and hoping that the
+program can recover automatically from the errors \cite{conf/pldi/LongSR14}.
+Static approaches strive for correctness whereas dynamic approaches are
+typically optimistic and work on the assumption that some suboptimal behavior
+under certain conditions is acceptable.
 
 \myparagraph{Data Structure Repairing}
-%\label{subsec:RecWorksDataStructure}
-% 
+% \label{subsec:RecWorksDataStructure}
 Demsky and Rinard have proposed approaches that repair data structures ~\cite{
 Demsky03automaticdata, conf/issre/DemskyR03,conf/oopsla/DemskyR03,
-conf/issta/DemskyEGMPR06} the authors mostly concentrated on specific data-structures like \emph{FAT-32}, \emph{ext2},
-\emph{CTAS} (a set of air-traffic control tools developed at the NASA Ames
-research center) and repairing them. The authors represented a specification
-language by which they able to see consistency property these data-structure.
+conf/issta/DemskyEGMPR06} the authors mostly concentrated on specific
+data-structures like \emph{FAT-32}, \emph{ext2}, \emph{CTAS} (a set of
+air-traffic control tools developed at the NASA Ames research center) and
+repairing them. The authors represented a specification language by which they
+able to see consistency property these data-structure.
 Given the specification, they able to detect the inconsistency of these
 data-structures and repair them.
 The repairing strategy involves detecting the consistency constraints for the
@@ -64,13 +137,12 @@ list, doubly liked list, N-ary tree, AVL tree, binary search tree, disjoint set,
 red-black tree, Fibonacci heap etc.
 
 \myparagraph{Works on Software Patching}
-%\label{subsec:RecWorksSoftPatch}
-% 
+% \label{subsec:RecWorksSoftPatch}
 In their paper~\cite{conf/sosp/PerkinsKLABCPSSSWZER09}, authors Perkins et al.
 presented their \emph{Clear view} system which works on windows x86 binaries
-without requiring any source code. They used invariants analysis for which
-they used Daikon~\cite{DBLP:journals/scp/ErnstPGMPTX07}. They mostly patched
-security vulnerabilities by some candidate repair patches.
+without requiring any source code. They used invariants analysis for which they
+used Daikon~\cite{DBLP:journals/scp/ErnstPGMPTX07}. They mostly patched security
+vulnerabilities by some candidate repair patches.
 
 Fan Long et al. in their paper~\cite{conf/pldi/LongSR14} presented their new
 system \emph{RCV} which recovers applications from divide-by-zero and
@@ -78,21 +150,18 @@ null-deference error. Their tool replaces \emph{SIGFPE} and \emph{SIGSEGV}
 signal handler with its own handler. The approach simply works by assigning zero
 at the time of divide-by-zero error, read zero and ignores write at the time of
 null-deference error. Their implementation was on $x86$ and $x86-64$ binaries
-and they also implemented a dynamic taint analysis to see the effect of
-their
+and they also implemented a dynamic taint analysis to see the effect of their
 patching until the program stabilizes which they called as \emph{error
 shepherding}.
 
 \myparagraph{Genetic Programming, Evolutionary Computation}
-%\label{subsec:RecWorksGeneric}
-% 
+% \label{subsec:RecWorksGeneric}
 Reserch works on program repair based on genetic programming and evolutionary
-computation can be found in the paper of Forrest
-et al.s~\cite{conf/gecco/2009g} and Weimer
-et al.~\cite{DBLP:journals/cacm/WeimerFGN10} respectively. In the papers, the
-authors used genetic programming to generate and evaluate test cases. They used their
-technique on the well known Microsoft Zune media player bug causing the
-application to freeze up.
+computation can be found in the paper of Forrest et al.s~\cite{conf/gecco/2009g}
+and Weimer et al.~\cite{DBLP:journals/cacm/WeimerFGN10} respectively. In the
+papers, the authors used genetic programming to generate and evaluate test
+cases. They used their technique on the well known Microsoft Zune media player
+bug causing the application to freeze up.
 }
 
 

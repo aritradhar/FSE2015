@@ -2,23 +2,20 @@
 \label{sec:motivation}
 
 Ensuring correctness of a program statically is an undecidable problem.
-However, there is always a tradeoff between the precision and the scalability that a
-static program analysis has to live with. In order to achieve a
-high scalability static analysis works by making sound approximations, which
+However, there is always a tradeoff between the precision and the scalability
+that a static program analysis has to live with. In order to achieve a high
+scalability static analysis works by making sound approximations, which
 typically lead to numerous false positives. Complex programming logic and data
 coming from diverse sources make the already hard problem worse.
-As a result, successful execution of a real application can never be guaranteed, and unexpected failures
-may happen. These failures often result in runtime exceptions being thrown by
-the applications that are generally not handled and the program crashes.
+As a result, successful execution of a real application can never be guaranteed,
+and unexpected failures may happen. These failures often result in runtime
+exceptions being thrown by the applications that are generally not handled and
+the program crashes.
 
-%The cost of these runtime
-%failures can vary depending on the criticality of the applications and can be
-%very high for mission-critical applications.
+% The cost of these runtime failures can vary depending on the criticality of
+% the applications and can be very high for mission-critical applications.
 
-\ignore{
-\begin{table}[t]
-\scriptsize
-\centering
+\ignore{ \begin{table}[t] \scriptsize \centering
 \begin{tabular}{|l|r|r|}
 \hline
 \multicolumn{1}{|c|}{\textbf{Runtime Exception Type}} &
