@@ -53,12 +53,17 @@ APIs.}
 \ignore{
 \java\ applications are typically built using libraries, and \code{String} APIs
 are commonly used in third party libraries. Common and diverse usage of strings
-in programs can be a significant source of errors. We mined the repository of posts
-on \texttt{stackoverflow}~\cite{stackoverflow} to understand \java\ string objects'
+in programs can be a significant source of errors. We mined the repository of
+posts
+on \texttt{stackoverflow}~\cite{stackoverflow} to understand \java\ string
+objects'
 involvement in the exceptions thrown in case of failures. We realised that out
-of the total $60K$ posts in which the exception was thrown, about $33K$ posts were
-related to the \java\ string objects. \comment{Aritra: could you please take a look at this?
-Is this number really that large? Have you checked that the call stack traces that are printed
+of the total $60K$ posts in which the exception was thrown, about $33K$ posts
+were
+related to the \java\ string objects. \comment{Aritra: could you please take a
+look at this?
+Is this number really that large? Have you checked that the call stack traces
+that are printed
 have string objects in it?}
 This data indicates that strings play an important
 role in generating exceptions that can potentially crash programs. This result
@@ -219,26 +224,44 @@ priorVariables.add(temp);
 \subsection{Problem Definition}
 \label{subsec:definition}
 
-Let the behavior $\mathcal{B}$  of program $\mathcal{P}$ for input $\mathcal{I}$ be defined as a sequence of data values $\textless b_1,
- \ldots, b_n \textgreater$ shared with the environment such as the values that are used to print some information on screen,
-access and manipulate files and databases, and exchanged with other processes or threads. For brevity, we assume that the program is sequential.
-However, our formalisation and arguments can be extended to multi-threaded programs and their behaviors.
+Let the behavior $\mathcal{B}$  of program $\mathcal{P}$ for input $\mathcal{I}$
+be defined as a sequence of data values $\textless b_1,
+ \ldots, b_n \textgreater$ shared with the environment such as the values that
+are used to print some information on screen,
+access and manipulate files and databases, and exchanged with other processes or
+threads. For brevity, we assume that the program is sequential.
+However, our formalisation and arguments can be extended to multi-threaded
+programs and their behaviors.
 
-Let this sequence be decomposed into two components $\mathcal{B}_c  = \textless b_{1_c},
- \ldots, b_{n_c} \textgreater$ and $\mathcal{B}_n = \textless b_{1_n}, \ldots, b_{n_n} \textgreater$, where all the elements 
- of $\mathcal{B}_c$ can be identified as critical values that form core functionality of the program, where as 
- the elements of $\mathcal{B}_n$ can be marked as noncritical values with respect to the core functionality of the program.
+Let this sequence be decomposed into two components $\mathcal{B}_c  = \textless
+b_{1_c},
+ \ldots, b_{n_c} \textgreater$ and $\mathcal{B}_n = \textless b_{1_n}, \ldots,
+b_{n_n} \textgreater$, where all the elements 
+ of $\mathcal{B}_c$ can be identified as critical values that form core
+functionality of the program, where as 
+ the elements of $\mathcal{B}_n$ can be marked as noncritical values with
+respect to the core functionality of the program.
  
- Let $\mathcal{P}'$ be a variant of $\mathcal{P}$. We consider behaviors of the two progams equivalent if their critical components are identical for same program inputs.
-Formally, $\mathcal{P} \equiv \mathcal{P}' \iff$ ($\mathcal{B}_c \equiv \mathcal{B}'_c \land \mathcal{I} = \mathcal{I}'$). In other words,
+ Let $\mathcal{P}'$ be a variant of $\mathcal{P}$. We consider behaviors of the
+two progams equivalent if their critical components are identical for same
+program inputs.
+Formally, $\mathcal{P} \equiv \mathcal{P}' \iff$ ($\mathcal{B}_c \equiv
+\mathcal{B}'_c \land \mathcal{I} = \mathcal{I}'$). In other words,
 for equivalent program behaviors their noncritical behaviors do not matter.
  
- Let $p$ be an element of $\mathcal{P}$ which results in a failure under certain input $\mathcal{I}_f$. Let the intended behavior of $\mathcal{P}$ under this input be
- $\mathcal{B}_{I_f}$, and let the data element that correspond to the failure does not belong to $\mathcal{B}_{{I_f}_c}$. Let the element be $b_{m_n}$. 
+ Let $p$ be an element of $\mathcal{P}$ which results in a failure under certain
+input $\mathcal{I}_f$. Let the intended behavior of $\mathcal{P}$ under this
+input be
+ $\mathcal{B}_{I_f}$, and let the data element that correspond to the failure
+does not belong to $\mathcal{B}_{{I_f}_c}$. Let the element be $b_{m_n}$. 
  
- In this work, we restrict our approach to data values that are strings. The approach attempts to i) find a minimal $p$ that was associated with the failure, ii) ensures that 
+ In this work, we restrict our approach to data values that are strings. The
+approach attempts to i) find a minimal $p$ that was associated with the failure,
+ii) ensures that 
  $b_{m_n} \not\in \mathcal{B}_{{I_f}_c}$, iii) develops a program patch $p'$
- that is applied on-the-fly to $\mathcal{P}$ in place of $p$, converting $\mathcal{P}$ to $\mathcal{P}'$, iv) does not violate the behavior $\mathcal{B}_{{I_f}_c}$,
+ that is applied on-the-fly to $\mathcal{P}$ in place of $p$, converting
+$\mathcal{P}$ to $\mathcal{P}'$, iv) does not violate the behavior
+$\mathcal{B}_{{I_f}_c}$,
  and v) ensures that the resulting behavior $\mathcal{B}'_{{I_f}_n}$ is
  close to and ideally same as the intended behavior $\mathcal{B}_{{I_f}_n}$.
 
