@@ -19,7 +19,7 @@ to detect at the compilation-time, and irrespective of the validation techniques
 used, some of them may go undetected and exist in the applications even when the
 applications are in production.}
 
-Software systems form a functional backbone of business organizations and their successful operation in turn determines
+Software systems form a functional backbone of business organizations and their successful operation determines
 the success of the organizations. Therefore, there is hardly a surprise that companies
 invest substantial amount of time and effort in testing and verifying the software products and applications
 that they develop. However, in spite of this effort and the tools used to
@@ -36,13 +36,25 @@ case of a failure. Instead a suboptimal functioning for a short while might be
 acceptable until the system fully stabilizes.}
 
 A crash that occurs during production would
-have an adverse effect on the business of an organizarion running the software, and also on the business
-of the company that developed the software. On the other hand,
-crashes happened during internal acceptance testing may hamper the 
+have an adverse effect on the business of an organization running the software, and also on the business
+of the company that developed the software. The organisations normally have no other option, but to wait for the
+developers to fix the bug that resulted on the failure, and then relaunch the software after it is repaired. The bug-fixing
+itself may take variable amount of time and the time could be long and unpredictable if the bug is related to a third-party
+component of the software.
+
+
+On the other hand,
+crashes occurred during internal acceptance testing may hamper the 
 testing progress, since the testers would waste their time logging few bugs at a time and then waiting for the newer version with the fixes.
 This would negatively impact the testing efficiency lowering the overall quality of the software.
 Similarly, crashes during beta testing of a software product if performed by public might frustrate them 
 resulting in the rejection of the product from the market.
+
+In both of these scenarios, it would be helpful if a temporary program patch that saves the program from crashing
+and moreover, also guarantees \textit{acceptable} and close to the intended behavior
+can be applied to the software on-the-fly. Program failures that result in crashes often originate from subtle
+program bugs that are related to unusual program inputs, unexpected environment changes, or specific
+thread schedules since correctness for most of the normal and expected 
 
 
 \ignore{The expectations about the quality of service would largely
@@ -124,17 +136,33 @@ In general, for dynamic approaches for program repairing, narrowing the problem
 is the key in providing an effective solution to it. In this work, we propose a novel
 approach, which is hybrid in the nature and
 deals with the failures originated from either malformed strings or incorrect
-handling of strings. The approach targets string variables for patching, firstly, because
-strings are used heavily in \java\ APIs and have been common sources
-of errors, and secondly, because by targeting a specific type of data
-the approach can develop patches that are more precise and result in the
-behavior that would be close to the intended behavior. In other words, we try to exploit our
-knowledge about the string behavior and its well-defined API to automatically synthesize 
-effective patches that have higher likelihood of generating a program behavior under failure that
-would be close to the intended behavior.
+handling of strings. The approach targets string variables for patching for the following reasons.
 
-Our approach first identifyies program statements statically
-that might be vulnerable to string-related failures, and then developes patches
+Firstly, \java\ applications are typically built using libraries, and \code{String} APIs
+are commonly used in third party libraries. Common and diverse usage of strings
+in programs is a significant source of errors. In order to understand \java\ string objects'
+involvement in the exceptions thrown in case of failures, we mined the repository of posts
+on \texttt{stackoverflow}~\cite{stackoverflow}. We realised that out
+of the total $60K$ posts in which the exception was thrown, about $33K$ posts were
+related to the \java string objects. This data indicates that strings play a vital
+role in generating exceptions and potentially crashing programs. This result
+coupled with the potentially
+heavy cost of program crashes motivated us to develop a hybrid technique for
+automatic repairing of \java\ programs for failures related to \code{String}
+APIs.\comment{Aritra: could you please take a look at this?
+Is this number really that large? Have you checked that the call stack traces that are printed
+have string objects in it?}
+
+
+Secondly, by targeting a specific type of data
+the approach can develop more precise patches that not only save the running program from crashing, but 
+also try to preserve the intended behavior. In other words, we exploit our
+knowledge about the string behavior, its well-defined API, and also the program context to automatically synthesize 
+effective patches that precisely identify the program location as well as the data that triggered the failure, and 
+repair the program as close as possible to the failure trying to prevent the failure propagation.
+
+Our approach first identifies program statements statically
+that might be vulnerable to string-related failures, and then develops patches
 by trying to identify origins of errors and constraints on the strings. It further uses dynamic
 analysis to improve the precision of the patches generated by the static
 analysis. 

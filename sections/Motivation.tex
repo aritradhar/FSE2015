@@ -1,5 +1,5 @@
-\section{Motivation and Overview}
-\label{sec:motivation}
+\section{Overview}
+\label{sec:overview}
 
 Ensuring correctness of a program statically is an undecidable problem.
 However, there is always a tradeoff between the precision and the scalability
@@ -50,6 +50,7 @@ heavy cost of program crashes motivated us to develop a hybrid technique for
 automatic repairing of \java\ programs for failures related to \code{String}
 APIs.}
 
+\ignore{
 \java\ applications are typically built using libraries, and \code{String} APIs
 are commonly used in third party libraries. Common and diverse usage of strings
 in programs can be a significant source of errors. We mined the repository of posts
@@ -65,9 +66,8 @@ coupled with the potentially
 heavy cost of program crashes motivated us to develop a hybrid technique for
 automatic repairing of \java\ programs for failures related to \code{String}
 APIs.
+}
 
-\subsection{Overview}
-\label{subsec:overview}
 
 \lstset{language=Java, caption=Snippet from \code{fileUtils} class of Apache
 Commons library. , label = snippet:exampleRepairing2}
@@ -214,6 +214,34 @@ try {
 priorVariables.add(temp);
 \end{lstlisting}
 \end{figure}
+
+
+\subsection{Problem Definition}
+\label{subsec:definition}
+
+Let the behavior $\mathcal{B}$  of program $\mathcal{P}$ for input $\mathcal{I}$ be defined as a sequence of data values $\textless b_1,
+ \ldots, b_n \textgreater$ shared with the environment such as the values that are used to print some information on screen,
+access and manipulate files and databases, and exchanged with other processes or threads. For brevity, we assume that the program is sequential.
+However, our formalisation and arguments can be extended to multi-threaded programs and their behaviors.
+
+Let this sequence be decomposed into two components $\mathcal{B}_c  = \textless b_{1_c},
+ \ldots, b_{n_c} \textgreater$ and $\mathcal{B}_n = \textless b_{1_n}, \ldots, b_{n_n} \textgreater$, where all the elements 
+ of $\mathcal{B}_c$ can be identified as critical values that form core functionality of the program, where as 
+ the elements of $\mathcal{B}_n$ can be marked as noncritical values with respect to the core functionality of the program.
+ 
+ Let $\mathcal{P}'$ be a variant of $\mathcal{P}$. We consider behaviors of the two progams equivalent if their critical components are identical for same program inputs.
+Formally, $\mathcal{P} \equiv \mathcal{P}' \iff$ ($\mathcal{B}_c \equiv \mathcal{B}'_c \land \mathcal{I} = \mathcal{I}'$). In other words,
+for equivalent program behaviors their noncritical behaviors do not matter.
+ 
+ Let $p$ be an element of $\mathcal{P}$ which results in a failure under certain input $\mathcal{I}_f$. Let the intended behavior of $\mathcal{P}$ under this input be
+ $\mathcal{B}_{I_f}$, and let the data element that correspond to the failure does not belong to $\mathcal{B}_{{I_f}_c}$. Let the element be $b_{m_n}$. 
+ 
+ In this work, we restrict our approach to data values that are strings. The approach attempts to i) find a minimal $p$ that was associated with the failure, ii) ensures that 
+ $b_{m_n} \not\in \mathcal{B}_{{I_f}_c}$, iii) develops a program patch $p'$
+ that is applied on-the-fly to $\mathcal{P}$ in place of $p$, converting $\mathcal{P}$ to $\mathcal{P}'$, iv) does not violate the behavior $\mathcal{B}_{{I_f}_c}$,
+ and v) ensures that the resulting behavior $\mathcal{B}'_{{I_f}_n}$ is
+ close to and ideally same as the intended behavior $\mathcal{B}_{{I_f}_n}$.
+
 
 We next present in detail the techniques and the algorithms used in our analysis
 that can produce patches to regenerate string variables under more complex
