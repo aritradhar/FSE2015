@@ -210,17 +210,21 @@ described below.
 
 \begin{mylist}
 
-\item \textbf{Effectiveness of the patch}: A software patch is considered if it
-does not violate any existing test case from the test suite. Thus, we
-determined the effectiveness of \tool\ generated patches by running them
-against the the benchmark's existing test suites 
+\item \textbf{Effectiveness of the patch}: A software patch is considered
+effective if it does not violate any existing test case from the software's test
+suite. Thus, we determined the effectiveness of \tool\ generated patches by
+running them against the the benchmark's existing test suites.
+Table~\ref{tab:results} lists $30$ real-world bugs mined from bug repositories
+of popular open-source libraries. We wrote a driver program to recreate the bug,
+and then applied \tool\ to patch it. We observed that \tool\ successfully
+patched the offending class file in $28$ of the $30$ library benchmarks in our
+data set, \ie\ an effectiveness of $93.33$\%.
 
+\begin{mybullet}
+ \item
+ \item
+\end{mybullet}
 
-Table~\ref{tab:results} lists $30$
-real-world bugs mined from bug repositories of popular open-source libraries. We
-wrote a driver program to recreate the bug, and then applied \tool\ to patch it.
-We observed that in all cases, \tool\ successfully patched the offending class
-file in the concerned library.
 
 \item \textbf{Precision of the patch}: Precision of a patch is governed by the
 similarity between a \tool\ generated patch and the developer's fix for the same
