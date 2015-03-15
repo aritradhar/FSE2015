@@ -221,11 +221,10 @@ and then applied \tool\ to patch it. We observed that \tool\ successfully
 patched the offending class file in $28$ of the $30$ library benchmarks in our
 data set, \ie\ an effectiveness of $93.33$\%.
 
-\begin{mybullet}
- \item
- \item
-\end{mybullet}
-
+Note that even the patched versions of \code{Eclipse AJ Weaver} and \code{Hive}
+benchmarks fail their corresponding test cases. We observed that for
+\code{Eclipse AJ Weaver}, the \todo{add the reason.}. In case of \code{Hive},
+the \todo{add the reason.}
 
 \item \textbf{Precision of the patch}: Precision of a patch is governed by the
 similarity between a \tool\ generated patch and the developer's fix for the same
@@ -238,14 +237,21 @@ $$PQI = \frac{\#~Constraints_{\tool}}{\#~Constraints_{Developer}}$$
 Specifically, PQI compares the similarities in constraints in \tool's patch
 against the developer's version, thereby considering the core logic to construct
 an effective patch. If \tool's patch has fewer constraints than the developer's
-fix, the PQI will be lesser. Thus, a higher value of PQI, \ie\ closer to $1$, is
-preferred.
+fix, the PQI will be lesser. Thus, a higher value of PQI, \ie\ closer to $1$,
+is preferred. PQI values greater than $1$ mean that \tool\ generates many more
+constraints than reflected in the developer's fix, while low values of PQI
+suggest that \tool\ may misses out on several constraints.
 
-PQI can be computed automatically, since \tool\ already generates a list
-of constraints, and static program analysis of the developer's patch can
-provided the same. However, in our current implementation, we manually compute
-the constraints for the developer's fix. Table~\ref{tab:results} lists the PQI
-for the benchmarks in our set.
+PQI can be computed automatically, since \tool\ already generates a list of
+constraints (in the form of Jimple bytecodes), and static program analysis of
+the developer's patch can provided the same. However, in our current
+implementation, we compute the constraints for the developer's fix through
+manual inspection of the Jimple bytecodes. Table~\ref{tab:results} lists the PQI
+for the benchmarks in our set. We note that PQI is $>$$0.7$ for over $70\%$ of
+the benchmarks. This high PQI across several benchmarks indicates two things:
+(i) the conditional statements involved in the developer's bug fix includes a
+high number of \code{String} operations, and (ii) \tool\ correctly matches and
+fixes errors in several of these \code{String} operations. 
 
 % We compared \tool's patch with the developer's version and count the exact
 % similar constraints observed in both patches to determine the closeness in
