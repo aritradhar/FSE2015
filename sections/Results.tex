@@ -219,18 +219,17 @@ effective if it does not violate any existing test case from the software's test
 suite. Thus, we determined the effectiveness of \tool\ generated patches by
 running them against the the benchmark's existing test suites.
 Table~\ref{tab:results} lists $30$ real-world bugs mined from bug repositories
-of popular open-source libraries. We wrote a driver program to recreate the bug,
-and then applied \tool\ on the library to patch it. We observed that \tool\
-without any optimizations patched $25$ of the $30$ offending bugs in our
-library benchmarks, an effectiveness of over $83\%$. With forced patching
-enabled to overcome cascaded exceptions arising from \code{String} operations,
-\tool\ successfully patches all but one benchmark, thereby raising its
-effectiveness to over $96$\%.
+of popular open-source libraries.
 
-Note that even the force patched version of \code{Commons CLI2.x} fails a test
-cases. We observed that \code{Commons CLI2.x} throws a non-\code{String} related
-cascaded exception that \tool\ could not patch, thereby resulting in a failed
-test scenario.
+We wrote a driver program to recreate the bug, and then applied \tool\ on the
+library to patch it. We observed that \tool\ without any optimizations patched
+$25$ of the $30$ offending bugs in our library benchmarks, an effectiveness of
+over $83\%$. With forced patching enabled to overcome cascaded exceptions
+arising from \code{String} operations, \tool\ successfully patches all but one
+benchmark, thereby raising its effectiveness to over $96$\%. Note that even the
+force patched version of \code{Commons CLI2.x} fails a test cases. We observed
+that \code{Commons CLI2.x} throws a non-\code{String} related cascaded exception
+that \tool\ could not patch, thereby resulting in a failed test scenario.
 
 \item \textbf{Precision of the patch}: Precision of a patch is governed by the
 similarity between a \tool\ generated patch and the developer's fix for the same
