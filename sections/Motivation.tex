@@ -239,23 +239,63 @@ $\mathcal{B}_n$ are noncritical values with respect to the core functionality of
 the program. We consider behaviors of the two programs, $\mathcal{P}$ and
 $\mathcal{P}'$, equivalent if their critical components are identical for same
 program inputs. Formally, $\mathcal{P} \equiv \mathcal{P}' \iff$ ($\mathcal{B}_c
-\equiv \mathcal{B}'_c \land \mathcal{I} = \mathcal{I}'$). In other words, for
+= \mathcal{B}'_c \land \mathcal{I} = \mathcal{I}'$). In other words, for
 equivalent program behaviors their noncritical behaviors do not matter.
  
-Let $p$ be an element of $\mathcal{P}$ which results in a failure under certain
-input $\mathcal{I}_f$. Let the intended behavior of $\mathcal{P}$ under this
-input be $\mathcal{B}_{I_f}$, and let the data element that correspond to the
-failure does not belong to $\mathcal{B}_{{I_f}_c}$. Let the element be
-$b_{m_n}$. 
+% Let $\mathcal{B}_{I_f}$ be the behavior for $\mathcal{P}$ under failure input
+% $\mathcal{I}_f$. and let the data element that correspond to the failure does
+% not belong to $\mathcal{B}_{{I_f}_c}$. Let the element be $b_{m_n}$.
+
+% Let p be an element of P which results in a failure under cer-
+% tain input I f . Let the intended behavior of P under this input be
+% BI f , and let the data element that correspond to the failure does not
+% belong to BI f c . Let the element be bmn .
  
-In this work, we restrict our approach to data values that are strings. The
-approach attempts to i) find a minimal $p$ that was associated with the failure,
-ii) ensures that $b_{m_n} \not\in \mathcal{B}_{{I_f}_c}$, iii) develops a
-program patch $p'$ that is applied on-the-fly to $\mathcal{P}$ in place of $p$,
-converting $\mathcal{P}$ to $\mathcal{P}'$, iv) does not violate the behavior
-$\mathcal{B}_{{I_f}_c}$, and v) ensures that the resulting behavior
-$\mathcal{B}'_{{I_f}_n}$ is close to and ideally same as the intended behavior
-$\mathcal{B}_{{I_f}_n}$.
+% In this work, we restrict our approach to data values that are strings.
+
+If $\mathcal{B}_{I_f}$ be the behavior for $\mathcal{P}$ under failure input
+$\mathcal{I}_f$, then our approach attempts to
+% i) find a minimal $p$ that was associated with the failure,
+% ii) ensures that $b_{m_n} \not\in \mathcal{B}_{{I_f}_c}$,
+develop a program patch to convert $\mathcal{P}$ to $\mathcal{P}'$, while
+ensuring that:
+\begin{mybullet}
+ \item $\mathcal{P}'$ does not violate the core behavior of $\mathcal{P}$ under
+failure, \ie\ $\mathcal{B}'_{{I_f}_c} = \emptyset$, and
+ \item resulting behavior $\mathcal{B}'_{{I_f}_n}$ is close to the intended
+behavior $\mathcal{B}_{{I_f}_n}$.
+\end{mybullet}
+
+% \subsection{Goals}
+% \label{sec:tool:goals}
+
+In this work, we restrict our approach to data values that are strings. We
+identify the broad design goals for a technique to automatically repair
+malformed strings or incorrect handling of strings as follows:
+
+% i) identifies the statements which might be vulnerable to string-related
+% errors,
+% and are less critical to the functionality of the application such that
+% suboptimal behavior might be acceptable,
+% iii) generates patches by identifying constraints on the string data and if
+% required, tweaks \code{String} API  parameters to regenerate legally correct
+% string data,
+% iv) optimizes the number of statements to be patched by retaining only the
+% ones
+% that need to be protected,
+
+\myparagraph{(i) High patch fidelity} We require that the patched program must
+preserve the intended program behavior, \ie\ the patch must be precise, and
+should not induce any undesirable control flows in the repaired program.
+
+\myparagraph{(ii) Non-invasive instrumentation} We require that the technique
+must ensure no side-effects (aside from optimally repairing objects) during
+normal program execution, and activate patches only when the program is
+guaranteed to crash.
+
+\myparagraph{(iii) Low system overhead} We desire that the patched program must
+incur no runtime overhead during normal program execution, and only negligible
+overhead in case of failures.
 
 We next present in detail the techniques and the algorithms used in our analysis
 that can produce patches to regenerate string variables under more complex
