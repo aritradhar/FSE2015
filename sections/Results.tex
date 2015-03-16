@@ -390,6 +390,29 @@ demonstrated by the high PPI.
 \label{tab:taintAnalysis}
 \end{table}
 
+\begin{figure*}[t]
+\centering
+\begin{tabular}{ccc}
+\subfloat[Variation in call graph analysis time with size of call
+graph.\label{fig:perf:callgraph}]
+{\includegraphics[width=.3\linewidth]{images/CgSizeVsTime.pdf}}
+\hfill
+&
+\subfloat[Variation in static constraint analysis time with number of
+constraints.\label{fig:perf:constraints}]
+{\includegraphics[width=.3\linewidth]{images/ConstraintsVsTime.pdf}
+}
+\hfill
+&
+\subfloat[Variation in instrumentation time with \code{Units} to be
+instrumented.\label{fig:perf:units}]
+{\includegraphics[width=.3\linewidth]{images/InstrumentationVsTime.pdf}}
+\hfill
+\\
+\end{tabular}
+\caption{\tool\ evaluation.}
+\end{figure*}
+
 \item \textbf{Precision of taint analysis}: \tool\ leverages off-the-shelf
 tools (\infoflow) to perform the taint analysis. We measure precision of our
 choice of tool by measuring the number of statements in the analyzed code that
@@ -470,29 +493,6 @@ Detailed evaluation for each of the bugs in our data set is available at
 \label{sub:overhead}
 
 We measure the overhead of \tool\ across different metrics identified below.
-
-\begin{figure*}[t]
-\centering
-\begin{tabular}{ccc}
-\subfloat[Variation in call graph analysis time with size of call
-graph.\label{fig:perf:callgraph}]
-{\includegraphics[width=.3\linewidth]{images/CgSizeVsTime.pdf}}
-\hfill
-&
-\subfloat[Variation in static constraint analysis time with number of
-constraints.\label{fig:perf:constraints}]
-{\includegraphics[width=.3\linewidth]{images/ConstraintsVsTime.pdf}
-}
-\hfill
-&
-\subfloat[Variation in instrumentation time with \code{Units} to be
-instrumented.\label{fig:perf:units}]
-{\includegraphics[width=.3\linewidth]{images/InstrumentationVsTime.pdf}}
-\hfill
-\\
-\end{tabular}
-\caption{\tool\ evaluation.}
-\end{figure*}
 
 \begin{mylist}
 
