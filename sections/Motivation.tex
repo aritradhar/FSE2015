@@ -262,7 +262,7 @@ develop a program patch to convert $\mathcal{P}$ to $\mathcal{P}'$, while
 ensuring that:
 \begin{mybullet}
  \item $\mathcal{P}'$ does not violate the core behavior of $\mathcal{P}$ under
-failure, \ie\ $\mathcal{B}'_{{I_f}_c} = \emptyset$, and
+failure, \ie\ $\mathcal{B}'_{{I_f}_c}$ is same as the intended behavior $\mathcal{B}_{{I_f}_c}$.
  \item resulting behavior $\mathcal{B}'_{{I_f}_n}$ is close to the intended
 behavior $\mathcal{B}_{{I_f}_n}$.
 \end{mybullet}
@@ -287,7 +287,9 @@ malformed strings or incorrect handling of strings as follows:
 
 \myparagraph{(i) High patch fidelity} We require that the patched program must
 preserve the intended program behavior, \ie\ the patch must be precise, and
-should not induce any undesirable control flows in the repaired program.
+should not induce any undesirable control flows in the repaired program. 
+This goal naturally follows from the problem definition bullets. However, we
+set two more goals associated with the security and performance of the technique.
 
 \myparagraph{(ii) Non-invasive instrumentation} We require that the technique
 must ensure no side-effects (aside from optimally repairing objects) during
