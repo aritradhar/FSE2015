@@ -17,8 +17,8 @@
 \multicolumn{1}{c|}{\textbf{$\mathcal{S}_{U}$}} &
 \multicolumn{1}{c|}{\textbf{$\mathcal{F}_{U}$}} &
 \multicolumn{1}{c|}{\textbf{$\mathcal{S}_{P}$}} &
-\multicolumn{1}{c||}{\textbf{$\mathcal{F}_{P}$}} &
-\multicolumn{1}{c||}{\textbf{$\mathcal{F'}_{P}$}} &
+\multicolumn{1}{c|}{\textbf{$\mathcal{F}_{P}$}} &
+\multicolumn{1}{c||}{\textbf{$\mathcal{F}_{P}^{*}$}} &
 \multicolumn{1}{c|}{\textbf{$PPI$}} &
 \multicolumn{1}{c|}{\textbf{$FCI$}} &
 \multicolumn{1}{c|}{\textbf{$\mathcal{IC}_{NO}$}} & %instrumentation with
@@ -131,20 +131,18 @@ $11$ & $3$ & $14$ & $0$ & $0$ & $0.72$ &$0$ &$13$ & $2$ & $\checkmark$ \\
 \begin{tabular}{ll|ll|ll}
 
 $\mathcal{N}_{CG}$ & \# nodes in call graph & $\mathcal{S}_{P}$ & \# successful
-tests in patched version & $\mathcal{IC}_{NO}$ & Instrumentation w/o
-optimization (recall
-\xref{subsec:optimizations})\\
+tests in patched version & $FCI$ & Flow Consistency Index\\
 
-$\mathcal{N}_{Unit}$& \# \code{Units} analyzed & $\mathcal{F}_{P}$ & \# fail
-tests in patched version before force patching & $\mathcal{IC}_{WO}$ &
+$\mathcal{N}_{Unit}$& \# \code{Units} analyzed & $\mathcal{F}_{P}$ & \# failed
+tests in patched version w/o forced patching & $\mathcal{IC}_{NO}$
+& Instrumentation w/o optimization (recall \xref{subsec:optimizations})\\
+
+$\mathcal{S}_{U}$ & \# successful tests in unpatched & $\mathcal{F}_{P}^{*}$ &
+\# failed tests in patched version w/ forced patching & $\mathcal{IC}_{WO}$ &
 Instrumentation w/ optimization (recall \xref{subsec:optimizations})\\
 
-$\mathcal{S}_{U}$ & \# successful tests in unpatched & $PPI$ & Patch
-Precision Index & $\mathcal{RS}_{CE}$ & Cascaded exception exists\\
-
-$\mathcal{F}_{U}$ & \# fail tests in unpatched & $FCI$ & Flow Consistency
-Index & $\mathcal{F'}_p$ & \#fail test in patched version after force patching\\
-
+$\mathcal{F}_{U}$ & \# failed tests in unpatched & $PPI$ & Patch Precision
+Index & $\mathcal{RS}_{CE}$ & Cascaded exception exists
 \end{tabular}
 }
 \caption{\tool's accuracy results when applied to $30$ bugs in popular
@@ -223,9 +221,9 @@ running them against the the benchmark's existing test suites.
 Table~\ref{tab:results} lists $30$ real-world bugs mined from bug repositories
 of popular open-source libraries. We wrote a driver program to recreate the bug,
 and then applied \tool\ on the library to patch it. We observed that \tool\
-with all optimizations enabled successfully patched the offending bug in $28$ of
-the $30$ library benchmarks in our data set (see column $\mathcal{F}_{P}$ in
-Table~\ref{tab:results}), thereby achieving an effectiveness of over $93$\%.
+with all optimizations enabled successfully patched the offending bug in $29$
+of the $30$ library benchmarks in our data set (see column $\mathcal{F}_{P}^{*}$
+in Table~\ref{tab:results}), thereby achieving an effectiveness of over $96$\%.
 
 Note that the patched versions of \code{Commons CLI2.x} and \code{Eclipse AJ
 Weaver} benchmarks fail a total of three test cases. We observed that for both
