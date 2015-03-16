@@ -222,13 +222,14 @@ running them against the the benchmark's existing test suites.
 Table~\ref{tab:results} lists $30$ real-world bugs mined from bug repositories
 of popular open-source libraries. We wrote a driver program to recreate the bug,
 and then applied \tool\ on the library to patch it. We observed that \tool\
-successfully patched the offending class file in $28$ of the $30$ library
-benchmarks in our data set, achieving an effectiveness of over $93$\%.
+with all optimizations enabled successfully patched the offending bug in $28$ of
+the $30$ library benchmarks in our data set (see column $\mathcal{F}_{P}$ in
+Table~\ref{tab:results}), thereby achieving an effectiveness of over $93$\%.
 
-Note that the patched versions of \code{Eclipse AJ Weaver} and \code{Hive}
-benchmarks fail a total of three test cases. We observed that for \code{Eclipse
-AJ Weaver}, the \todo{add the reason.}. In case of \code{Hive}, the \todo{add
-the reason.}\note{Waiting on Aritra.}
+Note that the patched versions of \code{Commons CLI2.x} and \code{Eclipse AJ
+Weaver} benchmarks fail a total of three test cases. We observed that for both
+these benchmarks, a cascaded exception was thrown that resulted in the failure
+of the test case.
 
 \item \textbf{Precision of the patch}: Precision of a patch is governed by the
 similarity between a \tool\ generated patch and the developer's fix for the same
