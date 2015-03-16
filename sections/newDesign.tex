@@ -1,6 +1,7 @@
 \section{\tool}
 \label{sec:design}
 
+\ignore{
 \subsection{Goals}
 \label{sec:tool:goals}
 
@@ -28,6 +29,7 @@ guaranteed to crash.
 \myparagraph{(iii) Low system overhead} We desire that the patched program must
 incur no runtime overhead during normal program execution, and only negligible
 overhead in case of failures.
+}
 
 \subsection{Design}
 \label{sec:tool:design}
@@ -120,7 +122,7 @@ an I/O sink, like file system, console, network, GUI, etc.
 \label{table:TaintSinks}
 \end{table}
 
-The taint analysis module take as input the compiled byte code intended to be
+The taint analysis module takes as input the compiled byte code intended to be
 repaired, and generates a control flow graph identifying program statements that
 lie along paths from sensitive sources to sensitive sinks. Since, \tool\ targets
 strings in particular, it must support taint propagation for all \java\ APIs
@@ -130,7 +132,7 @@ that lie along the tainted path from a sensitive source to a sensitive sink are
 marked as \textit{unsafe} to patch. Subsequently, \tool\ does not repair such
 \code{String} objects. Tables~\ref{table:TaintSources} and
 \ref{table:TaintSinks} list some common sensitive sources and sinks for several
-classes in \java.
+classes in \java. \comment{Can we make exceptions to these?}
 
 \myparagraph{(ii) Call graph analysis} \tool\ leverages call graph analysis to
 further improve the precision for finding instrumentation points. Although
@@ -194,7 +196,7 @@ Figure~\ref{fig:constraint}.
 \scriptsize
 \DontPrintSemicolon
 \KwData{Control flow graph $CFG$ for program $P$}
-\KwResult{Patched program $\hat{P}$}
+\KwResult{Patched program $P'$}
 \Begin
 {
  \For{$\forall$ node $N \in CFG$} {
@@ -260,9 +262,9 @@ hybrid approach.
    \lIf{$*$ is $==$} {\\
    \mytab $maxlength_{str} \longleftarrow OP$\\
    \mytab $minlength_{str} \longleftarrow OP$
-   } \lElseIf {$*$ is $\textgreater$ {\bf AND} $*$ is $\ge$} {
+   } \lElseIf {$*$ is $\textgreater$ {\bf OR} $*$ is $\ge$} {
     $minlength_{str} \longleftarrow OP$
-   } \lElseIf {$*$ is $\textless$ {\bf AND} $*$ is $\le$} {
+   } \lElseIf {$*$ is $\textless$ {\bf OR} $*$ is $\le$} {
     $maxlength_{str} \longleftarrow OP$
    } \lElseIf {$*$ is Prefix Check} {
     $\textit{PrefixSet}_{str} \cup OP$
@@ -363,8 +365,8 @@ st = GenerateStringDynamic.init("<foo()>", st);
 \end{figure}
 
 Consider the example shown in Code~\ref{snippet:exCode1}, where the function
-\code{foo} performs a series of checks on a user entered string before computing
-a substring on it. Since the constraints on the string \code{st} cannot be
+\code{foo} performs a series of checks on a user-entered string \code{st} before computing
+a substring on it. Since the constraints on \code{st} cannot be
 completely collected and evaluated statically. For such cases, \tool\
 instruments the code with statements to dynamically collect constraint
 information, augment them with previously known static constraints, and evaluate
@@ -379,7 +381,7 @@ on string \code{st}.
 \subsubsection{Code generation}
 \label{sec:tool:stage2:generation}
 
-Code generation can be done either statically or dynamically depending on how
+Code generation is done either statically or dynamically depending on how
 the constraints are evaluated. In either scenario, a key component of code
 generation is \textit{object repairing}. Additionally, in certain cases
 where constraints cannot be satisfied, either statically or dynamically or
@@ -401,24 +403,24 @@ the repaired object, respectively.
 \begin{algorithm}[t]
 \scriptsize
 \DontPrintSemicolon
-\KwData{String object $Str$ and index set $IS$ which contains ${i}$ or ${i,j}$.}
-\KwResult{Repaired index set containing ${Ri}$ or ${Ri,Rj}$ based on input $IS$}
+\KwData{String object \textit{Str} and index set $IS$ which contains ${i}$ or ${i,j}$.}
+\KwResult{Repaired index set containing ${R_i}$ or ${R_i,R_j}$ based on input $IS$}
 \Begin {
-    $Length \longleftarrow$ length of $Str$
+    $Length \longleftarrow$ length of \textit{Str}
     
     \lIf{$Length == 0$} {\\
-     \mytab $Ri, Rj \longleftarrow 0$
+     \mytab $R_i, R_j \longleftarrow 0$
     } \lElse {
         \lIf{$i \textgreater j$} {\\
-           \mytab $Ri \longleftarrow j - 1$
+           \mytab $R_i \longleftarrow j - 1$
         }
         \lIf{$i \textgreater Length$ \bf{OR} $j \textgreater Length$} {\\
-           \mytab $Ri \longleftarrow Length - 1$ or $Rj \longleftarrow Length -
+           \mytab $R_i \longleftarrow Length - 1$ or $R_j \longleftarrow Length -
 1$ based on condition\\
            \mytab \code{/* more conditions possible */}
         }
         \lIf{$i \textless 0$ \bf{OR} $j \textless 0$} {\\
-          \mytab $Ri \longleftarrow 0$ or $Rj \longleftarrow 0$ based on
+          \mytab $R_i \longleftarrow 0$ or $R_j \longleftarrow 0$ based on
 condition\\
           \mytab \code{/* more conditions possible */}
         }\vspace{-1em}
