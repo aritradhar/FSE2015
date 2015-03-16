@@ -223,13 +223,14 @@ of popular open-source libraries. We wrote a driver program to recreate the bug,
 and then applied \tool\ on the library to patch it. We observed that \tool\
 without any optimizations patched $25$ of the $30$ offending bugs in our
 library benchmarks, an effectiveness of over $83\%$. With forced patching
-enabled to overcome cascaded exceptions, \tool\ successfully patches all but
-one benchmark, thereby raising its effectiveness to over $96$\%.
+enabled to overcome cascaded exceptions arising from \code{String} operations,
+\tool\ successfully patches all but one benchmark, thereby raising its
+effectiveness to over $96$\%.
 
-Note that the patched versions of \code{Commons CLI2.x} and \code{Eclipse AJ
-Weaver} benchmarks fail a total of three test cases. We observed that for both
-these benchmarks, a cascaded exception was thrown that resulted in the failure
-of the test case.
+Note that even the force patched version of \code{Commons CLI2.x} fails a test
+cases. We observed that \code{Commons CLI2.x} throws a non-\code{String} related
+cascaded exception that \tool\ could not patch, thereby resulting in a failed
+test scenario.
 
 \item \textbf{Precision of the patch}: Precision of a patch is governed by the
 similarity between a \tool\ generated patch and the developer's fix for the same
@@ -245,11 +246,12 @@ an effective patch. If \tool's patch has fewer constraints than the developer's
 fix, the PPI will be lesser. Thus, a higher value of PPI, \ie\ closer to $1$,
 is preferred. PPI values greater than $1$ mean that \tool\ generates many more
 constraints than reflected in the developer's fix, while low values of PPI
-suggest that \tool\ may misses out on several constraints. PPI can be computed
-automatically, since \tool\ already generates a list of constraints (in the form
-of bytecodes), and static program analysis of the developer's patch can provided
-the same. However, in our current implementation, we compute the constraints for
-the developer's fix through manual inspection of the library bytecodes.
+suggest that \tool\ may have missed out on several constraints. PPI can be
+computed automatically, since \tool\ already generates a list of constraints (in
+the form of bytecodes), and static program analysis of the developer's patch can
+provided the same. However, in our current implementation, we compute the
+constraints for the developer's fix through manual inspection of the library
+bytecodes.
 
 Table~\ref{tab:results} lists the PPI for the benchmarks in our set. We note
 that PPI is $>0.7$ for over $73\%$ of the benchmarks. This high PPI across
