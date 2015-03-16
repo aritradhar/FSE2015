@@ -121,14 +121,14 @@ Software failures that result in crashes often originate from subtle program
 bugs that are related to unusual program inputs, unexpected environment changes,
 or specific thread schedules. While crashes are always undesirable, they are
 particularly annoying when they arise from \textit{non-critical} modules that
-are not related to the core software functionality. For example, Code
-~\ref{snippet:exampleRepairing1} depicts a bug in Apache Log4j library version
-2.0-beta9~\cite{ApacheLog4jBug} that crashed the entire logging framework. It
-was reported as a major bug in spite of the fact that it occurred in logging
-component. The object \code{priorVariables} is a \code{List} of String. On line
-4, there is no check on the variables to ensure that invariants such as
-\code{offset + length <= chars.length}, \code{offset > 0}, and \code{length > 0}
-hold.
+are not related to the core software functionality. For example,
+Code~\ref{snippet:exampleRepairing1} depicts a bug in Apache Log4j library
+version 2.0-beta9~\cite{ApacheLog4jBug} that crashed the entire logging
+framework. It was reported as a major bug in spite of the fact that it occurred
+in logging component. The object \code{priorVariables} is a \code{List} of
+String. On line 4, there is no check on the variables to ensure that invariants
+such as \code{offset + length <= chars.length}, \code{offset > 0}, and
+\code{length > 0} hold.
 
 In case of failures, rather than allowing the application to crash,
 organizations would prefer to collect diagnostic information to identify the
