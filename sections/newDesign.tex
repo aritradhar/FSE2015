@@ -209,43 +209,98 @@ Figure~\ref{fig:constraint}.
 $S$\\
           \mytab $CES_{str} \longleftarrow$ all conditional statement in $P$ on
 $str$\\
+ \mytab  \code{/* Constraint collection for str */}\\
   	  \mytab $CS_{str} \longleftarrow$ output of
 Algorithm~\ref{algo:constraintCollection}$(CES_{str})$\\
 
   		\mytab \lIf{$str$ have sufficient constraints in $CS_{str}$} {\\
-			\mytab \mytab \code{/* Static constraint analysis */}\\
+  		
+  		 \mytab  \code{/* Constraint evaluation for str */}\\
   			\mytab \mytab $str \longleftarrow$ output of
 Algorithm~\ref{algo:constraint}$(CS_{str})$
-  		} \mytab \lElseIf {$str$ encountered exception} {\\
-  		        \mytab \mytab \code{/* Dynamic constraint analysis */}\\
-  		        \mytab \mytab $CS_{str} \longleftarrow$ output of
-Algorithm~\ref{algo:constraintCollection}$(CES_{str})$\\
-
-                        \mytab \mytab \lIf{$str$ have sufficient constraints in
-$CS_{str}$} {\\
-                        \mytab \mytab \mytab $str \longleftarrow$ output of
-Algorithm~\ref{algo:constraint}$(CS_{str})$
-  		} \mytab \mytab \lElse {\\
-  		        \mytab \mytab \mytab $str \longleftarrow$ output of
-Algorithm~\ref{algo:stringPatchParametr}$(S)$
   		}
+  		
+  		\mytab \lElse {\\
+  			\mytab \mytab \code{/*Repair by parameter tweaking*/}\\
+  			\mytab \mytab $str \longleftarrow$ output of
+  			Algorithm~\ref{algo:stringPatchParametr}$(S)$ 
+  		}
+  		
+  		
   		\mytab $S'\longleftarrow$ Modify $S$ with $str$ \\
   		\mytab Put $S$ in try block\\
   		\mytab Put $S'$ with patched $str$ in catch block \\
   		\mytab with the exception class $EC$
   		
-  		\vspace{-4em}
+    }
+    \vspace{-1em}
+    \lElse{\\
+    \mytab Skip $S$\\
+    }
+    \vspace{-2em}
+  }
+ }
+}
+\caption{Static patching strategy for \code{String} objects.}
+\label{algo:patchingStrategy}
+\end{algorithm}
+
+%dynamic
+\begin{algorithm}[t]
+\scriptsize
+\DontPrintSemicolon
+\KwData{Control flow graph $CFG$ for program $P$}
+\KwResult{Patched program $P'$}
+\Begin
+{
+ \For{$\forall$ node $N \in CFG$} {
+  Statement $S$ in node $N$\\
+  \lIf{$S$ contains \code{String} API call} {\\
+  	\mytab $str \longleftarrow$ \code{String} reference on $S$
+  	
+  	\lIf{$S$ can throw \code{RuntimeException}} {\\
+  	  \mytab Exception class $EC \longleftarrow$ \code{RuntimeException} of
+$S$\\
+          \mytab $CES_{str} \longleftarrow$ all conditional statement in $P$ on
+$str$\\
+ 
+ \mytab  \code{/* Constraint collection for str */}\\
+  	  \mytab $CS_{str} \longleftarrow$ output of
+Algorithm~\ref{algo:constraintCollection}$(CES_{str})$\\
+
+  		\mytab \lIf {$S$ encountered exception} {\\
   		
+  		\mytab \mytab \lIf{$str$ have sufficient constraints in
+$CS_{str}$} {\\
+
+\mytab\mytab \code{/* Constraint solving for str */}\\
+                        \mytab \mytab \mytab $str \longleftarrow$ output of
+Algorithm~\ref{algo:constraint}$(CS_{str})$
+  		} \mytab \mytab \lElse {\\
   		
-	}
+  		\mytab\mytab\mytab  \code{/* Parameter tweaking */}\\
+  		        \mytab \mytab \mytab $str \longleftarrow$ output of
+Algorithm~\ref{algo:stringPatchParametr}$(S)$
+  		}
+  		}
+  		\vspace{-1em}
+  		\mytab $S'\longleftarrow$ Modify $S$ with $str$ \\
+  		\mytab Put $S$ in try block\\
+  		\mytab Put $S'$ with patched $str$ in catch block \\
+  		\mytab with the exception class $EC$
+  	
+  		\lElse{\\
+  		\mytab Skip $S$
+  		}
+		\vspace{-2em} 
     }
   }
  }
 }
-\caption{Patching strategy for \code{String} objects.}
-\label{algo:patchingStrategy}
-\end{algorithm}
 
+\caption{Dynamic patching strategy for \code{String} objects.}
+\label{algo:patchingStrategyDynamic}
+\end{algorithm}
 The hybrid approach has a static component that makes a forward pass over the
 program to collect declarative constraints on string objects, such as their
 length or prefix, etc. \tool\ invokes the dynamic component if there are constraints
