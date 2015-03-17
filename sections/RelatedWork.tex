@@ -35,7 +35,8 @@ Samimi et al. present a tool \textit{PHPQuickFix} based on the static analysis a
 targets a special case of printing related bug in HTML \cite{SamirniSAMTH12}. Compared to their technique our
 approach addresses much wider range of problems related to Java strings and can be extended to
 other systems that have support for exceptions.
-Tatlock et al. focus on the java database API and related query string \cite{Tatlock:2008}. They
+Tatlock et al. focus on the \java\ database API and related query string
+\cite{Tatlock:2008}. They
 propose a solution of type errors which is caused due to a type mismatch in
 the database and the type assigned in the program. The authors also propose a
 solution for refactoring where changing a class name associated with some
@@ -74,8 +75,9 @@ our approach tries to provide support to the entire application in the context o
 by trying to keep the system behavior
 as close as possible to the intended. The advantage of these approaches is that they are
 light-weight and like our approach, can fix a system on-the-fly
-potentially allowing some sub-optimal behaviour for a finite time until the
+potentially allowing some sub-optimal behavior for a finite time until the
 systems self-stabilizes.
+
 Long et al. ~\cite{conf/pldi/LongSR14}
 present a technique that repairs a crashing system \emph{RCV} on-the-fly.
 The technique deals with two types of system violations, namely, divide-by-zero and
