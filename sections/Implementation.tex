@@ -216,6 +216,155 @@ statements analyzed for instrumentation.
 % \code{System.err.print()}. We only consider the conditional expressions in the
 % branches having no exception or error path.
 
+\begin{table*}[t]
+% \setlength{\tabcolsep}{3pt}
+\centering
+\scriptsize
+\begin{tabular}{|l|c|l|r|r||r|r|r|c|c||r|c|r|r|c|}
+
+\hline
+\multicolumn{1}{|c|}{\textbf{API}} &
+\multicolumn{1}{c|}{\textbf{BugID}} &
+\multicolumn{1}{c|}{\textbf{Priority}} &
+\multicolumn{1}{c|}{\textbf{$\mathcal{N}_{CG}$}} &
+\multicolumn{1}{c||}{\textbf{$\mathcal{N}_{Unit}$}} &
+%\multicolumn{1}{c|}{\textbf{$PPI$}} &
+\multicolumn{1}{c|}{\textbf{$\mathcal{S}_{U}$}} &
+\multicolumn{1}{c|}{\textbf{$\mathcal{F}_{U}$}} &
+\multicolumn{1}{c|}{\textbf{$\mathcal{T}$}} &
+\multicolumn{1}{c|}{\textbf{$\mathcal{F}_{P}$}} &
+\multicolumn{1}{c||}{\textbf{$\mathcal{F}_{P}^{*}$}} &
+\multicolumn{1}{c|}{\textbf{$PPI$}} &
+\multicolumn{1}{c|}{\textbf{$FCI$}} &
+\multicolumn{1}{c|}{\textbf{$\mathcal{IC}_{NO}$}} & %instrumentation with
+%optimization
+\multicolumn{1}{c|}{\textbf{$\mathcal{IC}_{WO}$}} & %instrumentation without
+% optimization
+\multicolumn{1}{c|}{\textbf{$\mathcal{RS}_{CE}$}}  % cascaded exception
+%new added col
+\\
+
+\hline
+\code{Aries} & \cite{ARIES1204} & Major &$3.5K$  & $129$ &
+$18$ & $2$ & $20$ &  &  & $0.83$ &  & $42$ & $5$ &  \\
+
+\code{Commons CLI1.x} & \cite{CLI193} & Critical & $3.2K$ & $53$ &
+$14$ & $2$ & $16$ &  &  & $0.74$ & & $19$& $19$ &  \\
+
+\code{Commons CLI2.x} & \cite{CLI46} & Major & $3.2K$ & $21$ &
+$13$ & $3$ & $15$ & $3$ & $1$ & $0.62$ &$1$ & $13$ &$2$ & $\checkmark$\\
+
+\code{Commons Compress} & \cite{COMPRESS26} & Blocker & $4.0K$ & $134$ &
+$32$ & $1$ & $33$ &  &  & $0.74$ & & $46$& $4$ & \\
+
+\code{Commons IO} & \cite{IO179} & Major & $3.3K$ & $125$ &
+$27$ & $1$ & $28$ &  &  & $0.77$ & & $76$ & $1$ & \\
+
+\code{Commons Lang} & \cite{LANG457} & Major & $5.1K$ & $240$ &
+$16$ & $2$ & $18$ &  &  & $0.59$ & & $168$& $8$ &  \\
+
+\code{Commons Math} & \cite{MATH198} & Major & $3.4K$ & $300$ &
+$19$ & $2$ & $21$ & $2$ &  & $0.89$ &$1$ & $36$ &$2$ &  \\
+
+\code{Commons Net} & \cite{NET442} & Major & $3.3K$ & $14$ &
+$22$ & $1$ & $23$ &  &  & $0.84$ & & $6$ & $1$ & \\
+
+\code{Commons VFS} & \cite{VFS338} & Major &$4.5K$ & $37$ &
+$18$ & $1$ & $19$ &  &  & $0.65$ & & $20$ & $2$ &  \\
+
+\code{Derby} & \cite{DERBY4748} & Major & $4.4K$ & $40$ &
+$30$ & $2$ & $22$ &  &  & $0.46$ & & $47$ & $6$ &  \\
+
+\code{Eclipse AJ Weaver} & \cite{EclipseBug432874} & Major & $20.6K$ & $50$ &
+$17$ & $2$ & $17$ & $2$ & $2$ & $0.98$ & & $4$ & $1$ & $\checkmark$ \\
+
+\code{Eclipse AJ} & \cite{EclipseBug333066} & Major & $25.0K$ &$39$ &
+$14$ & $2$ & $16$ &  &  & $0.87$ & & $6$ & $1$ & \\
+
+\code{FlexDK 3.4} &\cite{SDK14417} & Minor & $6.3K$ & $600$ &
+$13$ & $2$ & $15$ &  &  & $0.74$ & & $207$ & $25$&  \\
+
+\code{Hama 0.2.0} &\cite{HAMA212}  & Critical & $3.7K$ & $35$ &
+$13$ & $1$ & $14$ &  &  & $0.55$ & & $28$ & $5$ &  \\
+
+\code{HBase 0.92.0} &\cite{HBASE4481}  & Critical & $4.8K$ & $61$ &
+$24$ & $1$ & $25$ &  &  & $0.83$ & & $13$ & $2$ &  \\
+
+\code{Hive} &\cite{HIVE6986} & Trivial &$4.4K$ & $23$ &
+$18$ & $1$ & $19$ &  &  & $0.75$ & & $8$ & $1$ &  \\
+
+\code{HttpClient} &\cite{HTTPCLIENT150} & Major & $3.3K$ & $14$ &
+$20$ & $3$ & $23$ &  &  & $0.89$ & & $6$& $1$ &  \\
+
+\code{jUDDI} & \cite{JUDDI292} & Major &$3.2K$ & $70$ &
+$28$ & $1$ & $29$ &  &  & $0.85$ & & $10$ & $2$ &  \\
+
+\code{Log4j} & \cite{ApacheLog4jBug} & Major & $3.2K$ & $17$ &
+$8$ & $3$ & $11$ &  &  & $0.74$ &  & $6$ &$1$ &  \\
+
+\code{MyFaces Core} & \cite{MYFACES416} & Major  & $4.5K$ & $50$ &
+$11$ & $3$ & $14$  &  &  & $0.83$ &  & $4$& $2$ &  \\
+
+\code{Nutch} & \cite{NUTCH1547} & Major & $4.5K$ & $90$ &
+$8$ & $3$ & $11$ &  &  & $0.68$ & & $8$ & $1$ &  \\
+
+\code{Ofbiz} & \cite{OFBIZ4237} & Minor & $4.4K$ & $28$ &
+$20$ & $3$ & $23$ & $3$ &  & $0.45$ &$1$ & $6$ &$1$ &  \\
+
+\code{PDFBox} & \cite{PDFBOX467} & Major &$4.4K$ & $23$ &
+$15$ & $3$ & $18$ &  &  & $0.87$ & & $8$ & $1$ &  \\
+
+\code{Sling Eclipse IDE} & \cite{SLING3095} & Major & $4.5K$ & $58$ &
+$5$ & $1$ & $6$ &  &  & $0.59$ &  &$39$ & $6$ &  \\
+
+\code{SOAP} & \cite{SOAP130} & Major &$5.0K$ & $165$ &
+$18$ & $3$ & $21$ & $3$ &  & $0.84$ & $1$ & $32$ & $5$ &  \\
+
+\code{SOLR 1.2} & \cite{SOLR331} & Major & $11.0K$ & $200$ &
+$12$ & $2$ & $14$ &  &  & $0.89$ &  & $25$ & $4$ &  \\
+
+\code{Struts2} & \cite{WW650} & Major & $16.0K$ & $80$ &
+$11$ & $2$ & $13$ &  &  & $0.76$ & & $25$ & $2$ &  \\
+
+\code{Tapestry 5} & \cite{TAP51770} & Major & $6.2K$  & $71$ &
+$17$ & $3$ & $20$ &  &  & $0.70$ & & $31$ &$5$ &  \\
+
+\code{Wicket} & \cite{WICKET4387} & Major & $70.0K$ & $68$ &
+$20$ & $3$ & $23$ &  &  & $0.81$ & & $16$ & $1$ & \\
+
+\code{XalanJ2} & \cite{XALANJ836} & Major & $3.3K$ & $33$ &
+$11$ & $3$ & $14$ &  &  & $0.72$ & &$13$ & $2$ & \\
+
+\hline
+
+\end{tabular}
+
+\caption*{
+\scriptsize
+\centering
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{ll|ll|ll}
+
+$\mathcal{N}_{CG}$ & \# nodes in call graph & $\mathcal{T}$ & \# total cases in
+test suite & $FCI$ & Flow Consistency Index\\
+
+$\mathcal{N}_{Unit}$& \# \code{Units} analyzed & $\mathcal{F}_{P}$ & \# failed
+tests in patched version w/o forced patching & $\mathcal{IC}_{NO}$
+& Instrumentation w/o optimization (recall \xref{subsec:optimizations})\\
+
+$\mathcal{S}_{U}$ & \# successful tests in unpatched & $\mathcal{F}_{P}^{*}$ &
+\# failed tests in patched version w/ forced patching & $\mathcal{IC}_{WO}$ &
+Instrumentation w/ optimization (recall \xref{subsec:optimizations})\\
+
+$\mathcal{F}_{U}$ & \# failed tests in unpatched & $PPI$ & Patch Precision
+Index & $\mathcal{RS}_{CE}$ & Cascaded exception exists
+\end{tabular}
+}
+\caption{\tool's accuracy results when applied to $30$ bugs in popular
+open-source libraries.}
+\label{tab:results}
+\end{table*}
+
 \subsubsection{Minimize patch instrumentation}
 \label{subsubsec:minimizePatchInstrumentation}
 
