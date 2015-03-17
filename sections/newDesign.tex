@@ -228,7 +228,15 @@ Algorithm~\ref{algo:constraint}$(CS_{str})$
   		} \mytab \mytab \lElse {\\
   		        \mytab \mytab \mytab $str \longleftarrow$ output of
 Algorithm~\ref{algo:stringPatchParametr}$(S)$
-  		}\vspace{-4em}
+  		}
+  		\mytab $S'\longleftarrow$ Mofify $S$ with $str$ \\
+  		\mytab Put $S$ in try block\\
+  		\mytab Put $S'$ with patched $str$ in catch block \\
+  		\mytab with the exception class $EC$
+  		
+  		\vspace{-4em}
+  		
+  		
 	}
     }
   }
