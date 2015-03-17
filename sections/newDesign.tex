@@ -230,12 +230,7 @@ Algorithm~\ref{algo:constraint}$(CS_{str})$
   		\mytab $S'\longleftarrow$ Modify $S$ with $str$ \\
   		\mytab Put $S$ in try block\\
   		\mytab Put $S'$ with patched $str$ in catch block \\
-  		\mytab with the exception class $EC$
-  		
-    }
-    \vspace{-1em}
-    \lElse{\\
-    \mytab Skip $S$\\
+  		\mytab with the exception class $EC$	
     }
     \vspace{-2em}
   }
@@ -259,8 +254,6 @@ Algorithm~\ref{algo:constraint}$(CS_{str})$
   	\mytab $str \longleftarrow$ \code{String} reference on $S$
   	
   	\lIf{$S$ can throw \code{RuntimeException}} {\\
-  	  \mytab Exception class $EC \longleftarrow$ \code{RuntimeException} of
-$S$\\
           \mytab $CES_{str} \longleftarrow$ all conditional statement in $P$ on
 $str$\\
  
@@ -283,16 +276,7 @@ Algorithm~\ref{algo:constraint}$(CS_{str})$
 Algorithm~\ref{algo:stringPatchParametr}$(S)$
   		}
   		}
-  		\vspace{-1em}
-  		\mytab $S'\longleftarrow$ Modify $S$ with $str$ \\
-  		\mytab Put $S$ in try block\\
-  		\mytab Put $S'$ with patched $str$ in catch block \\
-  		\mytab with the exception class $EC$
-  	
-  		\lElse{\\
-  		\mytab Skip $S$
-  		}
-		\vspace{-2em} 
+		\vspace{-4em} 
     }
   }
  }
