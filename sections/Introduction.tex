@@ -189,7 +189,9 @@ softwares. We target string objects for patching, in particular, for the
 following reasons.
 
 First, \java\ applications are typically built using libraries, and
-\code{String} APIs are commonly used in third party libraries. Frequent and
+\code{String} APIs are commonly used in third party
+libraries~\cite{Kawachiya:2008:ARM:1449764.1449795, gc, techreport}. Frequent
+and
 often diverse usage of strings in programs is a significant source of errors. In
 order to understand the involvement of \java\ string objects in the exceptions
 thrown during software failures, we mined
@@ -201,9 +203,9 @@ exceptions.
 % This result coupled with the potentially heavy cost of program
 % crashes motivated us to develop a hybrid technique for automatic repairing of
 % \java\ programs for failures related to \code{String} APIs.
-\comment{Aritra: could you please take a look at this? Is this number really
-that large? Have you checked that the call stack traces that are printed have
-string objects in it?}
+% \comment{Aritra: could you please take a look at this? Is this number really
+% that large? Have you checked that the call stack traces that are printed have
+% string objects in it?}
 
 Second, we exploit extensive domain knowledge about strings, its well-defined
 API, and also the program context to automatically synthesize effective patches,
