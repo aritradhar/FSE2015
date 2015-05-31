@@ -17,41 +17,18 @@ either major, critical or blocking. These bugs involved usage of $64+$ different
 APIs from \java's \code{String}, \code{StringBuffer}, \code{StringBuilder}, and
 Apache \code{StringUtils} and Google Guava \code{StringUtils} classes.
 
-% \begin{mylist}  \item \textbf{Popularity}: How much it is used among the
-% developers and industries, \item \textbf{Severity} : We consider major,
-% critical and blocker priority bugs only considering the facts at the bug
-% affects dependent applications and other libraries severely.
-% \item \textbf{Age and state} : We consider latest bugs which were reported in
-% the last 5 years.
-% We also consider such bugs which still remains un-fixed.
-%  \end{mylist}
-
 \myparagraph{Experimental Setup} All our experiments were performed on a laptop
 with $2.9$ GHz dual core Intel i$5$ CPU, and $8$ GB of RAM, and running
 Microsoft Windows $8.1$. We used JDK v$1.7$ running with $2$ GB of allocated
 heap space. All bug reproduction was done on Eclipse Juno IDE. We used \soot\
 v$2.5.0$ for bytecode analysis and instrumentation, and \infoflow\ snapshot from
 May 2014 for static taint analysis.
-% We have also used \java\ decompiler JD v0.7.
-
-%  equipped with a dual core Intel i5 2.3-2.9 GHz processor, 8 GB or RAM,
-% Microsoft Windows 8.1 operating system, JDK version 1.7-45 with 2 GB of
-% allocated heap space. All the bug reproduction was done on Eclipse Juno IDE.
-% For static analysis and instrumentation we have used \soot\ version 2.5.0 and
-% \soot\ \infoflow\ for static taint analysis. We have also used java decompiler
-% JD version 0.7.0.1.
 
 \subsection{Accuracy}
 \label{sub:accuracy}
 
 We evaluate the precision of the patch and the effectiveness of \tool\ as
 described below.
-
-% We have conducted the evaluation based on the matrices which empirically
-% measures the precision and the performance of the developed tool. We measures
-% the precession in terms of the quality of the patch and some other criteria
-% listed bellow and the performance based on the time taken and the memory
-% footprint.
 
 \begin{mylist}
 
@@ -118,104 +95,6 @@ Since our library benchmarks have no notion of sources or sinks, \tool's
 bytecode analysis of the libraries did not involve the taint analysis phase.
 However, even without taint analysis, \tool's patches were of high quality, as
 demonstrated by the high PPI.
-
-% We compared \tool's patch with the developer's version and count the exact
-% similar constraints observed in both patches to determine the closeness in
-% terms of the set of constraints.
-
-% is the This matrix is for
-% the qualitative analysis of our auto generated patches. By this measurement we
-% have not only ensure the effectiveness of the patch but also look at the
-% similarity of logic an patch construction with the developers' one.After the
-% patching we compared both the auto-generated patch code with the developer's
-% patching code we found in the bug repositories. In the case the bug is still
-% un-fixed we looked for the comments and discussion in the panel and collects
-% the information about the potential patch. At the first step, we visually
-% compared the patches to see how much they are similar and dissimilar with the
-% developers' patch.
-
-% Determining PPI is a three step process. First, we visually compared \tool's
-% patch with the developer's version and count the exact similar constraints
-% observed in both patches to determine the closeness in terms of the set of
-% constraints. Second, we disassembled the developer's patch and compared the
-% count of bytecodes generated using \tool's patch. Third, we observed the
-% actual
-% output of using the \tool\ patched class files against the developer provided
-% patch in a later version of the same library. In case the output is primitive
-% or
-% strings, an exact match is considered successful, else we iterate over the
-% properties of the complex object to determine number of exact matches in the
-% two
-% outputs. In case of exception(s), we select the similarity ratio to be $0.5$.
-
-% In case the results were either primitive or string type, we
-% compared the output. In case the output is some complex object we compare
-% the properties of them.
-
-% Apart
-% from the test cases to reproduce the bug, we also ran couple of good test case
-% to make sure that the patch is not behaving any other way. Based on this
-% experiment we made a metric named \textbf{Patch Quality Index (PPI)} which
-% can contains three values, high, medium and low where we consider high PSI
-% being
-% a good close quality patch.
-
-
-%% subsumed in PPI
-
-% \item \textbf{Auto-generated patch size and the develops' patch size} : Apart
-% from the qualitative analysis we have measured quantitative aspect of the
-% Auto-generated patches and compared their sizes with the developers' one.
-% Quantitative measurement comes to picture only when we are satisfied with the
-% qualitative measurement. We came up with a metric called \textbf{Patch Size
-% Index (PSI)}. In case our patch is qualitatively satisfactory and the size is
-% less than the developer one the we assign PSI as high. In case the size varies
-% in $\pm5\%$ we assign PSI as medium. If our patch is more than $5\%$ bigger
-% than
-% the develops' one then PSI is assigned to low.
-
-% \note{redo the items below based on the PPI observed.}
-% \begin{mybullet}
-% 
-%  \item  We observed that PPI for \tool\ generated patches was high for most of
-% the bugs, which indicates the effectiveness of the patches. Specifically, for
-% $23$ out of $30$, \ie\ for more than $75\%$ cases, PPI for \tool-generated
-% patches was within $7\%$ of the developer's fix. Note that there was one
-% instance where the concerned bug~\cite{HBASE4481} was still unpatched. In such
-% cases, we looked for the potential or suggested patches in comments and
-% discussion forums, and compared \tool's patch with them.
-% 
-%  \item We observed that PPI for bug in Hama $0.2.0$~\cite{HAMA212} was as high
-% as $1.38$. We visually inspected both the \tool-generated patch and the
-% developer's fix and observed that \tool's patch was considerably smaller.
-% Further, we noticed that the developer's patch had i) multiple assertion blocks
-% to make sure the error condition can be avoided, and ii) several additional
-% conditional checks to avoid corner cases. Moreover, the developer's patch also
-% had a completely different implementation of the method on which the bug was
-% reported. Thus, the developer's fix was significantly larger than \tool's patch.
-% 
-%  \item We noticed low PPI (between $0.5$ and $0.79$) for four of the patched
-% libraries, which shows that the quality of the \tool-generated patch was
-% significantly lower than the developer's fix. A major reason for this drop in
-% PPI is the presence of cascaded exceptions observed in the patched versions of
-% these libraries upon execution.
-% % Though the
-% % repairing technique able to patch the buggy string api usage, but the patched
-% % version of the string was later used to load some configuration of used as a
-% % driver string to some place else.
-% We note that \tool\ in its present shape does not guarantee that the patch will
-% never raise cascaded exceptions. Thus, in these four cases \tool's patches were
-% of lower quality then the original ones. However, we also note that all the
-% cascaded exceptions were in fact checked exceptions, and it is expected that the
-% application developers would handle them appropriately.
-% 
-%  \item Note that taint analysis only works when sources and sinks are defined.
-% Since our library benchmarks have no notion of sources or sinks, \tool's
-% bytecode analysis of the libraries did not involve the taint analysis phase.
-% However, even without taint analysis, \tool's patches were of high quality, as
-% demonstrated by the high PPI.
-% 
-% \end{mybullet}
 
 \begin{table}[t]
 \centering
@@ -284,13 +163,6 @@ APIs result in further exceptions.
 intra-procedural analysis and a simple constraint evaluation mechanism. However,
 \tool's constraint solver is pluggable and a more sophisticated third party
 solvers can easily be integrated.
-% This is the limitation
-% in our technique in the some complicated cases where it requires develops' 
-% attention. The limitation is due to the fact that the analysis for the
-% repairing 
-% technique is a intra-procedural analysis and the constraint evaluation method is
-% very simple. For the constraint evaluation part, the solver is pluggable, we can
-% easily replace it with a third party solver.
 Specifically, cascaded exceptions may arise if the patch generates \code{String}
 objects that represent a malformed string. Further, if we keep the optimization
 in \xref{subsubsec:minimizePatchInstrumentation}, then cascaded failures may
@@ -298,14 +170,6 @@ occur even for subsequent \code{String} APIs handling the malformed
 string following the point of patching. If the optimization is turned
 off, \tool\ will automatically patch all relevant \code{String} APIs and thus
 handle all cascaded failures involving malformed \code{String} objects.
-% 
-% Cascaded exception can be noticed
-% when the string object we are patching is generation some specific URI or driver
-% string which would be used to load or configure something. In such scenario, the
-% patch may produce some malformed string. In case there is a cascaded exception 
-% in string object, our analysis will take care of it, other wise it would
-% abort.
-
 We observe that two benchmarks throw cascaded exceptions even after being
 repaired. The cascading was one level deep and triggered exception in another
 non-String code (and thus unpatched), which caused the application to crash.
@@ -345,19 +209,6 @@ We measure the overhead of \tool\ across different metrics identified below.
 
 \begin{mylist}
 
-% Apache wicket 100K run patched -> 1090ms, dev fix -> 929 ms
-% Eclipse AspectJ weaver 50K run patched -> 8ms, dev fix -> 2 ms
-% Apache Tapestry 50K run patched -> 200ms, dev fix -> 178 ms
-% Nutch -> 50k run, patched ->183ms, dev patched-> 12 ms
-% Hive -> 50k run, patched ->297ms, dev patched-> 99ms
-
-% Constraint analysis dependency : soot invoke + it flashes jimple files.
-% 
-% Instrumentation dependency : soot overhead for instrumentation  + flashes
-% instrumented class files to disk.
-% 
-% call graph dependency : apart from soot none
-
  \item \textbf{Execution overhead}: We randomly selected and patched $5$
 libraries (Apache Tapestry, Apache Wicket, Eclipse AspectJ Weaver, Hive and
 Nutch) from Table~\ref{tab:results} to determine the execution overhead of the
@@ -392,13 +243,6 @@ patched. We observe that even without optimization discussed in
 less with the optimizations enabled, which significantly decrease the number of
 \code{Units} to be instrumented, and is evident in Table~\ref{tab:results} where
 column $\mathcal{IC}_{WO}$ is much less than $\mathcal{IC}_{NO}$.
-
-%  \item \textbf{Number of \code{String} objects}: \tool\ performs exhaustive
-% optimizations to limit the static and dynamic instrumentations at points of
-% interest. Thus, \tool's performance is also dependent on the number of
-% \code{String} objects. Figure~\ref{fig:perf:strings} plots the trend in analysis
-% time as a function of the \code{String} objects generated for our benchmarks.
-% We observer that \todo{Add details later.}.
 
 \end{mylist}
 
@@ -449,52 +293,3 @@ were handled in a generic fashion. \tool's patched library ensures that
 exceptions originating from the \code{substring} call are handled properly.
 
 \end{mylist}
-
-
-% \begin{figure}[t]
-% \centering
-% \includegraphics[scale = .45]{images/CgSizeVsTime.pdf}
-% \caption{Performance statistics of call graph size vs. time}
-% \label{fig:perf:callgraph}
-% \end{figure}
-% 
-% 
-% \begin{figure}[t]
-% \centering
-% \includegraphics[scale = .31]{images/ConstraintsVsTime.pdf}
-% \caption{Performance statistics of constraint vs. time}
-% \label{fig:perf:constraints}
-% \end{figure}
-% 
-% \begin{figure}[t]
-% \centering
-% \includegraphics[scale = .48]{images/InstrumentationVsTime.pdf}
-% \caption{Performance statistics of instrumentation size vs time}
-% \label{fig:constraintHisto}
-% \end{figure}
-
-
-%not required
-% \begin{figure}
-%         \centering
-%         \begin{subfigure}[b]{0.3\textwidth}
-%                 \includegraphics[width=\textwidth]{images/CallGraphHisto.pdf}
-%                 \caption{A gull}
-%                 \label{fig:gull}
-%         \end{subfigure}%
-%         ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
-%           %(or a blank line to force the subfigure onto a new line)
-%         \begin{subfigure}[b]{0.3\textwidth}
-%                 \includegraphics[width=\textwidth]{tiger}
-%                 \caption{A tiger}
-%                 \label{fig:tiger}
-%         \end{subfigure}
-%         ~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
-%           %(or a blank line to force the subfigure onto a new line)
-%         \begin{subfigure}[b]{0.3\textwidth}
-%                 \includegraphics[width=\textwidth]{images/ConstraintHisto.pdf}
-%                 \caption{A mouse}
-%                 \label{fig:mouse}
-%         \end{subfigure}
-%         \caption{Pictures of animals}\label{fig:animals}
-% \end{figure}
