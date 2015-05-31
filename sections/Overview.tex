@@ -1,0 +1,230 @@
+\section{Overview}
+\label{sec:overview}
+
+Ensuring correctness of a program statically is an undecidable problem. Thus
+there is always a tradeoff between precision and scalability that static program
+analysis must balance. Static analysis achieves high scalability by making sound
+approximations, which typically leads to false positives. Complex
+programming logic and data coming from diverse sources make the already hard
+problem worse. As a result, successful execution of a real application can never
+be guaranteed, and unexpected failures may happen. These failures often result
+in runtime exceptions being thrown by the applications that are generally not
+handled and the program crashes.
+
+\ignore{ \begin{table}[t] \scriptsize \centering
+\begin{tabular}{|l|r|r|}
+\hline
+\multicolumn{1}{|c|}{\textbf{Runtime Exception Type}} &
+\multicolumn{1}{c|}{\textbf{Frequency}} & \multicolumn{1}{c|}{\textbf{\%}}\\
+% \scalebox{0.83}
+% {
+\hline
+\code{NullPointerException} & $34912$ & $54.94$ \\
+\code{ClassCastException} & $7504$ & $11.81$ \\
+\code{IndexOutOfBoundsException} & $6637$ & $10.44$ \\
+\code{SecurityException}  & $5818$ & $9.15$ \\
+\hline
+\end{tabular}
+\caption{Prominent runtime exceptions from
+\texttt{stackoverflow}~\cite{stackoverflow}.}
+\label{tab:stackoverlow}
+% }
+\end{table}
+}
+
+
+\lstset{language=Java, caption=Snippet from \code{fileUtils} class of Apache
+Commons library. , label = snippet:exampleRepairing2}
+\begin{figure}[t]
+\centering
+\begin{lstlisting}
+public static String getPathNoEndSeparator
+        (String filename) {
+  return doGetPath(filename, 0);
+}
+private static String doGetPath
+        (String filename, int separatorAdd) {
+  if(filename == null) return null;
+  int prefix = getPrefixLength(filename);
+  if (prefix < 0) return null;
+  int index = indexOfLastSeparator(filename);
+  if ((prefix >= filename.length()) || (index < 0))
+        return "";
+  return filename.substring(prefix,
+        index + separatorAdd);
+}
+\end{lstlisting}
+\end{figure}
+
+Code~\ref{snippet:exampleRepairing2} corresponds to methods from
+\code{fileUtils} class of Apache Common IO library. The method
+\code{getPathNoEndSeparator()} throws a \code{StringIndexOutOfBounds} exception,
+which originates from statement \code{return filename.substring(prefix, index +
+separatorAdd)} on line 13 when the method is called with parameter
+\code{"/foo.xml"}.  Here, the value of \code{prefix} as returned by the method
+\code{getPrefixLength} is 1. It fails to satisfy the constraint implied by the
+program condition \code{prefix <= index + separatorAdd} for \code{substring}
+method, which ensures that \code{beginIndex} cannot be greater than
+\code{endIndex}. As a result, the exception is thrown.
+
+
+\lstset{language=Java, caption=Patch for \code{fileUtils} class
+from Apache Commons library bug., label = snippet:exampleRepairing3, firstnumber
+=13}
+\begin{figure}[t]
+\centering
+\begin{lstlisting}
+String temp = null;
+try {
+  temp = filename.substring(prefix, index + separatorAdd);
+} catch(IndexOutOfBoundsException ex) {
+  int length = filename.length;
+  int t = index + separatorAdd;
+  temp = filename.substring(
+    getStart(prefix,t,length), getEnd(prefix,t,length));
+}
+return temp;
+\end{lstlisting}
+\end{figure}
+
+A closer inspection of this code snippet shows that the string variable
+\code{filename} invokes two methods, namely \code{length} and \code{substring}
+on lines 11 and 13 respectively. \java\ \code{String} API documentation
+specifies that \code{length} does not throw any runtime exceptions. The only
+exception that this invoke statement can throw is when the receiver object
+referenced by \code{filename} is \code{null}. However, the check on line 7
+indicates that this situation would not arise. However, method \code{substring}
+may throw \code{IndexOutOfBoundsException} exception that can potentially crash
+the program. A good patch to handle this failure should take into account all of
+these observations. 
+
+Code~\ref{snippet:exampleRepairing3} presents the patch automatically generated
+by \tool . This patch replaces the invoke statement on line 13 in
+Code~\ref{snippet:exampleRepairing2}. The invoke statement is wrapped inside
+the \code{try} block and a \code{catch} corresponding to
+\code{IndexOutOfBoundsException} is added on line 15, which ensures that control
+passes to the catch block only when the exception is thrown. Line 20 shows two
+method calls namely \code{getStart} and \code{getEnd} that are inserted by
+\tool. These methods, using the knowledge about the length of \code{filename}
+acquired with the help of the code on line 17, compute legally correct indexes
+required by \code{substring} method to satisfy the constraint related to
+\code{beginIndex} and \code{endIndex}. Method \code{substring} can now
+regenerate the substring ensuring that the method call will not fail. The actual
+patch provided by the developers is semantically similar to the one developed by
+\tool{}, and both versions of the program generate exactly the same output for
+the failed test case.
+
+Similarly, the patch developed by \tool\ for the bug depicted in
+Code~\ref{snippet:exampleRepairing1} is semantically similar to the actual one
+provided by the developers and is presented in
+Code~\ref{snippet:exampleRepairing4}. Here, the object referenced by the string
+variable \code{temp} is regenerated after adjusting the offset and ensuring that
+the constraint represented by the program condition \code{offset <= length}
+would never be violated.
+
+
+\lstset{language=java, caption=Patch for the Apache Log4j bug.,
+label = snippet:exampleRepairing4, firstnumber =4}
+\begin{figure}[t]
+\centering
+\begin{lstlisting}
+try {
+    temp = new String(chars, offset, length);
+} catch(StringIndexOutOfBoundsException ex) {
+    int i = chars.length;
+    temp = new String(chars,
+        IndexRepair.getStart(offset, length, i),
+            IndexRepair.getEnd(offset, length, i));
+}
+priorVariables.add(temp);
+\end{lstlisting}
+\end{figure}
+
+
+\section{Problem Definition}
+\label{sec:definition}
+
+Let the behavior $\mathcal{B}$ of program $\mathcal{P}$ for input $\mathcal{I}$
+be a sequence of data values $\textless b_1, \ldots, b_n \textgreater$ shared
+with the environment, where these values may be used to print information on
+screen, access and manipulate files and databases, and exchange data with other
+processes or threads. For brevity, we assume that the program is sequential.
+However, our formalization and arguments can be extended to multi-threaded
+programs and their behaviors.
+
+Consider the behavior $\mathcal{B}$ to be composed of $\mathcal{B}_c = \textless
+b_{1_c}, \ldots, b_{n_c} \textgreater$ and $\mathcal{B}_n = \textless b_{1_n},
+\ldots, b_{n_n} \textgreater$, where elements in $\mathcal{B}_c$ consist of
+critical values that form core functionality of the program, while elements in
+$\mathcal{B}_n$ are noncritical values with respect to the core functionality of
+the program.
+% We consider behaviors of the two programs, $\mathcal{P}$ and
+% $\mathcal{P}'$, equivalent if their critical components are identical for same
+% program inputs. Formally, $\mathcal{P} \equiv \mathcal{P}' \iff$
+% ($\mathcal{B}_c
+% = \mathcal{B}'_c \land \mathcal{I} = \mathcal{I}'$). In other words, for
+% equivalent program behaviors their noncritical behaviors do not matter.
+%  
+% Let $\mathcal{B}_{I_f}$ be the behavior for $\mathcal{P}$ under failure input
+% $\mathcal{I}_f$. and let the data element that correspond to the failure does
+% not belong to $\mathcal{B}_{{I_f}_c}$. Let the element be $b_{m_n}$.
+% 
+% Let p be an element of P which results in a failure under cer-
+% tain input I f . Let the intended behavior of P under this input be
+% BI f , and let the data element that correspond to the failure does not
+% belong to BI f c . Let the element be bmn .
+%  
+% In this work, we restrict our approach to data values that are strings.
+% 
+If $\mathcal{B}_{I_f}$ be the behavior for $\mathcal{P}$ under failure input
+$\mathcal{I}_f$, then our approach attempts to
+% i) find a minimal $p$ that was associated with the failure,
+% ii) ensures that $b_{m_n} \not\in \mathcal{B}_{{I_f}_c}$,
+develop a program patch to convert $\mathcal{P}$ to $\mathcal{P}'$, while
+ensuring that:
+\begin{mybullet}
+ \item $\mathcal{P}'$ does not violate the core behavior of $\mathcal{P}$ under
+failure, \ie\ $\mathcal{B}'_{{I_f}_c}$ is same as the intended behavior
+$\mathcal{B}_{{I_f}_c}$, and
+ \item resulting behavior $\mathcal{B}'_{{I_f}_n}$ is close to the intended
+behavior $\mathcal{B}_{{I_f}_n}$.
+\end{mybullet}
+
+% \subsection{Goals}
+% \label{sec:tool:goals}
+
+In this work, we restrict our approach to data values that are strings. We
+identify the broad design goals for a technique to automatically repair
+malformed strings or incorrect handling of strings as follows:
+
+% i) identifies the statements which might be vulnerable to string-related
+% errors,
+% and are less critical to the functionality of the application such that
+% suboptimal behavior might be acceptable,
+% iii) generates patches by identifying constraints on the string data and if
+% required, tweaks \code{String} API  parameters to regenerate legally correct
+% string data,
+% iv) optimizes the number of statements to be patched by retaining only the
+% ones
+% that need to be protected,
+
+\myparagraph{(i) High patch fidelity} We require that the patched program must
+preserve the intended program behavior, \ie\ the patch must be precise, and
+should not induce any undesirable control flows in the repaired program. 
+This goal naturally follows from the problem definition bullets. However, we
+set two more goals associated with the security and performance of the
+technique.
+
+\myparagraph{(ii) Non-invasive instrumentation} We require that the technique
+must ensure no side-effects (aside from optimally repairing objects) during
+normal program execution, and activate patches only when the program is
+guaranteed to crash.
+
+\myparagraph{(iii) Low system overhead} We desire that the patched program must
+incur no runtime overhead during normal program execution, and only negligible
+overhead in case of failures.
+
+We next present in detail the techniques and the algorithms used in our analysis
+that can produce patches to regenerate string variables under more complex
+scenarios. Our study presented in \xref{sec:results} suggests that majority of
+the string generation scenarios in practice are less complex.

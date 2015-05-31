@@ -1,39 +1,6 @@
 \section{\tool}
 \label{sec:design}
 
-\ignore{
-\subsection{Goals}
-\label{sec:tool:goals}
-
-We identify the broad design goals for a technique to automatically repair
-malformed strings or incorrect handling of strings as follows:
-
-% i) identifies the statements which might be vulnerable to string-related errors,
-% and are less critical to the functionality of the application such that
-% suboptimal behavior might be acceptable,
-% iii) generates patches by identifying constraints on the string data and if
-% required, tweaks \code{String} API  parameters to regenerate legally correct
-% string data,
-% iv) optimizes the number of statements to be patched by retaining only the ones
-% that need to be protected,  
-
-\myparagraph{(i) High patch fidelity} We require that the patched program must
-preserve the intended program behavior, \ie\ the patch must be precise, and
-should not induce any undesirable control flows in the repaired program.
-
-\myparagraph{(ii) Non-invasive instrumentation} We require that the technique
-must ensure no side-effects (aside from optimally repairing objects) during
-normal program execution, and activate patches only when the program is
-guaranteed to crash.
-
-\myparagraph{(iii) Low system overhead} We desire that the patched program must
-incur no runtime overhead during normal program execution, and only negligible
-overhead in case of failures.
-}
-
-% \subsection{Design}
-% \label{sec:tool:design}
-
 \begin{figure}[t]
 \centering
 \includegraphics[scale=.38]{images/NewDesignDiagram.pdf}
@@ -133,7 +100,6 @@ marked as \textit{unsafe} to patch. Subsequently, \tool\ does not repair such
 \code{String} objects. Tables~\ref{table:TaintSources} and
 \ref{table:TaintSinks} list some common sensitive sources and sinks for several
 classes in \java.
-% \comment{Can we make exceptions to these?}
 
 \myparagraph{(ii) Call graph analysis} \tool\ leverages call graph analysis to
 further improve the precision for finding instrumentation points. Although
@@ -435,8 +401,6 @@ the constraints are evaluated. In either scenario, a key component of code
 generation is \textit{object repairing}. Additionally, in certain cases
 where constraints cannot be satisfied, either statically or dynamically or
 both, \tool\ resorts to \textit{parameter tweaking}.
-%The mechanism by which \tool\ achieves this is primarily based on 
-%\textit{parameter tweaking}.
 
 \begin{mylist}
 
@@ -562,15 +526,6 @@ transition and $safe \rightarrow error$ corresponds to the constraint violation.
 \label{fig:constraintautomata}
 \end{figure}
 
-% An abstract constraint representation model is depicted in
-% Figure~\ref{fig:constraintautomata}. A concrete model be constructed using an
-% exception-specific information that is available in the API documentation. The
-% repairing mechanism gets triggered when some $\eta$ is thrown while performing
-% $\zeta$ after at least one of the constraints from $\Lambda$ on the structure of
-% the associated string is violated. The patches essentially support the same
-% semantics using multiple \code{catch} blocks corresponding to various
-% exceptions.
-
 
 A partial constraint representation model is depicted in
 Figure~\ref{fig:constraintautomata}. It essentially specifies the constraints
@@ -606,72 +561,3 @@ exceptions, particularly when there are heavy object dependencies in the program
 The quality of \tool's patches also depends on the nature of the constraint
 solver, which is pluggable. A more sophisticated solver may improve the quality
 of program repair, and we leave comparison of different solvers for future work.
-
-\ignore{
-\paragraph{Identifying Program Statements.} We perform static taint analysis
-to identify sensitive data which are leaving the system via database, network
-stream, file stream or console. Providing patches to the
-statements that manipulate this data would be undesirable, since
-activation of the patches in case failures may allow altered sensitive data to
-eventually
-reach users. Hence, we only mark those program statements which do
-not manipulate these data.
-
-\paragraph{Noninvasive Patching.} In case a runtime exception that is thrown
-by a statement as a result of a failure is already caught and handled in a
-program,
-we skip that statement from patching to avoid interfering with the results. Such
-statements are identified by analyzing call-graphs and ensuring that no caller
-method
-in the call-chain handles the exception or its superclass. By embedding the
-patches inside
-\texttt{catch} blocks, we ensure that they do not get activated during normal
-program execution.
-
-\paragraph{Patch Generation.} We first perform an
-intra-procedural static analysis
-to identify constraints on the string objects under consideration. By
-identifying
-the type of exceptions that can be thrown in case of a failure, we
-develop patches that
-regenerate string objects by tweaking \java\ \code{String} API used in
-the statements to regenerate legal string objects and by trying to solve the
-constraints. In the latter case,
-we evaluate the constraints statically if complete information is available at
-the compilation-time. Otherwise, the analysis automatically generates
-code that performs dynamic analysis to solve the constraints, and then
-inserts this code in the generated patches.
-
-\paragraph{Optimizing Instrumentation.} We perform reaching definitions
-analysis to skip marked statements
-if the string variables that are contained in the statements are already
-patched, and the variables
-are not redefined along any path that originates from the patched statement.
-This analysis reduces
-instrumentation points in a program.
-
-\paragraph{Patch Precision.} The precision of a program patch is improved,
-firstly, by targeting only strings
-for patching which allows us to develop more specialized patches, secondly, by
-patching programs very
-close to the points of potential failures which avoids unnecessary patching of
-other
-unaffected variables and their potential
-side effects, thirdly, by analyzing the types of exceptions that can be thrown
-which
-provides valuable insights into
-origins of failures, and finally, by considering all the constraints
-on the strings. This would result
-in a program behavior closed to the intended one in case of a failure.
-
-\paragraph{Reduced Overhead.} The side-effect of non-invasive patches is that
-they do not interfere during
-normal execution which results in no runtime overhead. Even when they get
-activated in case of failures,
-they still cause negligible overhead since we perform no analysis during runtime
-except if required resolve the dynamic constraints.
-As our study reveals~\xref{sec:evaluation} the constraints are typically few and
-simple, making
-the dynamic analysis light-weight.
-}
-
