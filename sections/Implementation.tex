@@ -74,6 +74,30 @@ statements analyzed for instrumentation.
 \begin{table*}[t]
 % \setlength{\tabcolsep}{3pt}
 \centering
+\caption{\tool's accuracy results when applied to $30$ bugs in popular
+open-source libraries.}
+\caption*{
+\scriptsize
+\centering
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{ll|ll|ll}
+
+$\mathcal{N}_{CG}$ & \# nodes in call graph & $\mathcal{T}$ & \# total cases in
+test suite & $FCI$ & Flow Consistency Index\\
+
+$\mathcal{N}_{Unit}$& \# \code{Units} analyzed & $\mathcal{F}_{P}$ & \# failed
+tests in patched version w/o forced patching & $\mathcal{IC}_{NO}$
+& Instrumentation w/o optimization (recall \xref{subsec:optimizations})\\
+
+$\mathcal{S}_{U}$ & \# successful tests in unpatched & $\mathcal{F}_{P}^{*}$ &
+\# failed tests in patched version w/ forced patching & $\mathcal{IC}_{WO}$ &
+Instrumentation w/ optimization (recall \xref{subsec:optimizations})\\
+
+$\mathcal{F}_{U}$ & \# failed tests in unpatched & $PPI$ & Patch Precision
+Index & $\mathcal{RS}_{CE}$ & Cascaded exception exists
+\end{tabular}
+}
+
 \scriptsize
 \begin{tabular}{|l|c|l|r|r||r|c|r|c|c||r|c|r|r|c|}
 
@@ -194,29 +218,6 @@ $11$ & $3$ & $14$ &  &  & $0.72$ & &$13$ & $2$ & \\
 
 \end{tabular}
 
-\caption*{
-\scriptsize
-\centering
-\setlength{\tabcolsep}{3pt}
-\begin{tabular}{ll|ll|ll}
-
-$\mathcal{N}_{CG}$ & \# nodes in call graph & $\mathcal{T}$ & \# total cases in
-test suite & $FCI$ & Flow Consistency Index\\
-
-$\mathcal{N}_{Unit}$& \# \code{Units} analyzed & $\mathcal{F}_{P}$ & \# failed
-tests in patched version w/o forced patching & $\mathcal{IC}_{NO}$
-& Instrumentation w/o optimization (recall \xref{subsec:optimizations})\\
-
-$\mathcal{S}_{U}$ & \# successful tests in unpatched & $\mathcal{F}_{P}^{*}$ &
-\# failed tests in patched version w/ forced patching & $\mathcal{IC}_{WO}$ &
-Instrumentation w/ optimization (recall \xref{subsec:optimizations})\\
-
-$\mathcal{F}_{U}$ & \# failed tests in unpatched & $PPI$ & Patch Precision
-Index & $\mathcal{RS}_{CE}$ & Cascaded exception exists
-\end{tabular}
-}
-\caption{\tool's accuracy results when applied to $30$ bugs in popular
-open-source libraries.}
 \label{tab:results}
 \end{table*}
 

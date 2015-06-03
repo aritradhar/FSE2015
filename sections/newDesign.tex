@@ -47,6 +47,7 @@ an I/O sink, like file system, console, network, GUI, etc.
 
 \begin{table}[t]
 \centering
+\caption{Common sensitive sources in \java.}
 \scriptsize
 % \setlength{\tabcolsep}{3pt}
 % \hrule
@@ -66,12 +67,12 @@ an I/O sink, like file system, console, network, GUI, etc.
 \code{org.apache.http.util.EntityUtils} & \code{getContentCharSet()}\\
 \hline
 \end{tabular}
-\caption{Common sensitive sources in \java.}
 \label{table:TaintSources}
 \end{table}
 
 \begin{table}[t]
 \centering
+\caption{Common sensitive sinks in \java.}
 \scriptsize
 % \setlength{\tabcolsep}{3pt}
 \begin{tabular}{|l|l|}
@@ -85,7 +86,6 @@ an I/O sink, like file system, console, network, GUI, etc.
 \code{java.io.Writer} & \code{write()}\\
 \hline
 \end{tabular}
-\caption{Common sensitive sinks in \java.}
 \label{table:TaintSinks}
 \end{table}
 
