@@ -551,7 +551,12 @@ exceptions. While this may seem to be a limitation, we believe that \tool's
 strength lies in the fact that it mines contextual data about runtime exceptions
 related to \code{String} objects that helps development of intelligent patches.
 Moreover, \tool's technique is generic and can be ported to any other class of
-\java\ APIs.
+\java\ APIs. \textcolor{red}{This technique can be applied to objects other
+than \code{String} but requires rigorous study to understand the
+characteristics (behavior and types of exceptions thrown) associated to the APIs
+related to that object.
+\tool calculates patch by analyzing constrains. Proper study is required to understand the
+constraints associated to the object to apply this technique to patch.}
 
 \tool generates precise patches considering the program context which avoids
 cascading exceptions to a great extent producing the intended behavior in case
