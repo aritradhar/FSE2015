@@ -8,7 +8,7 @@ $\sim$$12.7K$ lines of \java. We leveraged the \soot~\cite{soot} framework for
 bytecode analysis and instrumentation, and \infoflow~\cite{infoflow} for static
 taint analysis.
 We now briefly describe a few salient features of our implementation, which is
-also available for download at \url{http://goo.gl/d1zcXD}.
+also available for download at \url{https://github.com/aritradhar/CLOTHO}.
 
 \subsection{Taint Analysis}
 
@@ -32,13 +32,16 @@ uses the \code{Trap} class to manage exception handling for both classes of
 exceptions discussed above. Each \code{Trap} object has start, end and handler
 unit.  We tagged every \code{Unit} in a \code{HashMap} if it belonged to an
 existing \code{Trap}, so as to exclude it from instrumentation during the
-repairing phase.
+repairing phase. \textcolor{red}{In the implementation we have added a switch to
+\tool  where the user can turn of this analysis feature to look for already
+handled exception. In such cases we call the patching as \emph{forced
+patching}}.
 
 \subsection{Constraint Analysis}
 \label{subsec:constraint analysis}
 
 \tool\ makes a forward pass over the \code{Units} identified by the taint
-analysis and other program analyses in the first phase to gather constrains over
+analysis and other program analysis in the first phase to gather constrains over
 string literals of interest (recall \xref{sec:tool:stage2}), and builds a
 \code{HashMap} of \code{ConstraintDataType}, a custom data type to store and
 evaluate these constrains. Specifically, each \code{ConstraintDataType} entry
@@ -231,4 +234,4 @@ required, since the constraint would have been satisfied in the beginning and it
 as long as the variable is not changed. Similarly, when the API usage is same and none of 
 the method parameters are changed, no further patching would be required. This reduces the 
 total number of possible
-instrumentations required. 
+instrumentation required. 
