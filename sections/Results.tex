@@ -65,17 +65,17 @@ $$PPI = \frac{\#~Constraints_{\tool}}{\#~Constraints_{Developer}}$$
 
 Specifically, PPI compares the similarities in constraints in \tool's patch
 against the developer's version, thereby considering the core logic to construct
-an effective patch. If \tool's patch has fewer constraints than the developer's
-fix, the PPI will be lesser. Thus, a higher value of PPI, \ie\ closer to $1$,
-is preferred. PPI values greater than $1$ mean that \tool\ generates many more
-constraints than reflected in the developer's fix, while low values of PPI
+an effective patch. \textcolor{red}{\tool\ only analyzes and registers the
+constraints which are related to only \code{String} objects. By doing so, we
+ensure the value of PPI is only influenced by \code{String} objects}.If \tool's
+patch has fewer constraints than the developer's fix, the PPI will be lesser. Thus, a higher value of PPI, \ie\ closer to $1$, is preferred. PPI values greater than $1$ mean that \tool\ generates many more constraints than reflected in the developer's fix, while low values of PPI
 suggest that \tool\ may have missed out on several constraints. PPI can be
 computed automatically, since \tool\ already generates a list of constraints (in
 the form of bytecodes), and static program analysis of the developer's patch can
 provided the same. However, in our current implementation, we compute the
 constraints for the developer's fix through manual inspection of the
 \sout{library bytecodes}\textcolor{red}{the source code of the patched version
-of the library downloaded from the official repository}.
+of the library downloaded from the official repository}. 
 
 Table~\ref{tab:results} lists the PPI for the benchmarks in our set. We note
 that PPI is $>0.7$ for over $73\%$ of the benchmarks. This high PPI across
