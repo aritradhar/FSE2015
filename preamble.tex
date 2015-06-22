@@ -299,3 +299,13 @@ pdfproducer = {pdflatex}}
 
 % The space-saving sledgehammer. -- md
 %\renewcommand{\baselinestretch}{0.95}
+
+% For author table --- md
+% \renewcommand{\and}{\hspace{5mm}}
+\def\sharedaffiliation{%
+\end{tabular}
+\begin{tabular}{ccccc}}
+
+\def\ibm{\raisebox{6pt}{\small \ding{67}}}
+\def\xrci{\raisebox{6pt}{\small \ding{82}}}
+\def\iiit{\raisebox{6pt}{\small \ding{81}}}
