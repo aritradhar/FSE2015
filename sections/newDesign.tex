@@ -97,9 +97,15 @@ that support string manipulation, including \code{StringBuffer} and
 \code{StringBuilder}. All \code{String} objects (whether generated or assigned)
 that lie along the tainted path from a sensitive source to a sensitive sink are
 marked as \textit{unsafe} to patch. Subsequently, \tool\ does not repair such
-\code{String} objects. Tables~\ref{table:TaintSources} and
-\ref{table:TaintSinks} list some common sensitive sources and sinks for several
-classes in \java.
+\code{String} objects. \textcolor{red}{The definition of
+criticality is solely over the developers. In some cases one would like to
+patch the \code{String} objects which are tainted. \tool\ is highly
+configurable and allow the developers to define their own set of sources and
+sinks and even put some tainted path to exclude list. In the default behavior
+of \tool\ we took a safe assumption that patched objects which are leaving the
+system may cause some unintended behavior in some other modules}.
+Tables~\ref{table:TaintSources} and \ref{table:TaintSinks} list some common
+sensitive sources and sinks for several classes in \java.
 
 \myparagraph{(ii) Call graph analysis} \tool\ leverages call graph analysis to
 further improve the precision for finding instrumentation points. Although
