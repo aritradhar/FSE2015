@@ -264,9 +264,12 @@ such scenarios \tool\ (i) generates a patch that itself dynamically collects
 constraint information, (ii) augments it with the previously collected static
 constraint details, and (iii) evaluates these constraints on the fly to generate
 repaired \code{String} objects, which do not cause the program to throw runtime
-exceptions. Algorithms~\ref{algo:patchingStrategy}
-and~\ref{algo:patchingStrategyDynamic} give an overview of this
-hybrid approach.
+exceptions. \textcolor{red}{We leverage constraint propagation technique to make
+sure static constraint collection works properly if the conditional statements
+involve any variables which re defined or reassigned before and can be
+calculated statically. \tool\ only collects constraints which are directly
+associated to \code{String} objects.}.Algorithms~\ref{algo:patchingStrategy}
+and~\ref{algo:patchingStrategyDynamic} give an overview of this hybrid approach.
 
 \begin{algorithm}[t]
 \scriptsize
@@ -440,7 +443,14 @@ information, augment them with previously known static constraints, and evaluate
 these constraints at runtime. Specifically, \tool\ instruments the bytecode
 with constraint collection code just before the conditional statements under
 consideration. After all the required code instrumentation by \tool\ the code
-will looks like~\ref{snippet:exCode2}.
+will looks like~\ref{snippet:exCode2}. \textcolor{red}{One complex example of
+dynamic constraint collection and evaluation is \code{x > 10} and
+\code{s.length() < x * x \&\& x * x > 10}. In such case, \tool\ with the help
+of \code{jimple} intermediate representation (IR) breaks down the second conjugate
+constraint to two simple ones. As \code{x > 10} and \code{x * x > 10} do not
+involve any \code{String} object, \tool\ will ignore them and evaluate
+\code{s.length() < x * x } dynamically when the value of x is available just
+before the conditional statement.}
 
 \end{mylist}
 
@@ -494,19 +504,6 @@ condition\\
 \label{algo:stringPatchParametr}
 \end{algorithm}
 
-\lstset{language=Java, caption=Example of parameter tweaking.,
-label =
-snippet:exCode3, firstnumber =1}
-\begin{figure}[t]
-\begin{lstlisting}
-try{
-    c = s.chatAt(4);
-} catch(IndexOutOfBoundException ex) {
-    c = s.failSafeCharAt(4, s.length());
-}
-\end{lstlisting}
-\end{figure}
-
  \item \textbf{Parameter tweaking}: It is possible that as a side-effect of
 object repairing, the newly patched object may throw runtime errors when
 invoked with certain string APIs. For example, \code{c = s.charAt(4);} may still
@@ -523,7 +520,19 @@ counter a potentially suboptimal object repair that may throw cascading
 exceptions. Algorithm~\ref{algo:stringPatchParametr} briefly outlines
 the mechanism to correctly set the parameters for the offending string API.
 
+\item \lstset{language=Java, caption=Example of parameter tweaking.,
+label = snippet:exCode3, firstnumber =1}
+\begin{figure}[t]
+\begin{lstlisting}
+try{
+    c = s.chatAt(4);
+} catch(IndexOutOfBoundException ex) {
+    c = s.failSafeCharAt(4, s.length());
+}
+\end{lstlisting}
+\end{figure}
 \end{mylist}
+
 
 \subsection{Instrumentation}
 \label{sec:tool:stage3}
