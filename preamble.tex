@@ -33,7 +33,6 @@
 \usepackage[hyphens]{url}
 \usepackage{xspace}
 \usepackage{sty/algorithm2e}
-
 %%\usepackage[belowskip=-10pt,aboveskip=5pt,small,labelfont=bf]{caption}
 \usepackage[aboveskip=5pt,small,labelfont=bf]{caption}
 \DeclareCaptionType{copyrightbox}
@@ -300,3 +299,13 @@ pdfproducer = {pdflatex}}
 
 % The space-saving sledgehammer. -- md
 %\renewcommand{\baselinestretch}{0.95}
+
+% For author table --- md
+% \renewcommand{\and}{\hspace{5mm}}
+\def\sharedaffiliation{%
+\end{tabular}
+\begin{tabular}{ccc}}
+
+\def\ibm{\raisebox{6pt}{\small \ding{67}}}
+\def\xrci{\raisebox{6pt}{\small \ding{82}}}
+\def\iiit{\raisebox{6pt}{\small \ding{81}}}
