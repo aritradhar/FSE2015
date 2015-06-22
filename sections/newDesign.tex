@@ -297,15 +297,19 @@ hybrid approach.
 \end{algorithm}
 
 
-\lstset{language=Java, caption=\textcolor{red}{Static and dynamic constraint
-collection example}, label = snippet:constraintCollection, firstnumber =1}
+\lstset{language=Java, caption=Static and dynamic constraint
+collection example, label = snippet:constraintCollection, firstnumber =1}
 \begin{figure}[t]
 \begin{lstlisting}
-String st = "test String";
-if(st.length == 10) {/*do something*/}
-if(st.startsWith("ab")) {/*do something*/}
-if(st.startsWith("abcd")) {{/*do something*/}}
-if(st.contains(userInput())){{/*do something*/}}
+void foo(){
+  String st = "test String";
+  if(st.length == 5) {/*do something*/}
+  if(st.startsWith("ab")) {/*do something*/}
+  if(st.startsWith("abcd")) {{/*do something*/}}
+  /*userInput() accepts String input from console*/
+  if(st.contains(userInput())){{/*do something*/}}
+  st = st.substring(7, 10); /*Potential failure*/
+}
 \end{lstlisting}
 \end{figure}
 
@@ -330,8 +334,14 @@ Specifically, \tool\ iterates over all program code and analyzes conditional
 statements involving string objects of the form \code{if (st.length() == $5$)}.
 \tool\ considers only those constraints that the object must satisfy to ensure
 that the control flows through the \textit{preferred} branch of the conditional.
-We define the preferred branch as the one that does not throw exceptions or
-error conditions, like \code{System.err.print()}. In other words, \tool\ only
+\textcolor{red} {One such example is given in
+Code~\ref{snippet:constraintCollection} and
+Figure~\ref{fig:constraintExample}. Here line numbers $2$-$5$ contains four
+\code{if} statements. In which first three of the constraints are static as
+all of them can be evaluated in compile time. By analyzing these conditional
+statements one by one, \tool\ populates the constraint store data structure as
+of Figure~\ref{fig:constraintExample}}.
+We define the preferred branch as the one that does not throw exceptions or error conditions, like \code{System.err.print()}. In other words, \tool\ only
 considers the conditional expressions in the branches that do not involve any
 exceptions or error paths. Note that \tool\ also evaluates $OP$ (in
 Algorithm~\ref{algo:constraintCollection}) when collecting constraints, in case
@@ -382,6 +392,7 @@ potential safe values of the string object under consideration. However, there
 are scenarios, where there are potentially conflicting constraints or no
 permissible values of the constraints can be calculated statically.
 
+\ignore{
 \lstset{language=Java, caption=Code requiring dynamic string constraint
 evaluation., label =
 snippet:exCode1, firstnumber =1}
@@ -395,19 +406,32 @@ void foo() {
 }
 \end{lstlisting}
 \end{figure}
+}
 
 \lstset{language=Java, caption=Dynamic constraint collection and evaluation
-for code \ref{snippet:exCode1}., label =snippet:exCode2,
+for code \ref{snippet:constraintCollection}., label =snippet:exCode2,
 firstnumber =1}
-\begin{figure}[t]
+\begin{figure}[!htb]
 \begin{lstlisting}
+String st = "test String";
+ConstraintStore.updateLength("<foo()>", st, 5);
+/*This code will fire only if there is an exception over st*/
+st = GenerateStringStatic.init("<foo()>", st);
+if(st.length == 5) {}
+if(st.startsWith("ab")) {/*do something*/}
+ConstraintStore.updatePrefix("<foo()>", st, "ab");
+st = GenerateStringStatic.init("<foo()>", st);
+ConstraintStore.updatePrefix("<foo()>", st, "abcd");
+st = GenerateStringStatic.init("<foo()>", st);
+if(st.startsWith("abcd")) {{/*do something*/}}
 String temp = Input();
 ConstraintStore.updateSet("<foo()>", st, temp);
 st = GenerateStringDynamic.init("<foo()>", st);
+if(st.contains(temp){{/*do something*/}}
 \end{lstlisting}
 \end{figure}
 
-Consider the example shown in Code~\ref{snippet:exCode1}, where the function
+Consider the example shown in Code~\ref{snippet:constraintCollection}, where the function
 \code{foo} performs a series of checks on a user-entered string \code{st} before computing
 a substring on it. Since the constraints on \code{st} cannot be
 completely collected and evaluated statically. For such cases, \tool\
@@ -415,9 +439,8 @@ instruments the code with statements to dynamically collect constraint
 information, augment them with previously known static constraints, and evaluate
 these constraints at runtime. Specifically, \tool\ instruments the bytecode
 with constraint collection code just before the conditional statements under
-consideration. Thus, \tool\ will insert Code~\ref{snippet:exCode2} before line
-$4$ in Code~\ref{snippet:exCode1} to update and evaluate the set of constraints
-on string \code{st}.
+consideration. After all the required code instrumentation by \tool\ the code
+will looks like~\ref{snippet:exCode2}.
 
 \end{mylist}
 
@@ -438,8 +461,8 @@ evaluated. If the constraints are resolved statically, then \tool\ updates its
 constraint data store and instruments the corresponding bytecodes appropriately.
 However, in case the patch requires dynamic constraint collection, \tool\ embeds
 the code to dynamically collect constraints and generate the patch as well. Line
-$1$ and $3$ in Code~\ref{snippet:exCode2} update the constraint set and generate
-the repaired object, respectively.
+$4, 8, 10$ and $14$ in Code~\ref{snippet:exCode2} update the constraint set and
+generate the repaired object, respectively.
 
 \begin{algorithm}[t]
 \scriptsize
