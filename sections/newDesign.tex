@@ -592,18 +592,32 @@ exceptions. While this may seem to be a limitation, we believe that \tool's
 strength lies in the fact that it mines contextual data about runtime exceptions
 related to \code{String} objects that helps development of intelligent patches.
 Moreover, \tool's technique is generic and can be ported to any other class of
-\java\ APIs. \note{This technique can be applied to objects other
-than \code{String} but requires rigorous study to understand the
-characteristics (behavior and types of exceptions thrown) associated to the APIs
-related to that object.
-\tool calculates patch by analyzing constrains. Proper study is required to understand the
-constraints associated to the object to apply this technique to patch.}
+\java\ APIs.
 
 \tool generates precise patches considering the program context which avoids
 cascading exceptions to a great extent producing the intended behavior in case
 of failures. However, it still cannot give guarantees about elimination of cascading
 exceptions, particularly when there are heavy object dependencies in the program.
 
-The quality of \tool's patches also depends on the nature of the constraint
-solver, which is pluggable. A more sophisticated solver may improve the quality
-of program repair, and we leave comparison of different solvers for future work.
+\note{The constraint data store used by \tool\ is very simple as it captures
+limited number of \code{String} characteristics. This may create complication
+if the program contains very complex constraints. But  we tested \tool\ on
+several library APIs described in Section~\ref{sec:results} and multiple
+synthetic test cases composed by us and found no problem.}
+
+\subsection{Remedy}
+\label{sec:tool:remedy}
+
+\note{In the previous section we discuss about the major limitation of \tool\
+i.e. it is rather focused on only \code{String} objects. But one key point here
+is that the limitation exists because of the current implementation of \tool.
+This technique can be applied to objects other than \code{String} but requires
+rigorous study to understand the characteristics (behavior and types of
+exceptions thrown) associated to the APIs related to that object. \tool
+calculates patch by analyzing constrains. Proper study is required to understand
+the constraints associated to the object to apply \tool.}
+
+\note{The quality of \tool's patches also depends on the nature of the
+constraint solver, which is pluggable. A more sophisticated solver may improve
+the quality of program repair, and we leave comparison of different solvers for
+future work. }
