@@ -32,10 +32,10 @@ uses the \code{Trap} class to manage exception handling for both classes of
 exceptions discussed above. Each \code{Trap} object has start, end and handler
 unit.  We tagged every \code{Unit} in a \code{HashMap} if it belonged to an
 existing \code{Trap}, so as to exclude it from instrumentation during the
-repairing phase. \textcolor{red}{In the implementation we have added a switch to
+repairing phase. \note{In the implementation we have added a switch to
 \tool  where the users can turn of this analysis feature to look for already
-handled exception. In such cases we call the patching as \emph{forced
-patching}}.
+handled exception. In such cases we call the patching as forced
+patching}.
 
 \subsection{Constraint Analysis}
 \label{subsec:constraint analysis}

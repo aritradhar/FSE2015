@@ -97,7 +97,7 @@ that support string manipulation, including \code{StringBuffer} and
 \code{StringBuilder}. All \code{String} objects (whether generated or assigned)
 that lie along the tainted path from a sensitive source to a sensitive sink are
 marked as \textit{unsafe} to patch. Subsequently, \tool\ does not repair such
-\code{String} objects. \textcolor{red}{The definition of
+\code{String} objects. \note {The definition of
 criticality is solely over the developers. In some cases one would like to
 patch the \code{String} objects which are tainted. \tool\ is highly
 configurable and allow the developers to define their own set of sources and
@@ -264,7 +264,7 @@ such scenarios \tool\ (i) generates a patch that itself dynamically collects
 constraint information, (ii) augments it with the previously collected static
 constraint details, and (iii) evaluates these constraints on the fly to generate
 repaired \code{String} objects, which do not cause the program to throw runtime
-exceptions. \textcolor{red}{We leverage constraint propagation technique to make
+exceptions. \note{We leverage constraint propagation technique to make
 sure static constraint collection works properly if the conditional statements
 involve any variables which re defined or reassigned before and can be
 calculated statically. \tool\ only collects constraints which are directly
@@ -327,7 +327,7 @@ void foo(){
 \begin{mylist}
 
  \item \textbf{Static constraint collection}: \tool's static constraint
-collection phase identifies all constraints. \textcolor{red} {\emph{Constraint
+collection phase identifies all constraints. \note{\emph{Constraint
 store} is a data structure visualized in Figure~\ref{fig:constraint} which
 keeps track of all the constraints of all the
 \code{String} objects throughout the program.}
@@ -337,7 +337,7 @@ Specifically, \tool\ iterates over all program code and analyzes conditional
 statements involving string objects of the form \code{if (st.length() == $5$)}.
 \tool\ considers only those constraints that the object must satisfy to ensure
 that the control flows through the \textit{preferred} branch of the conditional.
-\textcolor{red} {One such example is given in
+\note{One such example is given in
 Code~\ref{snippet:constraintCollection} and
 Figure~\ref{fig:constraintExample}. Here line numbers $2$-$5$ contains four
 \code{if} statements. In which first three of the constraints are static as
@@ -443,7 +443,7 @@ information, augment them with previously known static constraints, and evaluate
 these constraints at runtime. Specifically, \tool\ instruments the bytecode
 with constraint collection code just before the conditional statements under
 consideration. After all the required code instrumentation by \tool\ the code
-will looks like~\ref{snippet:exCode2}. \textcolor{red}{One complex example of
+will looks like~\ref{snippet:exCode2}. \note{One complex example of
 dynamic constraint collection and evaluation is \code{x > 10} and
 \code{s.length() < x * x \&\& x * x > 10}. In such case, \tool\ with the help
 of \code{jimple} intermediate representation (IR) breaks down the second conjugate
@@ -611,7 +611,7 @@ exceptions. While this may seem to be a limitation, we believe that \tool's
 strength lies in the fact that it mines contextual data about runtime exceptions
 related to \code{String} objects that helps development of intelligent patches.
 Moreover, \tool's technique is generic and can be ported to any other class of
-\java\ APIs. \textcolor{red}{This technique can be applied to objects other
+\java\ APIs. \note{This technique can be applied to objects other
 than \code{String} but requires rigorous study to understand the
 characteristics (behavior and types of exceptions thrown) associated to the APIs
 related to that object.
