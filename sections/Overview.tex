@@ -140,6 +140,35 @@ priorVariables.add(temp);
 \end{lstlisting}
 \end{figure}
 
+\note{\tool\ performs hybrid constraint analysis to produce better patch.
+Constraint analysis ensures the \code{String} objects that are generated
+maintains intended program behavior. One such synthetic example is in
+Code~\ref{snippet:constraintCollection}. Line numbers $3, 4, 5 $ and $7$ in
+Code~\ref{snippet:constraintCollection} contains conditional associated with
+\code{st}. The first three constraints can be collected and evaluated
+statically and the last one dynamically as \code{userInput()} will return a
+\code{String} object only at runtime. All of these constraints are stored in a
+data structure called constraint store which is shown in
+Figure~\ref{fig:constraint}. \tool\ uses constraint store to evaluate
+which is descibed in Algorithm~\ref{algo:constraint}. More detailed process is
+discussed later in~\xref{sec:tool:stage2}.}
+
+\lstset{language=Java, caption=Static and dynamic constraint
+collection example, label = snippet:constraintCollection, firstnumber =1}
+\begin{figure}[t]
+\begin{lstlisting}
+void foo(){
+  String st = "test String";
+  if(st.length == 5) {/*do something*/}
+  if(st.startsWith("ab")) {/*do something*/}
+  if(st.startsWith("abcd")) {{/*do something*/}}
+  /*userInput() accepts String input from console*/
+  if(st.contains(userInput())){{/*do something*/}}
+  st = st.substring(7, 10); /*Potential failure*/
+}
+\end{lstlisting}
+\end{figure}
+
 
 \section{Problem Definition}
 \label{sec:definition}

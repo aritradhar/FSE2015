@@ -161,7 +161,8 @@ generates a high quality patch to repair the program. A constraint on a
 \code{String} object is defined as a set of permissible values that can uniquely
 define the string. \tool\ uses a simple constraint set that includes minimum and maximum
 length, along with set of permissible prefixes and substrings, as shown in
-Figure~\ref{fig:constraint}.
+Figure~\ref{fig:constraint}.\note{We named this data structure \emph{Constraint
+store}}.
 
 \begin{algorithm}[t]
 \scriptsize
@@ -299,23 +300,6 @@ and~\ref{algo:patchingStrategyDynamic} give an overview of this hybrid approach.
 \label{algo:constraintCollection}
 \end{algorithm}
 
-
-\lstset{language=Java, caption=Static and dynamic constraint
-collection example, label = snippet:constraintCollection, firstnumber =1}
-\begin{figure}[t]
-\begin{lstlisting}
-void foo(){
-  String st = "test String";
-  if(st.length == 5) {/*do something*/}
-  if(st.startsWith("ab")) {/*do something*/}
-  if(st.startsWith("abcd")) {{/*do something*/}}
-  /*userInput() accepts String input from console*/
-  if(st.contains(userInput())){{/*do something*/}}
-  st = st.substring(7, 10); /*Potential failure*/
-}
-\end{lstlisting}
-\end{figure}
-
 \begin{figure}[t]
 \centering
 %% change the font size in the img; make it min len, max len
@@ -327,10 +311,7 @@ void foo(){
 \begin{mylist}
 
  \item \textbf{Static constraint collection}: \tool's static constraint
-collection phase identifies all constraints. \note{\emph{Constraint
-store} is a data structure visualized in Figure~\ref{fig:constraint} which
-keeps track of all the constraints of all the
-\code{String} objects throughout the program.}
+collection phase identifies all constraints. 
 Algorithm~\ref{algo:constraintCollection} briefly describes the steps to
 populate the constraint store.
 Specifically, \tool\ iterates over all program code and analyzes conditional
