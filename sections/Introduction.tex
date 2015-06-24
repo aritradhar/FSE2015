@@ -1,37 +1,17 @@
 \section{Introduction}
 \label{sec:intro}
 
-\ignore{Modern software applications are large and complex. In addition, they
-run in
-diverse environments and get inputs from variety of data sources. As a result,
-predicting safe behavior for them at runtime can be difficult.
-Moreover, giving assurances about the quality of service becomes practically
-impossible when the applications are developed using third party
-libraries and components. Such applications often exhibit vulnerabilities that
-can be exploited by providing malicious inputs. In addition, diverse data
-sources
-and complex constraints on them make it challenging for programmers to ensure
-that all data elements are correctly validated and processed. Any deficiencies
-in this process makes applications prone to failures. Such defects can be hard
-to detect at the compilation-time, and irrespective of the validation techniques
-used, some of them may go undetected and exist in the applications even when the
-applications are in production.}
-
 
 Developers invest a significant amount of time and human involvement in testing
 and verification to make their software production ready. However, in spite of
 this effort and the tools used to ensure its safety and security, the software
-invariably carries subtle bugs, which are often evident only when the software
-throws an exception and/or crashes entirely. The cost of a severe exception or a
-crash varies considerably depending on the criticality of the software, and
+%invariably carries subtle bugs, which are often evident only when the software
+%throws an exception and/or crashes entirely. The cost of a severe exception or a
+%crash varies considerably depending on the criticality of the software, and
+invariably carries subtle bugs, which are evident only when the software
+throws an exception and crashes. The cost of a 
+crash varies depending on the criticality of the software, and
 whether it occurred during production or testing.
-
-\ignore{The cost of failures can vary considerably depending on the
-mission-critical
-nature of applications. In particular, it would be extremely undesirable for an
-unmanned aerial vehicle on its mission to allow the control system to crash in
-case of a failure. Instead a suboptimal functioning for a short while might be
-acceptable until the system fully stabilizes.}
 
 A software bug in production systems may result in huge monetary losses to the
 tune of hundreds of millions of dollars for organizations running third-party
@@ -39,28 +19,18 @@ software~\cite{hp, amazon, hershey, nike}. Further, these organizations must
 wait for the vendor to release a patch for the offending software, which may
 take days or even weeks. If a major software bug strikes during the internal 
 acceptance testing, it may significantly hamper the testing progress itself,
-thereby affecting the entire software release cycle, and negatively impact the
-testing efficiency. Additionally, the software testers may have to wait for the
+%thereby affecting the entire software release cycle, and negatively impact the
+%testing efficiency. Additionally, the software testers may have to wait for the
+thereby affecting the entire software release cycle.
+Additionally, the software testers may have to wait for the
 newer patched version before they resume the testing process. Lastly, any such
 crash during a software's beta testing phase might frustrate the public
-resulting in rejection of the product itself. In all the above scenarios, it
+resulting in rejection of the product itself. In all of the above scenarios, it
 would be extremely useful if a temporary program patch that not only saves the
-program from crashing and moreover, but also guarantees \textit{acceptable} (and
-close to the intended) behavior can be applied to the software on-the-fly.
-
-\ignore{The expectations about the quality of service would largely
-depend on how a failure may impact the business. For example, a commercial
-online store may not afford a crash while it is listing its products to a
-customer. Such unpleasant experiences might result in customers moving to other
-online stores making an adverse impact on the business. Similarly, a software
-company launching a new product would expect it to be stable while the product
-is undergoing beta-testing. Any crashes occurring at that time would result in
-negative feedback from the users and loss in the business. To make the matter
-worse, these
-failures may occur in software components that do not possess critical
-functionality, and hence, may even get less attention to their quality at the
-time of development. Nevertheless, irrespective of the criticality of these
-components, if the crash occurs it is equally undesirable.}
+%program from crashing and moreover, but also guarantees \textit{acceptable} (and
+%close to the intended) behavior can be applied to the software on-the-fly.
+program from crashing, but also guarantees \textit{acceptable} and
+close to the intended behavior can be applied to the software on-the-fly.
 
 
 \lstset{language=Java , caption=Apache Log4j bug example.,
@@ -88,8 +58,13 @@ in logging component. The object \code{priorVariables} is a \code{List} of
 String. On line 4, there is no check on the variables to ensure that invariants
 such as \code{offset + length <= chars.length}, \code{offset > 0}, and
 \code{length > 0} hold.
+%
+In case of such failures, rather than allowing the application to crash,
+organizations would prefer to collect diagnostic information to identify the
+defect, and proceed with a sub-optimal execution run hoping that it will
+eventually stabilize, or reveal a few more bugs
 
-In case of failures, rather than allowing the application to crash,
+\ignore{In case of failures, rather than allowing the application to crash,
 organizations would prefer to collect diagnostic information to identify the
 defect, and proceed with a sub-optimal execution run hoping that it will
 eventually stabilize, or reveal a few more bugs. In production environments,
@@ -97,32 +72,10 @@ program survival would get higher preference as long as the suboptimal behavior
 is within acceptable limits. The bug can then be fixed in the later version as
 soon as possible. This mechanism is particularly useful if shutting down the
 system is either not practical or is less desirable than continuing with a
-suboptimal behavior.
+suboptimal behavior.}
 
-\ignore{Several approaches have been proposed in the past to ensure that
-programs can
-recover from failures. Some of the approaches are based on static repairing
-where the patches are synthesized automatically based on the counter examples
-found in the field \cite{wei-issta-2010}.
-However, it is not always desirable to shut down the system for the post-mortem
-analysis and then relaunch it
-after fixing the defect. In order to overcome this weakness,
-dynamic approaches have been proposed to deal with problems that are
-related to memory, data, and incorrect programming constructs such as infinite
-loops \cite{Carbin:2011, KlingMCR12, conf/sosp/PerkinsKLABCPSSSWZER09}. Some of
-the approaches work either by identifying and isolating
-damaged data or memory portions \cite{conf/issre/DemskyR03, conf/icse/DemskyR05,
-conf/issta/DemskyEGMPR06}, or by delaying the execution until the program
-self-stabilizes \cite{Eom:2012}, or by finding the alternative execution paths
-\cite{PezzeRWZ11}, or by disabling suppressing signals and hoping that the
-program can recover automatically from the errors \cite{conf/pldi/LongSR14}.
-Static approaches strive
-for correctness whereas dynamic approaches are typically optimistic and work on
-the
-assumption that some suboptimal behavior under certain conditions is
-acceptable.}
 
-Several approaches have been proposed in the past to automatically fix the
+\ignore{Several approaches have been proposed in the past to automatically fix the
 incorrect program behavior by generating program patches. Some of these
 approaches are based on static repairing where the patches are synthesized
 automatically with the help of counter examples found in the field
@@ -137,14 +90,24 @@ However, pure dynamic approaches are optimistic and often produce patches that
 are suboptimal~\cite{conf/pldi/LongSR14}. These approaches assume
 that some suboptimal behavior is acceptable if it does not interfere with the
 system's core functionality, and provide correct, but, partial functionality if
-the corrupted data structures can be isolated from the rest of the system.
+the corrupted data structures can be isolated from the rest of the system.}
+
+Several approaches have been proposed in the past to automatically fix the
+incorrect program behavior by generating program patches
+\cite{wei-issta-2010, Carbin:2011, conf/sosp/PerkinsKLABCPSSSWZER09, conf/pldi/LongSR14}.
+These approaches either need a complete system shutdown in order to 
+apply a patch, or isolate the faulty part of a data structure on the fly thereby
+limiting the functionality, or keep suppressing the
+exceptions with a hope that a suboptimal behavior would be acceptable
+until the application stabilizes.
 
 In this work, we propose a novel hybrid approach that deals with failures
 originating due to malformed strings, or incorrect handling of strings in \java\
-softwares. We target string objects for patching, in particular, for the
-following reasons.
+%softwares. We target string objects for patching, in particular, for the
+applications. We target string objects for patching, in particular, for the
+following two reasons.
 
-First, \java\ applications are typically built using libraries, and
+\ignore{First, \java\ applications are typically built using libraries, and
 \code{String} APIs are commonly used in third party
 libraries~\cite{Kawachiya:2008:ARM:1449764.1449795, gc, techreport}. Frequent
 and
@@ -155,9 +118,17 @@ thrown during software failures, we mined
 out of $60$K posts containing \java\ exceptions, almost $33$K posts (\ie\
 $>50\%$) were related to \java\ string objects. This data indicates that strings
 are frequently used in softwares, and are a significant source of program
-exceptions.
+exceptions.}
 
-Second, we exploit extensive domain knowledge about strings, its well-defined
+First, \java\ applications are typically built using libraries, and
+\code{String} APIs are commonly used in third party
+libraries~\cite{Kawachiya:2008:ARM:1449764.1449795, gc, techreport}.  In
+order to understand the usage and potential involvement of \java\ string
+objects in the application failures, we mined
+\texttt{stackoverflow}~\cite{stackoverflow} for related posts. We observed that
+almost $33$K out of $60$K posts containing \java\ exceptions were related to
+\java\ string objects indicating their heavy usage.
+\ignore{Second, we exploit extensive domain knowledge about strings, its well-defined
 API, and also the program context to automatically synthesize effective patches,
 which identify the precise program location and the data that triggered the
 failure, thereby repairing the program close to the point of failure and
@@ -167,16 +138,28 @@ program from crashing, but also preserves the intended behavior. Our approach
 statically identifies program statements vulnerable to string-related failures,
 and develops patches by determining origin of errors and constraints on the
 strings. The approach further uses dynamic analysis to improve the precision
-of the patches generated by the static analysis. 
+of the patches generated by the static analysis.}
+Second, we exploit extensive domain knowledge about strings to
+automatically synthesize high-quality patches.
 
 This work makes following contributions:
 \begin{mylist}
 
 \item We present the design and implementation of \tool\ (\xref{sec:overview},
-\xref{sec:design} and \xref{sec:implementation}) that generates effective
-program patches to handle string-related errors. These patches get activated
-only in case of program failures during runtime, and save program from crashing
+\xref{sec:design} and \xref{sec:implementation}) that automatically generates effective
+program patches to handle string-related errors.
+% Added
+By performing a precise static analysis, \tool\ identifies program locations that are
+vulnerable to string-related failures, and also the contexts under which they trigger a failure.
+This enables repairing the program close to the point of failure and
+generating precise patches that take into account the constraints on the string objects
+preventing the failure propagation. \tool\ further uses dynamic analysis to improve the precision
+of the patches generated by the static analysis.
+%
+These patches get activated
+only in case of program failures during runtime, and save the program from crashing
 ensuring its acceptable behavior.
+
 \item We use a finite state machine (FSM) as a formalism (\xref{sec:design}) to
 describe the behavior of \java\ \code{String} API, and apply it to drive the
 generation of exception-specific patches.
