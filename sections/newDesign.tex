@@ -600,10 +600,11 @@ of failures. However, it still cannot give guarantees about elimination of casca
 exceptions, particularly when there are heavy object dependencies in the program.
 
 \note{The constraint data store used by \tool\ is very simple as it captures
-limited number of \code{String} characteristics. This may create complication
-if the program contains very complex constraints. But  we tested \tool\ on
-several library APIs described in Section~\ref{sec:results} and multiple
-synthetic test cases composed by us and found no problem.}
+limited number of \code{String} characteristics which is just sufficient to
+generate \code{String} objects. This may create complication if the program
+contains very complex constraints. But  we tested \tool\ on several library APIs
+described in Section~\ref{sec:results} and multiple synthetic test cases
+composed by us and found no problem.}
 
 \subsection{Remedy}
 \label{sec:tool:remedy}
