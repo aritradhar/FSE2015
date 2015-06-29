@@ -140,18 +140,23 @@ priorVariables.add(temp);
 \end{lstlisting}
 \end{figure}
 
-\note{\tool\ performs hybrid constraint analysis to produce better patch.
-Constraint analysis ensures the \code{String} objects that are generated
-maintains intended program behavior. One such synthetic example is in
+\note{\tool\ performs hybrid constraint analysis to produce high-quality patches.
+This analysis ensures that the generated \code{String} objects obeying constraints imposed on them
+by the program so as to exhibit a behavior that is close to the intended one. This ability of
+\tool\ is illustrated by an example in
 Code~\ref{snippet:constraintCollection}. Line numbers $3, 4, 5 $ and $7$ in
-Code~\ref{snippet:constraintCollection} contains conditional associated with
+Code~\ref{snippet:constraintCollection} contain conditions associated with
 \code{st}. The first three constraints can be collected and evaluated
 statically and the last one dynamically as \code{userInput()} will return a
 \code{String} object only at runtime. All of these constraints are stored in a
-data structure called constraint store which is shown in
-Figure~\ref{fig:constraint}. \tool\ uses constraint store to evaluate
-which is descibed in Algorithm~\ref{algo:constraint}. More detailed process is
-discussed later in~\xref{sec:tool:stage2}.}
+data structure called \textit{constraint store} for evaluation which is shown in
+Figure~\ref{fig:constraint}. %\tool\ uses constraint store to evaluate
+%which is described in Algorithm~\ref{algo:constraint}. More detailed process is
+%discussed later in~\xref{sec:tool:stage2}.
+The process of evaluation is described in Algorithm~\ref{algo:constraint} and
+discussed in~\xref{sec:tool:stage2}. }
+\note{Aritra: Can't we provide a real example here? It need not be an
+ example from our study. Any real example will do.}
 
 \lstset{language=Java, caption=Static and dynamic constraint
 collection example, label = snippet:constraintCollection, firstnumber =1}
@@ -205,19 +210,28 @@ the program.
 %  
 % In this work, we restrict our approach to data values that are strings.
 % 
-If $\mathcal{B}_{I_f}$ be the behavior for $\mathcal{P}$ under failure input
-$\mathcal{I}_f$, then our approach attempts to
+If $\mathcal{B}_{\theta}$ is the behavior for $\mathcal{P}$ under failure input
+$\theta$, then our approach attempts to
 % i) find a minimal $p$ that was associated with the failure,
 % ii) ensures that $b_{m_n} \not\in \mathcal{B}_{{I_f}_c}$,
 develop a program patch to convert $\mathcal{P}$ to $\mathcal{P}'$, while
 ensuring that:
 \begin{mybullet}
  \item $\mathcal{P}'$ does not violate the core behavior of $\mathcal{P}$ under
-failure, \ie\ $\mathcal{B}'_{{I_f}_c}$ is same as the intended behavior
-$\mathcal{B}_{{I_f}_c}$, and
- \item resulting behavior $\mathcal{B}'_{{I_f}_n}$ is close to the intended
-behavior $\mathcal{B}_{{I_f}_n}$.
+failure, \ie\ $\mathcal{B}'_{\theta_c}$ is same as the intended behavior
+$\mathcal{B}_{\theta_c}$, and
+ \item resulting behavior $\mathcal{B}'_{\theta_n}$ is close to the intended
+behavior $\mathcal{B}_{\theta_n}$. In other words, the difference between
+ $\mathcal{B}'_{\theta_n}$ and 
+$\mathcal{B}_{\theta_n}$ is within limits acceptable to the programmer.
 \end{mybullet}
+
+\note{the reviewers are not happy with the informal notion of "close to" or "acceptable".
+The changes I have made still do not address this issue convincingly. If we cannot
+come up with a good solution to this problem, we might say
+that formal definition of acceptance criteria and its enforcement is future work. Please
+comment on this. 
+}
 
 % \subsection{Goals}
 % \label{sec:tool:goals}
