@@ -300,6 +300,24 @@ and~\ref{algo:patchingStrategyDynamic} give an overview of this hybrid approach.
 \label{algo:constraintCollection}
 \end{algorithm}
 
+
+\lstset{language=Java, caption=Static and dynamic constraint
+collection example, label = snippet:constraintCollection, firstnumber =1}
+\begin{figure}[t]
+\begin{lstlisting}
+void foo(){
+  String st = "test String";
+  if(st.length == 5) {/*do something*/}
+  if(st.startsWith("ab")) {/*do something*/}
+  if(st.startsWith("abcd")) {/*do something*/}
+  /*userInput() accepts String input from console*/
+  if(st.contains(userInput())){/*do something*/}
+  st = st.substring(7, 10); /*Potential failure*/
+}
+\end{lstlisting}
+\end{figure}
+
+
 \begin{figure}[t]
 \centering
 %% change the font size in the img; make it min len, max len

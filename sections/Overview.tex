@@ -160,21 +160,7 @@ discussed in~\xref{sec:tool:stage2}. }
 \note{Aritra: Can't we provide a real example here? It need not be an
  example from our study. Any real example will do.}
 
-\lstset{language=Java, caption=Static and dynamic constraint
-collection example, label = snippet:constraintCollection, firstnumber =1}
-\begin{figure}[t]
-\begin{lstlisting}
-void foo(){
-  String st = "test String";
-  if(st.length == 5) {/*do something*/}
-  if(st.startsWith("ab")) {/*do something*/}
-  if(st.startsWith("abcd")) {/*do something*/}
-  /*userInput() accepts String input from console*/
-  if(st.contains(userInput())){/*do something*/}
-  st = st.substring(7, 10); /*Potential failure*/
-}
-\end{lstlisting}
-\end{figure}
+
 
 
 \section{Problem Definition}
