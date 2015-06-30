@@ -8,8 +8,8 @@ approximations, which typically leads to false positives. Complex
 programming logic and data coming from diverse sources make the already hard
 problem worse. As a result, successful execution of a real application can never
 be guaranteed, and unexpected failures may happen. These failures often result
-in runtime exceptions being thrown by the applications that are generally not
-handled and the program crashes.
+in applications throwing runtime exceptions, which if not handled correctly
+may crash the application.
 
 \ignore{ \begin{table}[t] \scriptsize \centering
 \begin{tabular}{|l|r|r|}
@@ -93,31 +93,33 @@ on lines $11$ and $13$ respectively. \java\ \code{String} API documentation
 specifies that \code{length} does not throw any runtime exceptions. The only
 exception that this invoke statement can throw is when the receiver object
 referenced by \code{filename} is \code{null}. However, the check on line $7$
-indicates that this situation would not arise. However, method \code{substring}
-may throw \code{IndexOutOfBoundsException} exception that can potentially crash
-the program. A good patch to handle this failure should take into account all of
+indicates that this situation would not arise. The method \code{substring} may
+throw \code{IndexOutOfBoundsException} exception that can potentially crash the
+program. A good patch to handle this failure should take into account all of
 these observations. 
 
 Code~\ref{snippet:exampleRepairing3} presents the patch automatically generated
-by \tool . This patch replaces the invoke statement on line 13 in
-Code~\ref{snippet:exampleRepairing2}. The invoke statement is wrapped inside
-the \code{try} block and a \code{catch} corresponding to
-\code{IndexOutOfBoundsException} is added on line 15, which ensures that control
-passes to the catch block only when the exception is thrown. Line 20 shows two
-method calls namely \code{getStart} and \code{getEnd} that are inserted by
-\tool. These methods, using the knowledge about the length of \code{filename}
-acquired with the help of the code on line 17, compute legally correct indexes
-required by \code{substring} method to satisfy the constraint related to
-\code{beginIndex} and \code{endIndex}. Method \code{substring} can now
-regenerate the substring ensuring that the method call will not fail. The actual
-patch provided by the developers is semantically similar to the one developed by
-\tool\ , and both versions of the program generate exactly the same output for
-the failed test case.
+by \tool. This patch replaces the invoke statement on line 13 in
+Code~\ref{snippet:exampleRepairing2}, which is now wrapped within a
+\code{try--catch} block. The \code{catch} corresponding to
+\code{IndexOutOfBoundsException}
+% is added on line 15
+ensures that control passes
+to the catch block only when the exception is thrown. Line 20 shows two method
+calls namely \code{getStart} and \code{getEnd} that are inserted by \tool. These
+methods, using the knowledge about the length of \code{filename} acquired with
+the help of the code on line 17, compute legally correct indexes required by
+\code{substring} method to satisfy the constraint related to \code{beginIndex}
+and \code{endIndex}. Method \code{substring} can now regenerate the substring
+ensuring that the method call will not fail. The actual patch provided by the
+developers is semantically similar to the one developed by \tool, and both
+versions of the program generate the exact the same output.
+% for the failed test case.
 
 Similarly, the patch developed by \tool\ for the bug depicted in
 Code~\ref{snippet:exampleRepairing1} is semantically similar to the actual one
 provided by the developers and is presented in
-Code~\ref{snippet:exampleRepairing4}. Here, the object referenced by the string
+Code~\ref{snippet:exampleRepairing4}. Here the object referenced by the string
 variable \code{temp} is regenerated after adjusting the offset and ensuring that
 the constraint represented by the program condition \code{offset <= length}
 would never be violated.
