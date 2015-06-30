@@ -246,9 +246,9 @@ comment on this.
 % \subsection{Goals}
 % \label{sec:tool:goals}
 
-In this work, we restrict our approach to data values that are strings. We
-identify the broad design goals for a technique to automatically repair
-malformed strings or incorrect handling of strings as follows:
+In this work, we restrict our approach to string data values. We identify the
+broad design goals for a technique to automatically repair malformed strings or
+incorrect handling of strings as follows:
 
 % i) identifies the statements which might be vulnerable to string-related
 % errors,
@@ -264,9 +264,8 @@ malformed strings or incorrect handling of strings as follows:
 \myparagraph{(i) High patch fidelity} We require that the patched program must
 preserve the intended program behavior, \ie\ the patch must be precise, and
 should not induce any undesirable control flows in the repaired program. 
-This goal naturally follows from the problem definition bullets. However, we
-set two more goals associated with the security and performance of the
-technique.
+This goal naturally follows from the problem definition. However, we set two
+more goals associated with the security and performance of the technique.
 
 \myparagraph{(ii) Non-invasive instrumentation} We require that the technique
 must ensure no side-effects (aside from optimally repairing objects) during
@@ -277,7 +276,7 @@ guaranteed to crash.
 incur no runtime overhead during normal program execution, and only negligible
 overhead in case of failures.
 
-We next present in detail the techniques and the algorithms used in our analysis
-that can produce patches to regenerate string variables under more complex
-scenarios. Our study presented in \xref{sec:results} suggests that majority of
-the string generation scenarios in practice are less complex.
+% We next present in detail techniques and algorithms to produce patches under
+% more complex scenarios.
+% Our study presented in \xref{sec:results} suggests that majority of
+% the string generation scenarios in practice are less complex.
