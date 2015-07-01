@@ -434,7 +434,7 @@ firstnumber =1}
 \begin{lstlisting}
 String st = "test String";
 ConstraintStore.updateLength("<foo()>", st, 5);
-/*This code will fire only if there is an exception over st*/
+/*Executes if there is an exception over st*/
 st = GenerateStringStatic.init("<foo()>", st);
 if(st.length == 5) {}
 if(st.startsWith("ab")) {/*do something*/}
