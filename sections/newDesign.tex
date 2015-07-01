@@ -147,6 +147,25 @@ thus the patched program does not throw any runtime exceptions.
 collection and evaluation, and (ii) code generation. We now describe \tool's
 patch generation mechanism in detail. 
 
+
+\begin{table}[t]
+\centering
+\caption{Constraints involving \code{Strings}.}
+\scriptsize
+\setlength{\tabcolsep}{1pt}
+\begin{tabular}{|c|c|c|c|c|c|c|c|}
+\hline
+Min length(L) & Max length(L) &
+Prefix $1$ & $\ldots$ & Prefix$L$ &
+Contain $1$ & $\ldots$ & Contain $L$
+\\
+\hline
+\end{tabular}
+\label{table:constraint}
+\end{table}
+
+%now the image is in table form
+\ignore{
 \begin{figure}[t]
 \centering
 %% change the font size in the img; make it min len, max len
@@ -154,15 +173,15 @@ patch generation mechanism in detail.
 \caption{Constraints involving Strings.}
 \label{fig:constraint}
 \end{figure}
-
+}
 \myparagraph{Constraint collection and evaluation} \tool\ leverages a hybrid
 approach to collect all possible constraints that must be satisfied, and thus
 generates a high quality patch to repair the program. A constraint on a
 \code{String} object is defined as a set of permissible values that can uniquely
 define the string. \tool\ uses a simple constraint set that includes minimum and maximum
 length, along with set of permissible prefixes and substrings, as shown in
-Figure~\ref{fig:constraint}.\note{We named this data structure \emph{Constraint
-store}}.
+Table~\ref{table:constraint}.\note{We named this data structure
+\emph{Constraint store}}.
 
 \begin{algorithm}[t]
 \scriptsize
