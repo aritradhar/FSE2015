@@ -33,7 +33,7 @@ may crash the application.
 }
 
 
-\lstset{language=Java, caption=Snippet from \code{fileUtils} class of Apache
+\lstset{language=Java, caption=Snippet from \code{fileUtils} class in Apache
 Commons library. , label = snippet:exampleRepairing2}
 \begin{figure}[t]
 \centering
@@ -57,7 +57,7 @@ private static String doGetPath
 \end{figure}
 
 Code~\ref{snippet:exampleRepairing2} corresponds to methods from
-\code{fileUtils} class of Apache Common IO library. The method
+\code{fileUtils} class in Apache Common IO library. The method
 \code{getPathNoEndSeparator()} throws a \code{StringIndexOutOfBounds} exception,
 which originates from statement \code{return filename.substring(prefix, index +
 separatorAdd)} on line 13 when the method is called with parameter
@@ -68,9 +68,8 @@ method, which ensures that \code{beginIndex} cannot be greater than
 \code{endIndex}. As a result, the exception is thrown.
 
 
-\lstset{language=Java, caption=Patch for \code{fileUtils} class
-from Apache Commons library bug., label = snippet:exampleRepairing3, firstnumber
-=13}
+\lstset{language=Java, caption=Patch for \code{fileUtils} bug in Apache Commons
+library., label = snippet:exampleRepairing3, firstnumber = 13}
 \begin{figure}[t]
 \centering
 \begin{lstlisting}
@@ -116,7 +115,7 @@ developers is semantically similar to the one developed by \tool, and both
 versions of the program generate the exact the same output.
 % for the failed test case.
 
-Similarly, the patch developed by \tool\ for the bug depicted in
+\ignore{Similarly, the patch developed by \tool\ for the bug depicted in
 Code~\ref{snippet:exampleRepairing1} is semantically similar to the actual one
 provided by the developers and is presented in
 Code~\ref{snippet:exampleRepairing4}. Here the object referenced by the string
@@ -141,8 +140,10 @@ try {
 priorVariables.add(temp);
 \end{lstlisting}
 \end{figure}
+}
 
-\note{\tool\ performs hybrid constraint analysis to produce high-quality patches.
+\ignore{\note{\tool\ performs hybrid constraint analysis to produce high-quality
+patches.
 This analysis ensures that the generated \code{String} objects obeying constraints imposed on them
 by the program so as to exhibit a behavior that is close to the intended one. This ability of
 \tool\ is illustrated by an example in
@@ -159,6 +160,7 @@ The process of evaluation is described in Algorithm~\ref{algo:constraint} and
 discussed in~\xref{sec:tool:stage2}. }
 \note{Aritra: Can't we provide a real example here? It need not be an
  example from our study. Any real example will do.}
+}
 
 \section{Problem Definition}
 \label{sec:definition}

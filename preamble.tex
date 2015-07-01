@@ -207,8 +207,11 @@ pdfproducer = {pdflatex}}
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% \hyphenpenalty 10000
-% \exhyphenpenalty 10000
+\clubpenalty = 10000
+\widowpenalty = 10000
+\displaywidowpenalty = 10000
+\hyphenpenalty 10000
+\exhyphenpenalty 10000
 \sloppy
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
@@ -234,9 +237,9 @@ pdfproducer = {pdflatex}}
 \SetEndCharOfAlgoLine{}
 
 %% for IEEEtran
-\def\tablename{Table}
-
-\renewcommand{\thetable}{\arabic{table}}
+% \def\tablename{Table}
+% 
+% \renewcommand{\thetable}{\arabic{table}}
 
 \newcommand*{\refname}{Bibliography}
 
