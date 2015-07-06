@@ -97,13 +97,16 @@ that support string manipulation, including \code{StringBuffer} and
 \code{StringBuilder}. All \code{String} objects (whether generated or assigned)
 that lie along the tainted path from a sensitive source to a sensitive sink are
 marked as \textit{unsafe} to patch. Subsequently, \tool\ does not repair such
-\code{String} objects. \note {The definition of
+\code{String} objects.
+\ignore{The definition of
 criticality is solely over the developers. In some cases one would like to
-patch the \code{String} objects which are tainted. \tool\ is highly
-configurable and allow the developers to define their own set of sources and
-sinks and even put some tainted path to exclude list. In the default behavior
+patch the \code{String} objects which are tainted.} \note{Rephrased and compressed.} \tool\, being a highly
+configurable tool, allows developers to define their own sets of sources and
+sinks, and to exclude specific tainted paths. \ignore{In the default behavior
 of \tool\ we took a safe assumption that patched objects which are leaving the
-system may cause some unintended behavior in some other modules}.
+system may cause some unintended behavior in some other modules.}
+By default, \tool\ makes a safe assumption that any object leaving the
+system has a potential to trigger an unintended behavior.
 Tables~\ref{table:TaintSources} and \ref{table:TaintSinks} list some common
 sensitive sources and sinks for several classes in \java.
 
@@ -176,10 +179,10 @@ $1$ & $\ldots$ & Contain $L$\\
 approach to collect all possible constraints that must be satisfied, and thus
 generates a high quality patch to repair the program. A constraint on a
 \code{String} object is defined as a set of permissible values that can uniquely
-define the string. \tool\ uses a simple constraint set that includes minimum and maximum
-length, along with set of permissible prefixes and substrings, as shown in
-Table~\ref{table:constraint}.\note{We named this data structure
-\emph{Constraint store}}.
+define the string. \tool\ uses a \textit{constraint store} to maintain a set that 
+includes constraints on minimum and maximum
+lengths, along with a set of permissible prefixes and substrings, as shown in
+Table~\ref{table:constraint}.\note{Reworded this.}
 
 \begin{algorithm}[t]
 \scriptsize
@@ -276,18 +279,19 @@ Algorithm~\ref{algo:stringPatchParametr}$(S)$
 \end{algorithm}
 The hybrid approach has a static component that makes a forward pass over the
 program to collect constraints on \code{String} objects, such as their
-length or prefix, etc. \tool\ invokes the dynamic component if there are constraints
+length or prefix. \tool\ invokes the dynamic component if there are constraints
 such that the constraint set cannot be evaluated. In
-such scenarios \tool\ (i) generates a patch that itself dynamically collects
+such scenarios it (i) generates a patch that itself dynamically collects
 constraint information, (ii) augments it with the previously collected static
 constraint details, and (iii) evaluates these constraints on the fly to generate
 repaired \code{String} objects, which do not cause the program to throw runtime
-exceptions. \note{We leverage constraint propagation technique to make
-sure static constraint collection works properly if the conditional statements
-involve any variables which re defined or reassigned before and can be
+exceptions. \tool\ propagates constraints to ensure that the static constraint 
+collection works correctly if the conditional statements
+involve any variables which are redefined during the collection and can be
 calculated statically. \tool\ only collects constraints which are directly
-associated to \code{String} objects.}.Algorithms~\ref{algo:patchingStrategy}
+associated to \code{String} objects. Algorithms~\ref{algo:patchingStrategy}
 and~\ref{algo:patchingStrategyDynamic} give an overview of this hybrid approach.
+\note{Reworded.}
 
 \begin{algorithm}[t]
 \scriptsize
@@ -349,23 +353,30 @@ void foo(){
 collection phase identifies all constraints. 
 Algorithm~\ref{algo:constraintCollection} briefly describes the steps to
 populate the constraint store.
-Specifically, \tool\ iterates over all program code and analyzes conditional
-statements involving string objects of the form \code{if (st.length() == $5$)}.
-\tool\ considers only those constraints that the object must satisfy to ensure
-that the control flows through the \textit{preferred} branch of the conditional.
-\note{One such example is given in
-Code~\ref{snippet:constraintCollection} and
-Figure~\ref{fig:constraintExample}. Here line numbers $2$-$5$ contains four
-\code{if} statements. In which first three of the constraints are static as
-all of them can be evaluated in compile time. By analyzing these conditional
-statements one by one, \tool\ populates the constraint store data structure as
-of Figure~\ref{fig:constraintExample}}.
-We define the preferred branch as the one that does not throw exceptions or error conditions, like \code{System.err.print()}. In other words, \tool\ only
+Specifically, \tool\ \ignore{iterates over all program code} identifies and analyzes conditional
+statements involving string objects \ignore{of the form} such as \code{if (st.length() == $5$)}.
+It considers only those constraints that the object must satisfy to ensure
+that the control flows through one of the \textit{normal} branches of the conditional.
+A normal branch is a one that does represent erroneous control flow. For example,  a branch
+that encounters a statement \code{System.err.print()} would represent an erroneous control flow.
+\ignore{In other words, \tool\ only
 considers the conditional expressions in the branches that do not involve any
-exceptions or error paths. Note that \tool\ also evaluates $OP$ (in
+exceptions or error paths.}
+Code~\ref{snippet:constraintCollection} shows a string variable with several constraints
+as defined by the \code{if} statements on lines $2$-$5$.
+The first three constraints are static as
+all of them can be evaluated at the compilation time. By analyzing these conditional
+statements one by one, \tool\ populates the constraint store data structure as
+depicted in Figure~\ref{fig:constraintExample}.
+\ignore{We define the preferred branch as the one that does not throw exceptions
+or error conditions, like \code{System.err.print()}. In other words, \tool\ only
+considers the conditional expressions in the branches that do not involve any
+exceptions or error paths.} \ignore{Note that \tool\ also evaluates $OP$ (in
 Algorithm~\ref{algo:constraintCollection}) when collecting constraints, in case
 $OP$ is a composite mathematical expression $f(x,y,z,...)$, such as $x + y * z$,
-where all $x$, $y$ and $z$ are known to be numeric.
+where all $x$, $y$ and $z$ are known to be numeric.}
+As described in Algorithm~\ref{algo:constraintCollection}, while collecting constraints \tool\ also evaluates composite mathematical expressions, such as $x + y * z$, 
+where all $x$, $y$ and $z$ are known to be numeric. \note{Please check.}
 
 \begin{algorithm}[t]
 \scriptsize
@@ -453,13 +464,16 @@ if(st.contains(temp){{/*do something*/}}
 Consider the example shown in Code~\ref{snippet:constraintCollection}, where the function
 \code{foo} performs a series of checks on a user-entered string \code{st} before computing
 a substring on it. Since the constraints on \code{st} cannot be
-completely collected and evaluated statically. For such cases, \tool\
+completely collected and evaluated statically, \tool\
 instruments the code with statements to dynamically collect constraint
-information, augment them with previously known static constraints, and evaluate
+information, augments them with previously known static constraints, and evaluates
 these constraints at runtime. Specifically, \tool\ instruments the bytecode
 with constraint collection code just before the conditional statements under
-consideration. After all the required code instrumentation by \tool\ the code
-will looks like~\ref{snippet:exCode2}. \note{One complex example of
+consideration. Code~\ref{snippet:exCode2} depicts the example in Code~\ref{snippet:constraintCollection}
+after it is instrumented by \tool. When the constraints in the source are complex, \tool\ relies on its base framework
+to simplify them and then evaluates only the ones that are related to strings.
+\note{I removed the complicated example. Please check.}
+\ignore{One complex example of
 dynamic constraint collection and evaluation is \code{x > 10} and
 \code{s.length() < x * x \&\& x * x > 10}. In such case, \tool\ with the help
 of \code{jimple} intermediate representation (IR) breaks down the second conjugate
