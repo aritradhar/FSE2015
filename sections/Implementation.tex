@@ -236,10 +236,17 @@ $11$ & $3$ & $14$ &  &  & $0.72$ & &$13$ & $2$ & \\
 \tool\ makes a forward pass over all bytecodes to determine if the string object
 under consideration is modified after it has been patched. If the object is not
 modified, then no further patching of statements capable of throwing exceptions,
-like \code{NullPointerException} \note{just this or others also? -- md}, is
-required. This is because the constraint
-% would have been satisfied in the beginning and is
-remains valid as long as the object has not changed. Similarly, when the API
-usage is same and none of the method parameters have changed, then no further
-patching would be required. \note {not clear -- md} This further reduces the
-total number of possible instrumentation points.
+like \code{NullPointerException} \note{just this or others also? -- if the
+string gets modified then it can throw any exception. One example is say the
+string is modified to an empty one, then a subString operation can throw index
+out of Bound-ad}.
+This is because the constraint remains valid as long as the object has not
+changed. Similarly, when the API usage is same and none of the method parameters
+have changed, then no further patching would be required. Assume
+two statements \code{$S_1$:String x = st.subString(i,j)} and \code{$S_2$:String
+p = st.subString(i,j)} in different program points and $st$ gets repaired by
+\tool before $S_1$. As long as \code{st} remains unchanged between $S_1$ and
+$S_2$ and the method invoked in those program points are identical along with
+there parameters, \tool\ will skip $S_2$. \note {not clear -- md, please check
+if it is clear now-ad} This further reduces the total number of possible
+instrumentation points.
