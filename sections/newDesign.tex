@@ -110,8 +110,8 @@ patch the \code{String} objects which are tainted.}
 sensitive sources and sinks, and exclude specific tainted paths. \ignore{In the
 default behavior of \tool\ we took a safe assumption that patched objects which
 are leaving the system may cause some unintended behavior in some other
-modules.} \note{Rephrased and compressed. Made minor edits --- md}
-Tables~\ref{table:TaintSources} and \ref{table:TaintSinks} list some common
+modules.} \note{Rephrased and compressed.}
+Tables~\ref{table:TaintSources} and \ref{table:TaintSinks} list common
 sensitive sources and sinks for several classes in \java.
 
 \myparagraph{(ii) Call graph analysis} \tool\ leverages call graph analysis to
@@ -147,8 +147,8 @@ instrumentation points have been identified, \tool\ determines the
 possible patches that can be applied to each of them. Specifically, a program
 patch constitutes a set of constraints on either the \code{String} object or the
 parameters to the \code{String} API under consideration, such that the new
-repaired \code{String} object that is generated will satisfy all constraints and
-thus the patched program does not throw any runtime exceptions.
+repaired \code{String} object that is generated satisfies all constraints. Thus
+the patched program does not throw any runtime exceptions.
 
 \tool's patch generation mechanism involves two main parts (i) constraint
 collection and evaluation, and (ii) code generation. We now describe \tool's
@@ -182,7 +182,7 @@ $1$ & $\ldots$ & Contain $L$\\
 \myparagraph{Constraint collection and evaluation} \tool\ leverages a hybrid
 approach to collect all possible constraints that must be satisfied, and thus
 generates a high quality patch to repair the program. A constraint on a
-\code{String} object is defined as a set of permissible values that can uniquely
+\code{String} object is defined as a set of permissible values that uniquely
 define the string. \tool\ uses a \textit{constraint store} to maintain a set that 
 includes constraints on minimum and maximum
 lengths, along with a set of permissible prefixes and substrings, as shown in
@@ -281,21 +281,21 @@ Algorithm~\ref{algo:stringPatchParametr}$(S)$
 \caption{Dynamic patching strategy for \code{String} objects.}
 \label{algo:patchingStrategyDynamic}
 \end{algorithm}
+
 The hybrid approach has a static component that makes a forward pass over the
-program to collect constraints on \code{String} objects, such as their
-length or prefix. \tool\ invokes the dynamic component if there are constraints
-such that the constraint set cannot be evaluated. In
-such scenarios it (i) generates a patch that itself dynamically collects
-constraint information, (ii) augments it with the previously collected static
-constraint details, and (iii) evaluates these constraints on the fly to generate
-repaired \code{String} objects, which do not cause the program to throw runtime
-exceptions. \tool\ propagates constraints to ensure that the static constraint 
-collection works correctly if the conditional statements
-involve any variables which are redefined during the collection and can be
-calculated statically. \tool\ only collects constraints which are directly
-associated to \code{String} objects. Algorithms~\ref{algo:patchingStrategy}
-and~\ref{algo:patchingStrategyDynamic} give an overview of this hybrid approach.
-\note{Reworded.}
+program to collect constraints on \code{String} objects, such as their length or
+prefix. \tool\ invokes the dynamic component if there are constraints such that
+the constraint set cannot be evaluated. In such scenarios, \tool\ (i) generates
+a patch that itself dynamically collects constraint information, (ii) augments
+it with the previously collected static constraint details, and (iii) evaluates
+these constraints on the fly to generate repaired \code{String} objects, which
+do not cause the program to throw runtime exceptions. \tool\ propagates
+constraints to ensure that the static constraint collection works correctly if
+the conditional statements involve any variables that are redefined during the
+collection and can be calculated statically. \tool\ only collects constraints
+that are directly associated to \code{String} objects.
+Algorithms~\ref{algo:patchingStrategy} and~\ref{algo:patchingStrategyDynamic}
+give an overview of this hybrid approach. \note{Reworded.}
 
 \begin{algorithm}[t]
 \scriptsize
@@ -354,33 +354,33 @@ void foo(){
 \begin{mylist}
 
  \item \textbf{Static constraint collection}: \tool's static constraint
-collection phase identifies all constraints. 
+collection phase identifies all constraints.
 Algorithm~\ref{algo:constraintCollection} briefly describes the steps to
-populate the constraint store.
-Specifically, \tool\ \ignore{iterates over all program code} identifies and analyzes conditional
-statements involving string objects \ignore{of the form} such as \code{if (st.length() == $5$)}.
-It considers only those constraints that the object must satisfy to ensure
-that the control flows through one of the \textit{normal} branches of the conditional.
-A normal branch is a one that does represent erroneous control flow. For example,  a branch
-that encounters a statement \code{System.err.print()} would represent an erroneous control flow.
-\ignore{In other words, \tool\ only
-considers the conditional expressions in the branches that do not involve any
-exceptions or error paths.}
-Code~\ref{snippet:constraintCollection} shows a string variable with several constraints
-as defined by the \code{if} statements on lines $2$-$5$.
-The first three constraints are static as
-all of them can be evaluated at the compilation time. By analyzing these conditional
-statements one by one, \tool\ populates the constraint store data structure as
-depicted in Figure~\ref{fig:constraintExample}.
-\ignore{We define the preferred branch as the one that does not throw exceptions
-or error conditions, like \code{System.err.print()}. In other words, \tool\ only
-considers the conditional expressions in the branches that do not involve any
-exceptions or error paths.} \ignore{Note that \tool\ also evaluates $OP$ (in
+populate the constraint store. Specifically, \tool\ \ignore{iterates over all
+program code} identifies and analyzes conditional statements involving string
+objects \ignore{of the form} such as \code{if (st.length() == $5$)}. It
+considers only those constraints that the object must satisfy to ensure control
+flows through one of the \textit{normal} branches of the conditional. A normal
+branch is a one that does represent erroneous control flow. For example,  a
+branch that encounters a statement \code{System.err.print()} would represent an
+erroneous control flow. \ignore{In other words, \tool\ only considers the
+conditional expressions in the branches that do not involve any exceptions or
+error paths.} Code~\ref{snippet:constraintCollection} shows a string variable
+with several constraints as defined by the \code{if} statements on lines
+$2$-$5$. The first three constraints are static as all of them can be evaluated
+at the compilation time. By analyzing these conditional statements one by one,
+\tool\ populates the constraint store data structure as depicted in
+Figure~\ref{fig:constraintExample}. \ignore{We define the preferred branch as
+the one that does not throw exceptions or error conditions, like
+\code{System.err.print()}. In other words, \tool\ only considers the conditional
+expressions in the branches that do not involve any exceptions or error paths.}
+\ignore{Note that \tool\ also evaluates $OP$ (in
 Algorithm~\ref{algo:constraintCollection}) when collecting constraints, in case
 $OP$ is a composite mathematical expression $f(x,y,z,...)$, such as $x + y * z$,
-where all $x$, $y$ and $z$ are known to be numeric.}
-As described in Algorithm~\ref{algo:constraintCollection}, while collecting constraints \tool\ also evaluates composite mathematical expressions, such as $x + y * z$, 
-where all $x$, $y$ and $z$ are known to be numeric. \note{Please check.}
+where all $x$, $y$ and $z$ are known to be numeric.} As described in
+Algorithm~\ref{algo:constraintCollection}, while collecting constraints \tool\
+also evaluates composite mathematical expressions, such as $x + y * z$, where
+all $x$, $y$ and $z$ are known to be numeric. \note{Please check.}
 
 \begin{algorithm}[t]
 \scriptsize
