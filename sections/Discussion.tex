@@ -1,9 +1,6 @@
 \section{Discussion}
-%\section{Limitations and Remedies}
 \label{sec:discussion}
 
-%\subsection{Weaknesses and Remedies}
-%\label{sec:discussion:limitation}
 In this section we discuss the weaknesses of \tool\ and also propose
 remedies to overcome them.
 
@@ -34,49 +31,4 @@ which is pluggable. \tool's current solver is simple and can efficiently
 handle a limited number of simple constraints. A more sophisticated off-the-shelf solver may improve
 the repair quality. However, the current evaluation of the tool
 on several library APIs described in Section~\ref{sec:results} indicates that the constraints that exist
-in practice are normally less complex and are limited in number. \note{Please check this section.}
-
-
-\ignore{
-\paragraph{Focus on String APIs} \tool's major limitation arises from the fact that it
-is heavily directed towards repairing handling \code{String} objects and API
-exceptions. While this may seem to be a limitation, we believe that \tool's
-strength lies in the fact that it mines contextual data about runtime exceptions
-related to \code{String} objects that helps development of intelligent patches.
-Moreover, \tool's technique is generic and can be ported to any other class of
-\java\ APIs.
-
-\tool generates precise patches considering the program context which avoids
-cascading exceptions to a great extent producing the intended behavior in case
-of failures. However, it still cannot give guarantees about elimination of cascading
-exceptions, particularly when there are heavy object dependencies in the program.
-
-
-
-
-\subsection{Remedy}
-\label{sec:discussion:remedy}
-
-\note{In the previous section we discuss about the major limitation of \tool\
-i.e. it is rather focused on only \code{String} objects. But one key point here
-is that the limitation exists because of the current implementation of \tool.
-This technique can be applied to objects other than \code{String} but requires
-rigorous study to understand the characteristics (behavior and types of
-exceptions thrown) associated to the APIs related to that object. \tool
-calculates patch by analyzing constrains. Proper study is required to understand
-the constraints associated to the object to apply \tool.}
-
-\note{The quality of \tool's patches also depends on the nature of the
-constraint solver, which is pluggable. A more sophisticated solver may improve
-the quality of program repair, and we leave comparison of different solvers for
-future work. }
-
-\subsection{Future Works}
-\label{sec:discussion:futureWorks}
-
-Our study shows that \tool\ can handle programs that are real, and can produce
-patches efficiently. Motivated by the results of our study as well as by the
-research conducted by other researchers, we intend to extend \tool\ in the
-future by adding support for other \java\ APIs and also by adding more
-intelligence to the process of patch generation.
-}
+in practice are normally less complex and are limited in number.
