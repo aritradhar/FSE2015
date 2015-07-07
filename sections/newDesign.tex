@@ -49,8 +49,6 @@ system, console, network, GUI, etc.
 \centering
 \caption{Common sensitive sources in \java.}
 \scriptsize
-% \setlength{\tabcolsep}{3pt}
-% \hrule
 \begin{tabular}{|l|l|}
 \hline
 \multicolumn{1}{|c|}{\textbf{Class}} & \multicolumn{1}{c|}{\textbf{Source}}\\
@@ -59,7 +57,6 @@ system, console, network, GUI, etc.
 \code{java.io.BufferedReader} & \code{readLine()}\\
 \code{java.net.URL} & \code{openConnection()}\\
 \code{java.util.Scanner} & \code{next()}\\
-% \code{javax.servlet.http.HttpServletRequest} & \code{getParameter()}\\
 \code{javax.servlet.ServletRequest} & \code{getParameter()}\\
 \code{org.apache.http.HttpResponse} & \code{getEntity()}\\
 \code{org.apache.http.util.EntityUtils} & \code{toString()}\\
@@ -74,7 +71,6 @@ system, console, network, GUI, etc.
 \centering
 \caption{Common sensitive sinks in \java.}
 \scriptsize
-% \setlength{\tabcolsep}{3pt}
 \begin{tabular}{|l|l|}
 \hline
 \multicolumn{1}{|c|}{\textbf{Class}} & \multicolumn{1}{c|}{\textbf{Sink}}\\
@@ -95,22 +91,15 @@ lie along paths from sensitive sources to sensitive sinks. Since, \tool\ targets
 \code{String} objects in particular, it must support taint propagation for all
 \java\ APIs that support string manipulation, including \code{StringBuffer} and
 \code{StringBuilder}.
-% 
 \tool\ makes a default, conservative assumption that all objects
 leaving the system have potential to trigger unintended behavior. Thus, all
 \code{String} objects (whether generated or assigned)
 that lie along the tainted path from a sensitive source to a sensitive sink are
 marked as \textit{unsafe} to patch. Subsequently, \tool\ does not repair such
 \code{String} objects.
-\ignore{The definition of
-criticality is solely over the developers. In some cases one would like to
-patch the \code{String} objects which are tainted.} 
 
 \tool's configuration further enables developers to specify their own sets of
-sensitive sources and sinks, and exclude specific tainted paths. \ignore{In the
-default behavior of \tool\ we took a safe assumption that patched objects which
-are leaving the system may cause some unintended behavior in some other
-modules.} \note{Rephrased and compressed.}
+sensitive sources and sinks, and exclude specific tainted paths.
 Tables~\ref{table:TaintSources} and \ref{table:TaintSinks} list common
 sensitive sources and sinks for several classes in \java.
 
@@ -236,7 +225,6 @@ Algorithm~\ref{algo:constraint}$(CS_{str})$
 \label{algo:patchingStrategy}
 \end{algorithm}
 
-%dynamic
 \begin{algorithm}[t]
 \scriptsize
 \DontPrintSemicolon
@@ -345,7 +333,6 @@ void foo(){
 
 \begin{figure}[t]
 \centering
-%% change the font size in the img; make it min len, max len
 \includegraphics[width=2.5in]{images/ConstraintExample.eps}
 \caption{Constraint store for Code~\ref{snippet:constraintCollection}}
 \label{fig:constraintExample}
@@ -371,17 +358,13 @@ Code~\ref{snippet:constraintCollection} shows a string variable with several
 constraints as defined by the \code{if} statements on lines $2$-$5$. The first
 three constraints are static as all of them can be evaluated at the compilation
 time. By analyzing these statements, \tool\ populates the constraint store
-depicted in Figure~\ref{fig:constraintExample}. \ignore{We define the preferred
-branch as the one that does not throw exceptions or error conditions, like
-\code{System.err.print()}. In other words, \tool\ only considers the conditional
-expressions in the branches that do not involve any exceptions or error paths.}
-\ignore{Note that \tool\ also evaluates $OP$ (in
+depicted in Figure~\ref{fig:constraintExample}. \ignore{Note that \tool\ also evaluates $OP$ (in
 Algorithm~\ref{algo:constraintCollection}) when collecting constraints, in case
 $OP$ is a composite mathematical expression $f(x,y,z,...)$, such as $x + y * z$,
-where all $x$, $y$ and $z$ are known to be numeric.} When collecting
+where all $x$, $y$ and $z$ are known to be numeric.}\ignore{ When collecting
 constraints, \tool\ also evaluates composite mathematical expressions, such as
 $x + y * z$, where all $x$, $y$ and $z$ are numeric (see
-Algorithm~\ref{algo:constraintCollection}).
+Algorithm~\ref{algo:constraintCollection}).}
 
 \begin{algorithm}[t]
 \scriptsize
@@ -479,14 +462,6 @@ Code~\ref{snippet:constraintCollection} after \tool's instrumentation. When the
 constraints in the source are complex, \tool\ relies on its base framework to
 simplify them and then evaluates only the ones that are related to strings.
 
-\ignore{One complex example of dynamic constraint collection and evaluation is
-\code{x > 10} and \code{s.length() < x * x \&\& x * x > 10}. In such case,
-\tool\ with the help of \code{jimple} intermediate representation (IR) breaks
-down the second conjugate constraint to two simple ones. As \code{x > 10} and
-\code{x * x > 10} do not involve any \code{String} object, \tool\ will ignore
-them and evaluate \code{s.length() < x * x } dynamically when the value of x is
-available just before the conditional statement.}
-
 \end{mylist}
 
 \subsection{Code generation}
@@ -576,7 +551,7 @@ try{
 do not get activated during normal program execution, thereby minimizing any
 side-effects of repairing and preventing any inadvertent changes to the
 program's intended control flow.
-% 
+
 An important task in the instrumentation stage is to determine the kind of
 exceptions that may be thrown, and appropriately construct the \code{catch}
 blocks. While most APIs throw only a single subclass of \code{RuntimeException},
@@ -587,7 +562,7 @@ exception-specific repairing as well. In other words, a single patch
 may get distributed over multiple \code{catch} blocks, which is achieved with
 the help of a constraint representation model.
 
-%-------------------
+
 
 \myparagraph{Constraint representation model}  We use a finite state machine
 (FSM) to model the behavior of \java\ \code{String} API, and apply it to drive
@@ -632,49 +607,3 @@ one of the constraints on the structure of the associated string is violated.
 This is represented by the transition labeled by \code{other}. The patches
 essentially support the same semantics identified by the transitions with the
 help of \code{catch} blocks.
-
-%------------------------
-
-%now in discussion dection
-\ignore{
-\subsection{Limitations}
-\label{sec:tool:limitation}
-
-\tool's major limitation arises from the fact that it
-is heavily directed towards repairing handling \code{String} objects and API
-exceptions. While this may seem to be a limitation, we believe that \tool's
-strength lies in the fact that it mines contextual data about runtime exceptions
-related to \code{String} objects that helps development of intelligent patches.
-Moreover, \tool's technique is generic and can be ported to any other class of
-\java\ APIs.
-
-\tool generates precise patches considering the program context which avoids
-cascading exceptions to a great extent producing the intended behavior in case
-of failures. However, it still cannot give guarantees about elimination of cascading
-exceptions, particularly when there are heavy object dependencies in the program.
-
-\note{The constraint data store used by \tool\ is very simple as it captures
-limited number of \code{String} characteristics which is just sufficient to
-generate \code{String} objects. This may create complication if the program
-contains very complex constraints. But  we tested \tool\ on several library APIs
-described in Section~\ref{sec:results} and multiple synthetic test cases
-composed by us and found no problem.}
-
-\subsection{Remedy}
-\label{sec:tool:remedy}
-
-\note{In the previous section we discuss about the major limitation of \tool\
-i.e. it is rather focused on only \code{String} objects. But one key point here
-is that the limitation exists because of the current implementation of \tool.
-This technique can be applied to objects other than \code{String} but requires
-rigorous study to understand the characteristics (behavior and types of
-exceptions thrown) associated to the APIs related to that object. \tool
-calculates patch by analyzing constrains. Proper study is required to understand
-the constraints associated to the object to apply \tool.}
-
-\note{The quality of \tool's patches also depends on the nature of the
-constraint solver, which is pluggable. A more sophisticated solver may improve
-the quality of program repair, and we leave comparison of different solvers for
-future work. }
-
-}
