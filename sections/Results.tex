@@ -11,14 +11,23 @@ performance and resource penalties incurred with \tool. In
 \xref{sub:casestudies}, we describe our experiences with some of the major bugs
 from our data set.
 
+\ignore{
 \myparagraph{Data Set} We mined bug repositories of several open-source
 \java-based applications and selected $30$ bugs, majority of them being rated
 either major, critical or blocking. \note{All of these bugs were very
-recent and repoted in the libraries which are widely used across products.
-Moreover these bugs were specifically occured in \code{String} APIs which fits
+recent and reported in the libraries which are widely used across products.
+Moreover these bugs were specifically occurred in \code{String} APIs which fits
 our problem definition.} These bugs involved usage of $64+$ different APIs from
 \java's \code{String}, \code{StringBuffer}, \code{StringBuilder}, and Apache
-\code{StringUtils} and Google Guava \code{StringUtils} classes.
+\code{StringUtils} and Google Guava \code{StringUtils} classes.}
+
+\myparagraph{Data Set} We mined bug repositories of several open-source
+\java-based applications and selected $30$ bugs that were reported recently
+and were related to the libraries which are widely used across products. All of the
+bugs except one were rated as either major or critical or blocker.
+These bugs involved usage of $64+$ different APIs from
+\java's \code{String}, \code{StringBuffer}, \code{StringBuilder}, and Apache
+\code{StringUtils} and Google Guava \code{StringUtils} classes. \note{Please check.}
 
 \myparagraph{Experimental Setup} All our experiments were performed on a laptop
 with $2.9$ GHz dual core Intel i$5$ CPU, and $8$ GB of RAM, and running
@@ -50,15 +59,15 @@ cascaded exceptions), respectively.
 We wrote a driver program to recreate the bug, and then applied \tool\ on the
 library to patch it. We observed that \tool\ without any optimizations patched
 $25$ of the $30$ offending bugs in our library benchmarks, an effectiveness of
-over $83\%$. \note{We denote some exceptions as \emph{cascaded
-exceptions} which are thrown in later program points after application of patch
-by \tool\ }.With forced patching enabled to overcome cascaded exceptions arising
+over $83\%$. With forced patching enabled to overcome cascaded exceptions arising
 from \code{String} operations, \tool\ successfully patches all but two
 benchmarks, thereby raising its effectiveness to over $93$\%. Note that even the
 force patched versions of \code{Commons CLI2.x} and \code{Eclipse AJ Weaver}
 fail test cases. We observed that in both cases the benchmarks throw a
-non-\code{String} related cascaded exception that \tool\ could not patch,
-thereby resulting in failed test scenarios.
+non-\code{String} related \textit{cascaded} exception that \tool\ could not patch,
+thereby resulting in failed test scenarios. A cascaded exception is an
+exception which is thrown as a response to another exception originating 
+from some other program point. \note{Please check.}
 
 \item \textbf{Precision of the patch}: Precision of a patch is governed by the
 similarity between a \tool\ generated patch and the developer's fix for the same
@@ -70,20 +79,21 @@ $$PPI = \frac{\#~Constraints_{\tool}}{\#~Constraints_{Developer}}$$
 
 Specifically, PPI compares the similarities in constraints in \tool's patch
 against the developer's version, thereby considering the core logic to construct
-an effective patch. \note{\tool\ only analyzes and registers the
-constraints which are related to only \code{String} objects. By doing so, we
-ensure the value of PPI is only \emph{influenced} by \code{String} objects}.If
-\tool's patch has fewer constraints than the developer's fix, the PPI will be
-lesser. Thus, a higher value of PPI, \ie\ closer to $1$, is preferred. PPI
-values greater than $1$ mean that \tool\ generates many more constraints than
-reflected in the developer's fix, while low values of PPI suggest that \tool\
-may have missed out on several constraints. PPI can be computed automatically,
-since \tool\ already generates a list of constraints (in the form of bytecodes),
-and static program analysis of the developer's patch can provided the same.
+an effective patch. \tool\ analyzes and registers the constraints which are
+related to only \code{String} objects. By doing so, we ensure that the value of
+PPI is \emph{influenced} only by \code{String} objects.
+\note{Please check.} If \tool's patch has fewer constraints than the developer's
+fix, the PPI will be lesser. Thus, a higher value of PPI, \ie\ closer to $1$, is
+preferred. PPI values greater than $1$ mean that \tool\ generates many more
+constraints than reflected in the developer's fix, while low values of PPI
+suggest that \tool\ may have missed out on several constraints. PPI can be
+computed automatically, since \tool\ already generates a list of constraints (in
+the form of bytecodes), and static program analysis of the developer's patch can
+provided the same.
+\note{Some grammatical issue. Please fix.}
 However, in our current implementation, we compute the constraints for the
-developer's fix through manual inspection of the \sout{library
-bytecodes}\note{the source code of the patched version of the library
-downloaded from the official repository}.
+developer's fix through manual inspection of the source code of the patched
+version of the library downloaded from the official repository.
 
 Table~\ref{tab:results} lists the PPI for the benchmarks in our set. We note
 that PPI is $>0.7$ for over $73\%$ of the benchmarks. This high PPI across
@@ -265,9 +275,10 @@ bugs reported in Table~\ref{tab:results}.
 
  \item The bug~\cite{ARIES1204} as reported in the repository for Apache Aries
 cited String related issues. However, our investigation showed that the bug was
-actually in the ASM framework that was invoked by Aries, not in the Aries framework as originally reported. Thus, we patched the
-particular ASM methods containing the bugs, and retested it with the Aries
-framework to ensure conformance.
+actually in the ASM framework that was invoked by Aries, not in the Aries
+framework as originally reported. Thus, we patched the particular ASM methods
+containing the bugs, and retested it with the Aries framework to ensure
+conformance.
 
  \item The bug in Commons Math~\cite{MATH198} had a bug related to incorrect
 formatting of the input string. However, it threw a completely irrelevant
