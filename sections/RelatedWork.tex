@@ -6,7 +6,7 @@ area over past decade. The approaches that have been proposed by the researchers
 broadly fall into two categories namely, static and dynamic.
 
 \subsection{Static Approaches}
-\myparagraph{Counter-example Driven.}
+\myparagraph{Counter-example Driven}
 Some of the static approaches work based on a counter-example or a violated
 invariant that is reported from the field. These approaches then repair the
 program by automatically developing a patch and then ensuring its correctness
@@ -16,7 +16,7 @@ However, shutting down the system to produce and apply patches is not always a f
 a desirable option. The motivation for our technique comes from the fact that for some
 applications fixing the bug after a program crash is not an option.
 
-\myparagraph{String Generation.}
+\myparagraph{String Generation}
 A key to effective program repairing is to reduce the problem by 
 targeting a specific domain, or specific data structures such as arrays, or data types such as strings, and then use
 specialized transformation and solving techniques for repairing which can exploit the constrained environment.
@@ -43,7 +43,7 @@ solution for refactoring where changing a class name associated with some
 queries will reflect all the strings system wide. This approach is based on type-checking
 and addresses different class of repairing problems.
 
-\myparagraph{Static Data Repair.}
+\myparagraph{Static Data Repair}
 Demsky et al. propose repair strategy by goal-directed reasoning~\cite{conf/icse/DemskyR05}. This involves
 translating the data-structure to an abstract model by a set of model definition
 rules. The actual repair involves model reconstruction and statically mapping it
@@ -61,7 +61,7 @@ have a precise knowledge of its state. In order to overcome some limitations of 
 and exploit the execution knowledge, several promising dynamic approaches have
 been proposed.
 
-\myparagraph{Dynamic Data Repair.}
+\myparagraph{Dynamic Data Repair}
 Demsky and Rinard present techniques that mostly concentrate on specific
 data-structures like \emph{FAT-32}, \emph{ext2}, \emph{CTAS} (a set of
 air-traffic control tools developed at the NASA Ames research center) and
@@ -91,7 +91,7 @@ patching until the program stabilizes which they called as \emph{error
 shepherding}. However, unlike our approach, this technique requires a special runtime support which is 
 built into the operating system.
 
-\paragraph{Genetic Programming.}
+\myparagraph{Genetic Programming}
 The researchers have also tried genetic programming approach for repairing.
 Goues et al. use genetic programming technique which is a stochastic search
 method inspired by biological evolution \cite{GouesNFW12}. The technique generates program patch
@@ -102,7 +102,7 @@ the fraction of the bugs their genetic programming-based tool can repair as well
 with it \cite{GouesDFW12}. These approaches are test-driven and rely on the availability and completeness of test-suites.
 In contrast, our approach is completely independent of a test-suite.
 
-\paragraph{Strings Related.}
+\myparagraph{Strings Related}
 Samimi et al. present a dynamic repairing technique for PHP applications  \cite{SamirniSAMTH12}.
 They present a tool \textit{PHPRepair} to repair auto-generated
 malformed HTML codes from the PHP scrips. Often the HTML codes do not have
@@ -110,7 +110,7 @@ proper tags which are silently corrected by the browser but the result is
 different across browsers. The authors employ an efficient SAT solver
 using cost optimization to find an efficient repair.
 
-\paragraph{Other Dyanamic Approaches.}
+\myparagraph{Other Dynamic Approaches}
 Perkins et al. present a system named \emph{Clear view} which works on windows x86 binaries
 without requiring any source code ~\cite{conf/sosp/PerkinsKLABCPSSSWZER09}.
 They use invariants analysis for which they
