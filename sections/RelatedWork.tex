@@ -6,7 +6,7 @@ area over past decade. The approaches that have been proposed by the researchers
 broadly fall into two categories namely, static and dynamic.
 
 \subsection{Static Approaches}
-\paragraph{Counter-example Driven.}
+\myparagraph{Counter-example Driven.}
 Some of the static approaches work based on a counter-example or a violated
 invariant that is reported from the field. These approaches then repair the
 program by automatically developing a patch and then ensuring its correctness
@@ -16,7 +16,7 @@ However, shutting down the system to produce and apply patches is not always a f
 a desirable option. The motivation for our technique comes from the fact that for some
 applications fixing the bug after a program crash is not an option.
 
-\paragraph{String Generation.}
+\myparagraph{String Generation.}
 A key to effective program repairing is to reduce the problem by 
 targeting a specific domain, or specific data structures such as arrays, or data types such as strings, and then use
 specialized transformation and solving techniques for repairing which can exploit the constrained environment.
@@ -43,7 +43,7 @@ solution for refactoring where changing a class name associated with some
 queries will reflect all the strings system wide. This approach is based on type-checking
 and addresses different class of repairing problems.
 
-\paragraph{Static Data Repair.}
+\myparagraph{Static Data Repair.}
 Demsky et al. propose repair strategy by goal-directed reasoning~\cite{conf/icse/DemskyR05}. This involves
 translating the data-structure to an abstract model by a set of model definition
 rules. The actual repair involves model reconstruction and statically mapping it
@@ -60,7 +60,8 @@ dynamic approaches have a complete visibility to the program under execution and
 have a precise knowledge of its state. In order to overcome some limitations of static approaches
 and exploit the execution knowledge, several promising dynamic approaches have
 been proposed.
-\paragraph{Dynamic Data Repair.}
+
+\myparagraph{Dynamic Data Repair.}
 Demsky and Rinard present techniques that mostly concentrate on specific
 data-structures like \emph{FAT-32}, \emph{ext2}, \emph{CTAS} (a set of
 air-traffic control tools developed at the NASA Ames research center) and

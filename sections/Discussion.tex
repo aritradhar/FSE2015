@@ -7,7 +7,7 @@
 In this section we discuss the weaknesses of \tool\ and also propose
 remedies to overcome them.
 
-\paragraph{Focus on String APIs} \tool\ is heavily directed towards repairing 
+\myparagraph{Focus on String APIs} \tool\ is heavily directed towards repairing 
  \code{String} objects and handling API
 exceptions. While this may seem to be a limitation, we believe that \tool's
 strength lies in the fact that it mines contextual data about runtime exceptions
@@ -15,8 +15,8 @@ related to \code{String} objects that helps development of intelligent patches.
 Moreover, \tool's technique is generic and can be ported to any other class of
 \java\ APIs. We leave this extension for the future.
 
-\paragraph{Lack of guarantee regarding patch correctness} \tool attempts to generate 
-precise patches considering the program context which avoids
+\myparagraph{Lack of guarantee regarding patch correctness} \tool attempts to
+generate precise patches considering the program context which avoids
 cascading exceptions to a great extent producing the intended behavior in case
 of failures. However, it still cannot give guarantees about elimination of cascading
 exceptions, particularly when there are heavy object dependencies in the program.
@@ -24,8 +24,8 @@ In the future, we plan to support \tool\ with program invariants that would ensu
 acceptable behavior. The invariants can be specified by a programmer or can be
 automatically generated with the help of training runs.
 
-\paragraph{Handling of limited constraints} The constraint data store used by \tool\
-is easy to build as it captures
+\myparagraph{Handling of limited constraints} The constraint data store used by
+\tool\ is easy to build as it captures
 limited number of fairly simple \code{String} characteristics which are used to
 generate patching \code{String} objects. This approach may not be adequate particularly
 if the program contains a large number of complex constraints. The quality of
