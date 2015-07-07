@@ -27,7 +27,7 @@ and were related to the libraries which are widely used across products. All of 
 bugs except one were rated as either major or critical or blocker.
 These bugs involved usage of $64+$ different APIs from
 \java's \code{String}, \code{StringBuffer}, \code{StringBuilder}, and Apache
-\code{StringUtils} and Google Guava \code{StringUtils} classes. \note{Please check.}
+\code{StringUtils} and Google Guava \code{StringUtils} classes.
 
 \myparagraph{Experimental Setup} All our experiments were performed on a laptop
 with $2.9$ GHz dual core Intel i$5$ CPU, $8$ GB of RAM, JDK v$1.7$ with $2$
@@ -68,7 +68,7 @@ fail test cases. We observed that in both cases the benchmarks throw a
 non-\code{String} related \textit{cascaded} exception that \tool\ could not patch,
 thereby resulting in failed test scenarios. A cascaded exception is an
 exception which is thrown as a response to another exception originating 
-from some other program point. \note{Please check.}
+from some other program point.
 
 \item \textbf{Precision of the patch}: Precision of a patch is governed by the
 similarity between a \tool\ generated patch and the developer's fix for the same
@@ -82,15 +82,14 @@ Specifically, PPI compares the similarities in constraints in \tool's patch
 against the developer's version, thereby considering the core logic to construct
 an effective patch. \tool\ analyzes and registers the constraints which are
 related to only \code{String} objects. By doing so, we ensure that the value of
-PPI is \emph{influenced} only by \code{String} objects.
-\note{Please check.} If \tool's patch has fewer constraints than the developer's
-fix, the PPI will be lesser. Thus, a higher value of PPI, \ie\ closer to $1$, is
-preferred. PPI values greater than $1$ mean that \tool\ generates many more
-constraints than that of in the developer's fix, while low values of PPI
-suggest that \tool\ may have missed out on several constraints. PPI can be
-computed automatically, since \tool\ already generates a list of constraints (in
-the form of bytecodes), and static program analysis of the developer's patch can
-provide the same.
+PPI is \emph{influenced} only by \code{String} objects. If \tool's patch has
+fewer constraints than the developer's fix, the PPI will be lesser. Thus, a
+higher value of PPI, \ie\ closer to $1$, is preferred. PPI values greater than
+$1$ mean that \tool\ generates many more constraints than that of in the
+developer's fix, while low values of PPI suggest that \tool\ may have missed out
+on several constraints. PPI can be computed automatically, since \tool\ already
+generates a list of constraints (in the form of bytecodes), and static program
+analysis of the developer's patch can provide the same.
 %\note{Some grammatical issue. Please fix.}
 
 Table~\ref{tab:results} lists the PPI for the benchmarks in our set. We note
