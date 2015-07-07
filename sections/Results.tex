@@ -22,8 +22,8 @@ our problem definition.} These bugs involved usage of $64+$ different APIs from
 \code{StringUtils} and Google Guava \code{StringUtils} classes.}
 
 \myparagraph{Data Set} We mined bug repositories of several open-source
-\java-based applications and selected $30$ bugs that were reported recently
-and were related to the libraries which are widely used across products. All of the
+\java-based applications and libraries and selected $30$ bugs that were reported
+recently and were related to the libraries which are widely used across products. All of the
 bugs except one were rated as either major or critical or blocker.
 These bugs involved usage of $64+$ different APIs from
 \java's \code{String}, \code{StringBuffer}, \code{StringBuilder}, and Apache
@@ -62,11 +62,11 @@ library to patch it. We observed that \tool\ without any optimizations patched
 $25$ of the $30$ offending bugs in our library benchmarks, an effectiveness of
 over $83\%$. With forced patching enabled to overcome cascaded exceptions arising
 from \code{String} operations, \tool\ successfully patches all but two
-benchmarks, thereby raising its effectiveness to over $93$\%. Note that even the
+benchmarks, thereby raising its effectiveness to over $93\%$. Note that even the
 force patched versions of \code{Commons CLI2.x} and \code{Eclipse AJ Weaver}
 fail test cases. We observed that in both cases the benchmarks throw a
 non-\code{String} related \textit{cascaded} exception that \tool\ could not patch,
-thereby resulting in failed test scenarios. A cascaded exception is an
+thereby resulting in failed test scenarios. A \emph{cascaded exception} is an
 exception which is thrown as a response to another exception originating 
 from some other program point.
 
@@ -171,14 +171,10 @@ required \tool\ to ignore at most one exception; rest required no changes.
 
 \item \textbf{Cascaded exceptions}: A cascaded exception arises if the
 \tool-generated patch creates objects that when used as inputs to other \java\
-APIs result in further exceptions.
-% patched objects
-% are used as a input
-% to other methods and violates the specification there.
-\tool\ is prone to cascading exceptions because of the limitation of its
-intra-procedural analysis and a simple constraint evaluation mechanism. However,
-\tool's constraint solver is pluggable and a more sophisticated third party
-solvers can easily be integrated.
+APIs result in further exceptions. \tool\ is prone to cascading exceptions
+because of the limitation of its intra-procedural analysis and a simple
+constraint evaluation mechanism. However, \tool's constraint solver is pluggable
+and a more sophisticated third party solvers can easily be integrated.
 Specifically, cascaded exceptions may arise if the patch generates \code{String}
 objects that represent a malformed string. Further, if we keep the optimization
 in \xref{subsubsec:minimizePatchInstrumentation}, then cascaded failures may
