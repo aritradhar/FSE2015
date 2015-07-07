@@ -39,11 +39,11 @@ suboptimally) without affecting the program control flow, \ie\ affect only
 objects that are generated and stay within the application throughout their
 lifetime. While this principle is not a binding constraint, it ensures that
 \tool's repairing mechanism does not adversely affect critical program behavior.
-We specify a generic set of sensitive sources and sensitive sinks for each input
-program, to identify critical program paths where a repaired \code{String}
-objects (and thus possibly suboptimal) must not flow. For example, \tool\ does
-not repair program statements that lie along a control flow path that leads to
-an I/O sink, like file system, console, network, GUI, etc.
+We specify a generic set of sensitive sources and sinks for each input program,
+to identify critical program paths where repaired \code{String} objects
+(possibly suboptimal) must not flow. For example, \tool\ does not repair
+statements that lie along a control flow path leading to an I/O sink, like file
+system, console, network, GUI, etc.
 
 \begin{table}[t]
 \centering
@@ -92,37 +92,41 @@ an I/O sink, like file system, console, network, GUI, etc.
 The taint analysis module takes as input the compiled byte code intended to be
 repaired, and generates a control flow graph identifying program statements that
 lie along paths from sensitive sources to sensitive sinks. Since, \tool\ targets
-strings in particular, it must support taint propagation for all \java\ APIs
-that support string manipulation, including \code{StringBuffer} and
-\code{StringBuilder}. All \code{String} objects (whether generated or assigned)
+\code{String} objects in particular, it must support taint propagation for all
+\java\ APIs that support string manipulation, including \code{StringBuffer} and
+\code{StringBuilder}.
+% 
+\tool\ makes a default, conservative assumption that all objects
+leaving the system have potential to trigger unintended behavior. Thus, all
+\code{String} objects (whether generated or assigned)
 that lie along the tainted path from a sensitive source to a sensitive sink are
 marked as \textit{unsafe} to patch. Subsequently, \tool\ does not repair such
 \code{String} objects.
 \ignore{The definition of
 criticality is solely over the developers. In some cases one would like to
-patch the \code{String} objects which are tainted.} \note{Rephrased and compressed.} \tool\, being a highly
-configurable tool, allows developers to define their own sets of sources and
-sinks, and to exclude specific tainted paths. \ignore{In the default behavior
-of \tool\ we took a safe assumption that patched objects which are leaving the
-system may cause some unintended behavior in some other modules.}
-By default, \tool\ makes a safe assumption that any object leaving the
-system has a potential to trigger an unintended behavior.
+patch the \code{String} objects which are tainted.} 
+
+\tool's configuration further enables developers to specify their own sets of
+sensitive sources and sinks, and exclude specific tainted paths. \ignore{In the
+default behavior of \tool\ we took a safe assumption that patched objects which
+are leaving the system may cause some unintended behavior in some other
+modules.} \note{Rephrased and compressed. Made minor edits --- md}
 Tables~\ref{table:TaintSources} and \ref{table:TaintSinks} list some common
 sensitive sources and sinks for several classes in \java.
 
 \myparagraph{(ii) Call graph analysis} \tool\ leverages call graph analysis to
 further improve the precision for finding instrumentation points. Although
 unlikely, it is possible that the developers may themselves handle code that
-raises runtime exceptions. Thus, \tool\ must not instrument program points that
+raises runtime exceptions. \tool\ must not instrument program points that
 are explicitly handled by the developers, since repairing such statements
 would definitely alter the intended control flow.
 
 Checked runtime exceptions may be placed in the (i) same method, or (ii)
 upstream in the call chain. While handling the former scenario is trivial,
 \tool\ handles the latter case by identifying all possible call chains (in
-the call graph) involving the concerned method using reverse Breadth First
-search (BFS), and determines ancestor methods where the call site was wrapped in
-\code{try-catch} block of compatible exception type or not.
+the call graph) involving the concerned method using reverse breadth first
+search, and determining ancestor methods where the call site was wrapped in
+\code{try-catch} block of compatible exception type.
 
 \myparagraph{(iii) Reaching definitions analysis} Taint and call graph analyses
 together provide a set of program points to be instrumented with the
