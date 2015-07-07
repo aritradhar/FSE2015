@@ -33,14 +33,14 @@ program from crashing, but also guarantees \textit{acceptable} and
 close to the intended behavior can be applied to the software on-the-fly.
 
 
-\lstset{language=Java , caption=Apache Log4j bug example.,
-label=snippet:exampleRepairing1}
+\lstset{escapeinside={/*@}{@*/}, language=Java , caption=Apache Log4j bug
+example., label=snippet:exampleRepairing1}
 \begin{figure}[t]
 \begin{lstlisting}
 private int substitute() {
   if (priorVariables == null) {
     priorVariables = new ArrayList<String>();
-    priorVariables.add(new String(chars, offset, length));
+    priorVariables.add(/*@\\@*/ new String(chars, offset, length));
   }
 }
 \end{lstlisting}
