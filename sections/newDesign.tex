@@ -186,7 +186,7 @@ generates a high quality patch to repair the program. A constraint on a
 define the string. \tool\ uses a \textit{constraint store} to maintain a set that 
 includes constraints on minimum and maximum
 lengths, along with a set of permissible prefixes and substrings, as shown in
-Table~\ref{table:constraint}.\note{Reworded this.}
+Table~\ref{table:constraint}.
 
 \begin{algorithm}[t]
 \scriptsize
@@ -295,7 +295,7 @@ the conditional statements involve any variables that are redefined during the
 collection and can be calculated statically. \tool\ only collects constraints
 that are directly associated to \code{String} objects.
 Algorithms~\ref{algo:patchingStrategy} and~\ref{algo:patchingStrategyDynamic}
-give an overview of this hybrid approach. \note{Reworded.}
+give an overview of this hybrid approach.
 
 \begin{algorithm}[t]
 \scriptsize
@@ -381,7 +381,7 @@ $OP$ is a composite mathematical expression $f(x,y,z,...)$, such as $x + y * z$,
 where all $x$, $y$ and $z$ are known to be numeric.} When collecting
 constraints, \tool\ also evaluates composite mathematical expressions, such as
 $x + y * z$, where all $x$, $y$ and $z$ are numeric (see
-Algorithm~\ref{algo:constraintCollection}). \note{Please check.}
+Algorithm~\ref{algo:constraintCollection}).
 
 \begin{algorithm}[t]
 \scriptsize
@@ -478,9 +478,7 @@ Code~\ref{snippet:exCode2} depicts the example in
 Code~\ref{snippet:constraintCollection} after \tool's instrumentation. When the
 constraints in the source are complex, \tool\ relies on its base framework to
 simplify them and then evaluates only the ones that are related to strings.
-\note{
-%%I removed the complicated example. Please
-check.}
+
 \ignore{One complex example of dynamic constraint collection and evaluation is
 \code{x > 10} and \code{s.length() < x * x \&\& x * x > 10}. In such case,
 \tool\ with the help of \code{jimple} intermediate representation (IR) breaks
