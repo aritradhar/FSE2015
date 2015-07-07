@@ -85,15 +85,12 @@ PPI is \emph{influenced} only by \code{String} objects.
 \note{Please check.} If \tool's patch has fewer constraints than the developer's
 fix, the PPI will be lesser. Thus, a higher value of PPI, \ie\ closer to $1$, is
 preferred. PPI values greater than $1$ mean that \tool\ generates many more
-constraints than reflected in the developer's fix, while low values of PPI
+constraints than that of in the developer's fix, while low values of PPI
 suggest that \tool\ may have missed out on several constraints. PPI can be
 computed automatically, since \tool\ already generates a list of constraints (in
 the form of bytecodes), and static program analysis of the developer's patch can
-provided the same.
-\note{Some grammatical issue. Please fix.}
-However, in our current implementation, we compute the constraints for the
-developer's fix through manual inspection of the source code of the patched
-version of the library downloaded from the official repository.
+provide the same.
+%\note{Some grammatical issue. Please fix.}
 
 Table~\ref{tab:results} lists the PPI for the benchmarks in our set. We note
 that PPI is $>0.7$ for over $73\%$ of the benchmarks. This high PPI across
