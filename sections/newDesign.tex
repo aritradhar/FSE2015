@@ -361,26 +361,27 @@ program code} identifies and analyzes conditional statements involving string
 objects \ignore{of the form} such as \code{if (st.length() == $5$)}. It
 considers only those constraints that the object must satisfy to ensure control
 flows through one of the \textit{normal} branches of the conditional. A normal
-branch is a one that does represent erroneous control flow. For example,  a
+branch is one that does not represent erroneous control flow. For example, a
 branch that encounters a statement \code{System.err.print()} would represent an
 erroneous control flow. \ignore{In other words, \tool\ only considers the
 conditional expressions in the branches that do not involve any exceptions or
-error paths.} Code~\ref{snippet:constraintCollection} shows a string variable
-with several constraints as defined by the \code{if} statements on lines
-$2$-$5$. The first three constraints are static as all of them can be evaluated
-at the compilation time. By analyzing these conditional statements one by one,
-\tool\ populates the constraint store data structure as depicted in
-Figure~\ref{fig:constraintExample}. \ignore{We define the preferred branch as
-the one that does not throw exceptions or error conditions, like
+error paths.}
+
+Code~\ref{snippet:constraintCollection} shows a string variable with several
+constraints as defined by the \code{if} statements on lines $2$-$5$. The first
+three constraints are static as all of them can be evaluated at the compilation
+time. By analyzing these statements, \tool\ populates the constraint store
+depicted in Figure~\ref{fig:constraintExample}. \ignore{We define the preferred
+branch as the one that does not throw exceptions or error conditions, like
 \code{System.err.print()}. In other words, \tool\ only considers the conditional
 expressions in the branches that do not involve any exceptions or error paths.}
 \ignore{Note that \tool\ also evaluates $OP$ (in
 Algorithm~\ref{algo:constraintCollection}) when collecting constraints, in case
 $OP$ is a composite mathematical expression $f(x,y,z,...)$, such as $x + y * z$,
-where all $x$, $y$ and $z$ are known to be numeric.} As described in
-Algorithm~\ref{algo:constraintCollection}, while collecting constraints \tool\
-also evaluates composite mathematical expressions, such as $x + y * z$, where
-all $x$, $y$ and $z$ are known to be numeric. \note{Please check.}
+where all $x$, $y$ and $z$ are known to be numeric.} When collecting
+constraints, \tool\ also evaluates composite mathematical expressions, such as
+$x + y * z$, where all $x$, $y$ and $z$ are numeric (see
+Algorithm~\ref{algo:constraintCollection}). \note{Please check.}
 
 \begin{algorithm}[t]
 \scriptsize
@@ -420,11 +421,11 @@ all $x$, $y$ and $z$ are known to be numeric. \note{Please check.}
 \end{algorithm}
 
  \item \textbf{Dynamic constraint collection}: The constraint set is populated
-at the end of the static phase, and \tool\ leverages
-Algorithm~\ref{algo:constraint} to evaluate these constraints and determine the
-potential safe values of the string object under consideration. However, there
-are scenarios, where there are potentially conflicting constraints or no
-permissible values of the constraints can be calculated statically.
+at the end of the static phase. \tool\ leverages Algorithm~\ref{algo:constraint}
+to evaluate these constraints and determine the potential safe values of the
+\code{String} object under consideration. However, there are scenarios where
+there exist potentially conflicting constraints or no permissible values of the
+constraints can be calculated statically.
 
 \ignore{
 \lstset{language=Java, caption=Code requiring dynamic string constraint
@@ -465,26 +466,28 @@ if(st.contains(temp){{/*do something*/}}
 \end{lstlisting}
 \end{figure}
 
-Consider the example shown in Code~\ref{snippet:constraintCollection}, where the function
-\code{foo} performs a series of checks on a user-entered string \code{st} before computing
-a substring on it. Since the constraints on \code{st} cannot be
-completely collected and evaluated statically, \tool\
-instruments the code with statements to dynamically collect constraint
-information, augments them with previously known static constraints, and evaluates
-these constraints at runtime. Specifically, \tool\ instruments the bytecode
-with constraint collection code just before the conditional statements under
-consideration. Code~\ref{snippet:exCode2} depicts the example in Code~\ref{snippet:constraintCollection}
-after it is instrumented by \tool. When the constraints in the source are complex, \tool\ relies on its base framework
-to simplify them and then evaluates only the ones that are related to strings.
-\note{I removed the complicated example. Please check.}
-\ignore{One complex example of
-dynamic constraint collection and evaluation is \code{x > 10} and
-\code{s.length() < x * x \&\& x * x > 10}. In such case, \tool\ with the help
-of \code{jimple} intermediate representation (IR) breaks down the second conjugate
-constraint to two simple ones. As \code{x > 10} and \code{x * x > 10} do not
-involve any \code{String} object, \tool\ will ignore them and evaluate
-\code{s.length() < x * x } dynamically when the value of x is available just
-before the conditional statement.}
+For example, function \code{foo} in Code~\ref{snippet:constraintCollection}
+performs a series of checks on a user-entered string \code{st} before computing
+a substring on it. Since the constraints on \code{st} cannot be completely
+collected and evaluated statically, \tool\ instruments the code with statements
+to dynamically collect constraint information, augments them with previously
+known static constraints, and evaluates these constraints at runtime.
+Specifically, \tool\ instruments the bytecode with constraint collection code
+just before the conditional statements under consideration.
+Code~\ref{snippet:exCode2} depicts the example in
+Code~\ref{snippet:constraintCollection} after \tool's instrumentation. When the
+constraints in the source are complex, \tool\ relies on its base framework to
+simplify them and then evaluates only the ones that are related to strings.
+\note{
+%%I removed the complicated example. Please
+check.}
+\ignore{One complex example of dynamic constraint collection and evaluation is
+\code{x > 10} and \code{s.length() < x * x \&\& x * x > 10}. In such case,
+\tool\ with the help of \code{jimple} intermediate representation (IR) breaks
+down the second conjugate constraint to two simple ones. As \code{x > 10} and
+\code{x * x > 10} do not involve any \code{String} object, \tool\ will ignore
+them and evaluate \code{s.length() < x * x } dynamically when the value of x is
+available just before the conditional statement.}
 
 \end{mylist}
 
@@ -504,9 +507,9 @@ object under consideration after all the constraints have been collected and
 evaluated. If the constraints are resolved statically, then \tool\ updates its
 constraint data store and instruments the corresponding bytecodes appropriately.
 However, in case the patch requires dynamic constraint collection, \tool\ embeds
-the code to dynamically collect constraints and generate the patch as well. Line
-$4, 8, 10$ and $14$ in Code~\ref{snippet:exCode2} update the constraint set and
-generate the repaired object, respectively.
+the code to dynamically collect constraints and generates the patch as well.
+Lines $4, 8, 10$ and $14$ in Code~\ref{snippet:exCode2} update the constraint
+set and generate the repaired object.
 
 \begin{algorithm}[t]
 \scriptsize
@@ -539,20 +542,20 @@ condition\\
 \end{algorithm}
 
  \item \textbf{Parameter tweaking}: It is possible that as a side-effect of
-object repairing, the newly patched object may throw runtime errors when
-invoked with certain string APIs. For example, \code{c = s.charAt(4);} may still
-throw runtime errors even if \code{s} has been repaired. This is possible if
-the repaired \code{s} has a length less than $4$. In such scenarios, \tool\
-patches the code with a \code{try-catch} block around the offending API call,
-and appropriately inserts the repaired code in the \code{catch} block but with
-tweaks to the API arguments, as shown in Code~\ref{snippet:exCode3}, to ensure
-that no further runtime exception is thrown. For example, if the length of the
+object repairing, the newly patched object may throw runtime errors when invoked
+with certain \code{String} APIs. The snippet \code{c = s.charAt(4)} may still
+throw runtime errors even if \code{s} has been repaired. This is possible if the
+repaired \code{s} has a length less than $4$. In such scenarios, \tool\ patches
+the code with a \code{try-catch} block around the offending API call, and
+appropriately inserts the repaired code in the \code{catch} block but with
+tweaks to the API arguments to ensure that no further runtime exception is
+thrown (see Code~\ref{snippet:exCode3}). For example, if the length of the
 string is greater than $4$, then the API works similar to default \code{charAt}
 API. However, if the length is $3$, then line $4$ is invoked with both arguments
 equal to string length, \ie\ $3$. Note that parameter tweaking is leveraged to
 counter a potentially suboptimal object repair that may throw cascading
-exceptions. Algorithm~\ref{algo:stringPatchParametr} briefly outlines
-the mechanism to correctly set the parameters for the offending string API.
+exceptions. Algorithm~\ref{algo:stringPatchParametr} briefly outlines the
+mechanism to correctly set the parameters for the offending string API.
 
 \lstset{language=Java, caption=Example of parameter tweaking.,
 label = snippet:exCode3, firstnumber =1}
@@ -575,26 +578,25 @@ try{
 do not get activated during normal program execution, thereby minimizing any
 side-effects of repairing and preventing any inadvertent changes to the
 program's intended control flow.
-
+% 
 An important task in the instrumentation stage is to determine the kind of
 exceptions that may be thrown, and appropriately construct the \code{catch}
 blocks. While most APIs throw only a single subclass of \code{RuntimeException},
 it is possible that a statement may throw more than one subclasses, such as
 \code{NullPointerException} and \code{StringIndexOutOfBoundsException}. \tool\
-generates a \code{catch} ladder for each kind of exception, which also
-facilitates exception-specific repairing as well. In other words, a single patch
-may get distributed over multiple \code{catch} blocks. This mechanism is
-achieved with the help of a constraint representation model.
+generates a \code{catch} ladder for each kind of exception, which facilitates
+exception-specific repairing as well. In other words, a single patch
+may get distributed over multiple \code{catch} blocks, which is achieved with
+the help of a constraint representation model.
 
 %-------------------
 
-\myparagraph{Constraint representation model}  We use a finite state
-machine
-(FSM) as a formalism to describe the behavior of \java\ \code{String} API, and 
-apply it to drive the generation of exception-specific \code{catch} blocks. The
-model is precomputed based on the API documentation of \java\ \code{Strings}.
-Formally, we define the constraint representation FSM model $(Q, \Sigma, \delta,
-q_0, F)$ as follows:
+\myparagraph{Constraint representation model}  We use a finite state machine
+(FSM) to model the behavior of \java\ \code{String} API, and apply it to drive
+the generation of exception-specific \code{catch} blocks. This model is
+precomputed based on the \java\ \code{Strings} API documentation. Formally, we
+define the constraint representation FSM model $(Q, \Sigma, \delta, q_0, F)$ as
+follows:
 \begin{mybullet}
  \item $Q$: Set of states where $|Q| = 2$, \emph{legal state}(safe) and
 \emph{illegal state} (error).
@@ -621,18 +623,17 @@ transition and $safe \rightarrow error$ corresponds to the constraint violation.
 \end{figure}
 
 
-A partial constraint representation model is depicted in
+A partial constraint representation model is depicted in 
 Figure~\ref{fig:constraintautomata}. It essentially specifies the constraints
-that are associated with \code{substring}
-method and \code{IndexOutofBoundException} exception that can be thrown by the
-method. A complete model would
-have several such self-looping transitions corresponding to other \java\
-\code{String} API methods. The
-repairing mechanism gets triggered when an exception is thrown while performing
-a string operation after at least one of the constraints on the structure of
-the associated string is violated. This is represented by the transition labeled
-by \code{other}. The patches essentially support the same
-semantics identified by the transitions with the help of \code{catch} blocks.
+that are associated with \code{substring} method and
+\code{IndexOutofBoundException} exception that can be thrown by the method. A
+complete model would have several such self-looping transitions corresponding to
+other \java\ \code{String} API methods. The repairing mechanism gets triggered
+when an exception is thrown while performing a string operation after at least
+one of the constraints on the structure of the associated string is violated.
+This is represented by the transition labeled by \code{other}. The patches
+essentially support the same semantics identified by the transitions with the
+help of \code{catch} blocks.
 
 %------------------------
 
