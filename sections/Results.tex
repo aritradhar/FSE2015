@@ -30,11 +30,12 @@ These bugs involved usage of $64+$ different APIs from
 \code{StringUtils} and Google Guava \code{StringUtils} classes. \note{Please check.}
 
 \myparagraph{Experimental Setup} All our experiments were performed on a laptop
-with $2.9$ GHz dual core Intel i$5$ CPU, and $8$ GB of RAM, and running
-Microsoft Windows $8.1$. We used JDK v$1.7$ running with $2$ GB of allocated
-heap space. All bug reproduction was done on Eclipse Juno IDE. We used \soot\
-v$2.5.0$ for bytecode analysis and instrumentation, and \infoflow\ snapshot from
-May 2014 for static taint analysis.
+with $2.9$ GHz dual core Intel i$5$ CPU, $8$ GB of RAM, JDK v$1.7$ with $2$
+GB heap space and running Microsoft Windows $8.1$.\ignore{We used JDK v$1.7$
+running with $2$ GB of allocated heap space.} All bug reproduction was done on
+Eclipse Juno IDE. We used \soot\ v$2.5.0$ for bytecode analysis and
+instrumentation, and \infoflow\ snapshot from May 2014 for static taint
+analysis.
 
 \subsection{Accuracy}
 \label{sub:accuracy}
@@ -93,13 +94,13 @@ provide the same.
 %\note{Some grammatical issue. Please fix.}
 
 Table~\ref{tab:results} lists the PPI for the benchmarks in our set. We note
-that PPI is $>0.7$ for over $73\%$ of the benchmarks. This high PPI across
-several benchmarks indicates two things: (i) the conditional statements involved
+that PPI is \textgreater\ $0.7$ for over $73\%$ of the benchmarks. This high PPI
+across several benchmarks indicates two things: (i) the conditional statements involved
 in the developer's bug fix includes a high number of \code{String} operations,
 and (ii) \tool\ correctly matches and fixes errors in several of these
 \code{String} operations. PPI for the remainder of the benchmarks was observed
-to be lower, \ie\ $<0.7$. On manual inspection of the concerned bugs, we noted
-that the constraints in the specific conditional statement involved several
+to be lower, \ie\ \textless\ $0.7$. On manual inspection of the concerned bugs,
+we noted that the constraints in the specific conditional statement involved several
 other data types other than \code{String}. Since \tool\ operates only over
 \code{String} objects, the effective PPI reduces. On manual inspection of the
 offending bytecodes, we observed that \tool\ generated constraints on
