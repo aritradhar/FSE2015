@@ -60,16 +60,14 @@ cascaded exceptions), respectively.
 
 We wrote a driver program to recreate the bug, and then applied \tool\ on the
 library to patch it. We observed that \tool\ without any optimizations patched
-$25$ of the $30$ offending bugs in our library benchmarks, an effectiveness of
-over $83\%$. With forced patching enabled to overcome cascaded exceptions arising
-from \code{String} operations, \tool\ successfully patches all but two
+$25$ of the $30$ offending bugs in our benchmarks, an effectiveness of over
+$83\%$. With forced patching enabled (to overcome cascaded exceptions arising
+from \code{String} operations), \tool\ successfully patches all but two
 benchmarks, thereby raising its effectiveness to over $93\%$. Note that even the
 force patched versions of \code{Commons CLI2.x} and \code{Eclipse AJ Weaver}
-fail test cases. We observed that in both cases the benchmarks throw a
-non-\code{String} related \textit{cascaded} exception that \tool\ could not patch,
-thereby resulting in failed test scenarios. A \emph{cascaded exception} is an
-exception which is thrown as a response to another exception originating 
-from some other program point.
+fail test cases. We observed that in both benchmarks the offending test case
+throws a non-\code{String} related \textit{cascaded} exception that \tool\ could
+not patch, thereby resulting in failed test scenarios.
 
 \item \textbf{Precision of the patch}: Precision of a patch is governed by the
 similarity between a \tool\ generated patch and the developer's fix for the same

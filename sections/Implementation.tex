@@ -35,10 +35,12 @@ to exclude it from instrumentation during the repairing phase.
 % 
 \ignore{In the implementation we have added a switch to \tool  where the users
 can turn of this analysis feature to look for already handled exception.}
-% 
-Some cases may require \tool\ to \textit{force} patch the code, \ie\ disable the
-exception analysis and patch the code irrespective of whether the exception was
-handled or not.
+
+\myparagraph{Forced patching} Some scenarios, like cascaded exceptions, may
+require \tool\ to \textit{force} patch the code, \ie\ disable the exception
+analysis and patch the code irrespective of whether the exception was handled or
+not. A \emph{cascaded exception} is an exception thrown in response to another
+exception originating from some other program point.
 
 \subsection{Constraint Analysis}
 \label{subsec:constraint analysis}
