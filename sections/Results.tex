@@ -94,17 +94,21 @@ developer's patch can provide the same.
 
 Table~\ref{tab:results} lists the PPI for the benchmarks in our set. We note
 that PPI is \textgreater\ $0.7$ for over $73\%$ of the benchmarks. This high PPI
-across several benchmarks indicates two things: (i) the conditional statements involved
-in the developer's bug fix includes a high number of \code{String} operations,
-and (ii) \tool\ correctly matches and fixes errors in several of these
-\code{String} operations. PPI for the remainder of the benchmarks was observed
-to be lower, \ie\ \textless\ $0.7$. On manual inspection of the concerned bugs,
-we noted that the constraints in the specific conditional statement involved several
-other data types other than \code{String}. Since \tool\ operates only over
-\code{String} objects, the effective PPI reduces. On manual inspection of the
-offending bytecodes, we observed that \tool\ generated constraints on
-\code{String} conditionals were very similar to the developer's fix, thereby
-confirming \tool's high precision in generating patches.
+across several benchmarks indicates the number of \code{String} constraints
+considered by \tool\ is close to that of the developer's fix. This is a direct
+evidence that \tool\ generates patch closer to program specification and hence
+comparable to an actual patch.\ignore{two things:
+(i) the conditional statements involved in the developer's bug fix includes a
+high number of \code{String} operations, and (ii) \tool\ correctly matches and
+fixes errors in several of these \code{String} operations} PPI for the remainder
+of the benchmarks was observed to be lower, \ie\ \textless\ $0.7$.\ignore{ On
+manual inspection of the concerned bugs, we noted that the constraints in the
+specific conditional statement involved several other data types other than
+\code{String}. Since \tool\ operates only over \code{String} objects, the
+effective PPI reduces.} On manual inspection of the offending bytecodes, we
+observed that \tool\ generated constraints on \code{String} conditionals were
+very similar to the developer's fix, thereby confirming \tool's high precision
+in generating patches.
 
 \note{\todo{What is the PPI if we only compare \code{String} constraints?}}
 
