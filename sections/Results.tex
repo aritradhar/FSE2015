@@ -276,7 +276,7 @@ bugs reported in Table~\ref{tab:results}.
 
  \item The bug~\cite{ARIES1204} as reported in the repository for Apache Aries
 cited String related issues. However, our investigation showed that the bug was
-actually in the ASM framework that was invoked by Aries, not in the Aries
+actually in the ASM framework that was invoked by Aries, and not in the Aries
 framework as originally reported. Thus, we patched the particular ASM methods
 containing the bugs, and retested it with the Aries framework to ensure
 conformance.
@@ -308,9 +308,10 @@ the SOAP bug~\cite{SOAP130} was reported for a faulty \code{substring} call that
 threw a \code{StringIndexOutOfBoundsException}. The entire method was wrapped in
 a \code{try-catch} that included the faulty substring call along with other
 servlet operations. However, the \code{catch} block handled the generic
-\code{Exception}, which is the base class of all exceptions. Thus, both servlet
-exceptions or \code{IndexOutOfBoundException} from the \code{substring} call
-were handled in a generic fashion. \tool's patched library ensures that
-exceptions originating from the \code{substring} call are handled properly.
+\code{Exception}, which is the base class for all exceptions. Thus, both the
+servlet exceptions and the \code{IndexOutOfBoundException} from the
+\code{substring} call were handled in a generic fashion. \tool's patched library
+ensures that exceptions originating from the \code{substring} call are handled
+properly.
 
 \end{mylist}
