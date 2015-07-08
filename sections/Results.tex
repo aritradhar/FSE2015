@@ -46,28 +46,30 @@ described below.
 
 \begin{mylist}
 
-\item \textbf{Effectiveness of the patch}: A software patch is considered
-effective if it does not violate any existing test case from the software's test
-suite. Thus, we determined the effectiveness of \tool\ generated patches by
-running them against the benchmark's existing test suites.
-Table~\ref{tab:results} lists $30$ real-world bugs mined from bug repositories
-of popular open-source libraries. Column $\mathcal{T}$ lists the total number
-of cases in the test suite, while $\mathcal{S}_{U}$ and $\mathcal{F}_{U}$ lists
-the number of successful and failed cases in unpatched version, respectively.
-Columns $\mathcal{F}_{p}$ and $\mathcal{F}_{p}^{*}$ represent the count of
-failed test cases without and with \tool{}'s forced patching (to address
-cascaded exceptions), respectively.
+\item \textbf{Effectiveness of the patch}: A software patch is \emph{effective}
+if it does not violate any existing test case from the software's test suite.
+Thus, we determined the effectiveness of \tool\ generated patches by running
+them against the benchmark's existing test suites. Table~\ref{tab:results} lists
+$30$ real-world bugs mined from bug repositories of popular open-source
+libraries. Column $\mathcal{T}$ lists the total number of cases in the test
+suite, while $\mathcal{S}_{U}$ and $\mathcal{F}_{U}$ lists the number of
+successful and failed cases in unpatched version, respectively. Columns
+$\mathcal{F}_{p}$ and $\mathcal{F}_{p}^{*}$ represent the count of failed test
+cases without and with \tool{}'s forced patching,
+% (to address cascaded exceptions)
+respectively.
 
 We wrote a driver program to recreate the bug, and then applied \tool\ on the
 library to patch it. We observed that \tool\ without any optimizations patched
 $25$ of the $30$ offending bugs in our benchmarks, an effectiveness of over
-$83\%$. With forced patching enabled (to overcome cascaded exceptions arising
-from \code{String} operations), \tool\ successfully patches all but two
-benchmarks, thereby raising its effectiveness to over $93\%$. Note that even the
-force patched versions of \code{Commons CLI2.x} and \code{Eclipse AJ Weaver}
-fail test cases. We observed that in both benchmarks the offending test case
-throws a non-\code{String} related \textit{cascaded} exception that \tool\ could
-not patch, thereby resulting in failed test scenarios.
+$83\%$. With forced patching enabled,
+% (to overcome cascaded exceptions arising from \code{String} operations)
+\tool\ successfully patches all but two benchmarks, thereby raising its
+effectiveness to over $93\%$. Note that even the force patched versions of
+\code{Commons CLI2.x} and \code{Eclipse AJ Weaver} fail test cases. We observed
+that in both benchmarks the offending test case throws a non-\code{String}
+related \textit{cascaded} exception that \tool\ could not patch, thereby
+resulting in failed test scenarios.
 
 \item \textbf{Precision of the patch}: Precision of a patch is governed by the
 similarity between a \tool\ generated patch and the developer's fix for the same
@@ -76,7 +78,7 @@ precision of the patch.
 $$PPI = \frac{\#~Constraints_{\tool}}{\#~Constraints_{Developer}}$$
 % * \frac{\#~LOC_{Developer}}{\#~LOC_{\tool}} *
 % \frac{Output_{\tool}}{Output_{Developer}}$$
-
+% 
 Specifically, PPI compares the similarities in constraints in \tool's patch
 against the developer's version, thereby considering the core logic to construct
 an effective patch. \tool\ analyzes and registers the constraints which are

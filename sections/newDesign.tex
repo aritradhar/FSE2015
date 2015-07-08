@@ -571,8 +571,8 @@ precomputed based on the \java\ \code{Strings} API documentation. Formally, we
 define the constraint representation FSM model $(Q, \Sigma, \delta, q_0, F)$ as
 follows:
 \begin{mybullet}
- \item $Q$: Set of states where $|Q| = 2$, \emph{legal state}(safe) and
-\emph{illegal state} (error).
+ \item $Q$: Set of \emph{legal} (safe) and \emph{illegal} (error) states, where
+$|Q| = 2$. %% states.
 
  \item $\Sigma$: Set of symbols. Each symbol is defined as a tuple ($\zeta$,
 $\eta$, $\Lambda$), where $\zeta$ is a \code{String} API operation, $\eta$ is

@@ -1,15 +1,15 @@
 \section{Overview}
 \label{sec:overview}
 
-Ensuring correctness of a program statically is an undecidable problem. Thus
-there is always a tradeoff between precision and scalability that static program
-analysis must balance. Static analysis achieves high scalability by making sound
-approximations, which typically leads to false positives. Complex
-programming logic and data coming from diverse sources make the already hard
-problem worse. As a result, successful execution of a real application can never
-be guaranteed, and unexpected failures may happen. These failures often result
-in applications throwing runtime exceptions, which if not handled correctly
-may crash the application.
+Ensuring program correctness statically is an undecidable problem. Thus there is
+always a tradeoff between precision and scalability that static program analysis
+must balance. Static analysis achieves high scalability by making sound
+approximations, which typically leads to false positives. Complex programming
+logic and data coming from diverse sources make the already hard problem worse.
+As a result, successful execution of a real application can never be guaranteed,
+and unexpected failures may happen. These failures often result in applications
+throwing runtime exceptions, which if not handled correctly may crash the
+application.
 
 \ignore{ \begin{table}[t] \scriptsize \centering
 \begin{tabular}{|l|r|r|}

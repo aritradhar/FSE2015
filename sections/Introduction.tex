@@ -92,14 +92,13 @@ that some suboptimal behavior is acceptable if it does not interfere with the
 system's core functionality, and provide correct, but, partial functionality if
 the corrupted data structures can be isolated from the rest of the system.}
 
-Several approaches have been proposed in the past to automatically fix the
-incorrect program behavior by generating program patches
-\cite{wei-issta-2010, Carbin:2011, conf/sosp/PerkinsKLABCPSSSWZER09, conf/pldi/LongSR14}.
-These approaches either need a complete system shutdown in order to 
-apply a patch, or isolate the faulty part of a data structure on the fly thereby
-limiting the functionality, or keep suppressing the
-exceptions with a hope that a suboptimal behavior would be acceptable
-until the application stabilizes.
+Prior work~\cite{wei-issta-2010, Carbin:2011, conf/sosp/PerkinsKLABCPSSSWZER09,
+conf/pldi/LongSR14} proposes several mechanisms to automatically fix incorrect
+program behavior by generating program patches. These approaches either need a
+complete system shutdown to apply a patch, or isolate the faulty part of a data
+structure on the fly thereby limiting the functionality, or keep suppressing the
+exceptions with a hope that a suboptimal behavior would be acceptable until the
+application stabilizes.
 
 In this work, we propose a novel hybrid approach that deals with failures
 originating due to malformed strings, or incorrect handling of strings in \java\
