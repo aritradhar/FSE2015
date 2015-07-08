@@ -166,17 +166,17 @@ discussed in~\xref{sec:tool:stage2}. }
 \label{sec:definition}
 
 Let the behavior $\mathcal{B}$ of program $\mathcal{P}$ for input $\mathcal{I}$
-be a sequence of data values $\textless b_1, \ldots, b_n \textgreater$ shared
+be a sequence of data values \textless\ $b_1, \ldots, b_n$ \textgreater\ shared
 with the environment, where these values may be used to print information on
 screen, access and manipulate files and databases, and exchange data with other
 processes or threads. For brevity, we assume that the program is sequential.
 However, our formalization and arguments can be extended to multi-threaded
 programs and their behaviors.
 
-Consider the behavior $\mathcal{B}$ to be composed of $\mathcal{B}_c = \textless
-b_{1_c}, \ldots, b_{n_c} \textgreater$ and $\mathcal{B}_n = \textless b_{1_n},
-\ldots, b_{n_n} \textgreater$, where elements in $\mathcal{B}_c$ consist of
-critical values that form core functionality of the program, while elements in
+Consider the behavior $\mathcal{B}$ to be composed of $\mathcal{B}_nc =$
+\textless\ $b_{1_c}, \ldots, b_{n_c}$ \textgreater\ and $\mathcal{B}_n =$
+\textless\ $b_{1_n}, \ldots, b_{n_n}$ \textgreater, where elements in
+$\mathcal{B}_c$ consist of critical values that form core functionality of the program, while elements in
 $\mathcal{B}_n$ are noncritical values with respect to the core functionality of
 the program.
 % We consider behaviors of the two programs, $\mathcal{P}$ and

@@ -298,9 +298,9 @@ give an overview of this hybrid approach.
    \lIf{$*$ is $==$} {\\
    \mytab $maxlength_{str} \longleftarrow OP$\\
    \mytab $minlength_{str} \longleftarrow OP$
-   } \lElseIf {$*$ is $\textgreater$ {\bf OR} $*$ is $\ge$} {
+   } \lElseIf {$*$ is \textgreater\ {\bf OR} $*$ is $\ge$} {
     $minlength_{str} \longleftarrow OP$
-   } \lElseIf {$*$ is $\textless$ {\bf OR} $*$ is $\le$} {
+   } \lElseIf {$*$ is \textless\ {\bf OR} $*$ is $\le$} {
     $maxlength_{str} \longleftarrow OP$
    } \lElseIf {$*$ is Prefix Check} {
     $\textit{PrefixSet}_{str} \cup OP$
@@ -495,15 +495,15 @@ set and generate the repaired object.
     \lIf{$Length == 0$} {\\
      \mytab $R_i, R_j \longleftarrow 0$
     } \lElse {
-        \lIf{$i \textgreater j$} {\\
+        \lIf{$i$ \textgreater\ $j$} {\\
            \mytab $R_i \longleftarrow j - 1$
         }
-        \lIf{$i \textgreater Length$ \bf{OR} $j \textgreater Length$} {\\
+        \lIf{$i$ \textgreater\ $Length$ \bf{OR} $j$ \textgreater\ $Length$} {\\
            \mytab $R_i \longleftarrow Length - 1$ or $R_j \longleftarrow Length -
 1$ based on condition\\
            \mytab \code{/* more conditions possible */}
         }
-        \lIf{$i \textless 0$ \bf{OR} $j \textless 0$} {\\
+        \lIf{$i$ \textless\ $0$ \bf{OR} $j$ \textless\ $0$} {\\
           \mytab $R_i \longleftarrow 0$ or $R_j \longleftarrow 0$ based on
 condition\\
           \mytab \code{/* more conditions possible */}
