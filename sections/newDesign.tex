@@ -16,8 +16,8 @@ goals mentioned in \xref{sec:definition}.
 
 Figure~\ref{fig:overallDesign} shows \tool's workflow, which involves three
 main stages. First, \tool\ uses program analysis techniques to precisely
-identify points of interest, \ie\ string objects or API arguments that must be
-repaired to prevent runtime exceptions. In the second stage, \tool\ leverages
+identify points of interest, \ie\ \code{string} objects or API arguments that
+must be repaired to prevent runtime exceptions. In the second stage, \tool\ leverages
 custom algorithms to generate relevant patches. Specifically, \tool\ performs
 intra-procedural static and dynamic analyses to identify and evaluate
 constraints on the string objects under consideration. Third, \tool\ uses the
@@ -113,16 +113,16 @@ would definitely alter the intended control flow.
 Checked runtime exceptions may be placed in the (i) same method, or (ii)
 upstream in the call chain. While handling the former scenario is trivial,
 \tool\ handles the latter case by identifying all possible call chains (in
-the call graph) involving the concerned method using reverse breadth first
-search, and determining ancestor methods where the call site was wrapped in
+the \textit{call graph}) involving the concerned method using reverse breadth
+first search, and determining ancestor methods where the call site was wrapped in
 \code{try-catch} block of compatible exception type.
 
 \myparagraph{(iii) Reaching definitions analysis} Taint and call graph analyses
 together provide a set of program points to be instrumented with the
 patch. However, this set can be further pruned. \tool\ performs \textit{reaching
 definitions} analysis to skip marked statements if
-(i) the string variables contained in such statements have already been patched
-upstream in the method, and (ii) the variables have not been redefined along any
+(i) the \code{String} variables contained in such statements have already been
+patched upstream in the method, and (ii) the variables have not been redefined along any
 path that originates from the patched statement. This analysis further reduces
 instrumentation points in a program.
 
