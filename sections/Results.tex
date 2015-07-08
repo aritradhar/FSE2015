@@ -185,7 +185,8 @@ off, \tool\ will automatically patch all relevant \code{String} APIs and thus
 handle all cascaded failures involving malformed \code{String} objects.
 We observe that two benchmarks throw cascaded exceptions even after being
 repaired. The cascading was one level deep and triggered exception in another
-non-String code (and thus unpatched), which caused the application to crash.
+non-\code{String} code (and thus unpatched), which caused the application to
+crash.
 
 \end{mylist}
 
