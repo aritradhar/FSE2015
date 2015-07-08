@@ -75,18 +75,18 @@ open-source libraries.}
 \setlength{\tabcolsep}{3pt}
 \begin{tabular}{ll|ll|ll}
 
-$\mathcal{N}_{CG}$ & \# nodes in call graph & $\mathcal{T}$ & \# total cases in
-test suite & $FCI$ & Flow Consistency Index\\
+$\mathcal{N}_{CG}$ & \# nodes in call graph & $\mathcal{F}_{U}$ & \# failed
+tests in unpatched & $FCI$ & Flow Consistency Index\\
 
 $\mathcal{N}_{Unit}$& \# \code{Unit} analyzed & $\mathcal{F}_{P}$ & \# failed
 tests in patched version w/o forced patching & $\mathcal{IC}_{NO}$
 & Instrumentation w/o optimization (recall \xref{subsec:optimizations})\\
 
-$\mathcal{S}_{U}$ & \# successful tests in unpatched & $\mathcal{F}_{P}^{*}$ &
-\# failed tests in patched version w/ forced patching & $\mathcal{IC}_{WO}$ &
+$\mathcal{T}$ & \# total cases in test suite & $\mathcal{F}_{P}^{*}$ & \# failed
+tests in patched version w/ forced patching & $\mathcal{IC}_{WO}$ &
 Instrumentation w/ optimization (recall \xref{subsec:optimizations})\\
 
-$\mathcal{F}_{U}$ & \# failed tests in unpatched & $PPI$ & Patch Precision
+$\mathcal{S}_{U}$ & \# successful tests in unpatched & $PPI$ & Patch Precision
 Index & $\mathcal{RS}_{CE}$ & Cascaded exception exists
 \end{tabular}
 }
