@@ -74,23 +74,22 @@ resulting in failed test scenarios.
 \item \textbf{Precision of the patch}: Precision of a patch is governed by the
 similarity between a \tool\ generated patch and the developer's fix for the same
 bug. We define \textbf{Patch Precision Index (PPI)} as a measure of the
-precision of the patch.
-$$PPI = \frac{\#~Constraints_{\tool}}{\#~Constraints_{Developer}}$$
+precision of the patch. $$PPI =
+\frac{\#~Constraints_{\tool}}{\#~Constraints_{Developer}}$$
 % * \frac{\#~LOC_{Developer}}{\#~LOC_{\tool}} *
 % \frac{Output_{\tool}}{Output_{Developer}}$$
 % 
 Specifically, PPI compares the similarities in constraints in \tool's patch
 against the developer's version, thereby considering the core logic to construct
-an effective patch. \tool\ analyzes and registers the constraints which are
-related to only \code{String} objects. By doing so, we ensure that the value of
-PPI is \emph{influenced} only by \code{String} objects. If \tool's patch has
-fewer constraints than the developer's fix, the PPI will be lesser. Thus, a
-higher value of PPI, \ie\ closer to $1$, is preferred. PPI values greater than
-$1$ mean that \tool\ generates many more constraints than that of in the
-developer's fix, while low values of PPI suggest that \tool\ may have missed out
-on several constraints. PPI can be computed automatically, since \tool\ already
-generates a list of constraints (in the form of bytecodes), and static program
-analysis of the developer's patch can provide the same.
+an effective patch. \tool\ analyzes and registers the constraints that are
+related to only \code{String} objects, thereby ensuring that PPI is also
+influenced by constraints on \code{String} objects alone. If \tool's patch has
+fewer constraints than the developer's fix, the PPI will be less than $1$. In
+contrast, PPI greater than $1$ indicates that \tool\ generates many more
+constraints than those in the developer's fix. Thus, a PPI closer to $1$ is
+desirable. PPI can be computed automatically, since \tool\ already generates a
+list of constraints (in the form of bytecodes), and static analysis of the
+developer's patch can provide the same.
 %\note{Some grammatical issue. Please fix.}
 
 Table~\ref{tab:results} lists the PPI for the benchmarks in our set. We note
@@ -107,11 +106,13 @@ offending bytecodes, we observed that \tool\ generated constraints on
 \code{String} conditionals were very similar to the developer's fix, thereby
 confirming \tool's high precision in generating patches.
 
-Note that taint analysis only works when sources and sinks are defined.
+\note{\todo{What is the PPI if we only compare \code{String} constraints?}}
+
+Note that the taint analysis works only when sources and sinks are defined.
 Since our library benchmarks have no notion of sources or sinks, \tool's
-bytecode analysis of the libraries did not involve the taint analysis phase.
-However, even without taint analysis, \tool's patches were of high quality, as
-demonstrated by the high PPI.
+bytecode analysis of the libraries does not involve the taint analysis phase.
+However, even without taint analysis, \tool's patches are of high quality, as
+indicated by the high PPI.
 
 \begin{table}[t]
 \centering
@@ -135,12 +136,12 @@ demonstrated by the high PPI.
 \label{tab:taintAnalysis}
 \end{table}
 
-\item \textbf{Precision of taint analysis}: \tool\ leverages off-the-shelf
-tools (\infoflow) to perform the taint analysis. We measure precision of our
-choice of tool by measuring the number of statements in the analyzed code that
-are deemed unsafe to patch. Since we could not measure the precision of our
-taint analysis on the library benchmarks (as discussed earlier), we select $3$
-diverse applications and apply \tool\ in its entirety to obtain a measure of the
+\item \textbf{Precision of taint analysis}: \tool\ leverages off-the-shelf tools
+(\infoflow) to perform the taint analysis. We measure precision of our choice of
+tool by measuring the number of statements in the analyzed code that are deemed
+unsafe to patch. Since we could not measure the precision of taint analysis on
+the library benchmarks (for reasons discussed earlier), we select $3$ diverse
+applications and apply \tool\ in its entirety to obtain a measure of the
 precision of the taint analysis. Specifically, for each application we provided
 a set of sources, sinks and taint propagators to \infoflow, which listed the
 total number of tainted paths, \ie\ paths from a sensitive source to a sink and
@@ -164,7 +165,7 @@ type or its base type. This is required else patching will disrupt the normal
 control flow of the program.
 
 We measure the extent of this optimization, which prevents disruption of the
-control flow using the \textbf{Flow Consistency Index (FCI)} that is calculated
+control flow, using the \textbf{Flow Consistency Index (FCI)} that is calculated
 as $FCI = n$, where $n$ is the number of exceptions in the application that
 must be ignored \tool\ for forced patching of the bug. Note that $FCI \ge 0$,
 and a lower value of $FCI$ is desirable. We observe that patching four bugs
