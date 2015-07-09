@@ -1,29 +1,30 @@
-\section{Conclusion and Future Work}
+\section{Conclusion}%% and Future Work}
 \label{sec:conc}
 
 Running programs may crash unexpectedly due to vulnerabilities in the code and
-malformed data.
-The cost associated with such crashes can vary with the criticality of the
-applications. Therefore, it is hardly a surprise that automatic program
-repairing has been an actively researched area over the past decade.
-In this work, we have presented a novel program repairing technique, and a tool
-\tool\ based on it which employs hybrid program analysis to protect a running
-program from failures originating from string-handling errors leading to a
-program crash.
-Our choice of \java\ \code{String} APIs is driven mainly by the popular usage of
-string objects and bugs associated with them.
-By focusing on a specific data type, and taking the program context into
-account, \tool\ can develop patches that are precise and  semantically close to
-the ones created by the developers.
-Hence, when the patches are activated, the program exhibits a behavior which is
-close to the intended program behavior.
+malformed data. The cost associated with such crashes can vary with the
+criticality of the applications.
+%% Therefore, it is hardly a surprise that automatic program repairing has been
+%% an actively researched area over the past decade.
+In this work, we present a novel program repairing technique, and a
+prototype tool \tool\ based on it, which employs hybrid program analysis to
+protect a running program from failures originating from string-handling errors
+leading to a program crash.
 
+Our choice of \java\ \code{String} APIs is driven mainly by the popular usage of
+string objects and bugs associated with them. By focusing on a specific data
+type, and taking the program context into account, \tool\ can develop patches
+that are precise and semantically close to the ones created by the developers.
+Hence, when the patches are activated, the program exhibits a behavior close to
+the intended program behavior.
+% % 
 %this part is now in discussion section
-Our study shows that \tool\ can handle programs that are real, and can produce
-patches efficiently. Motivated by the results of our study as well as by the
-research conducted by other researchers, we intend to extend \tool\ in the
-future by adding support for other \java\ APIs and also by adding more
-intelligence to the process of patch generation.
+Our evaluation shows that \tool\ can handle programs that are real, and can
+produce patches efficiently.
+%% Motivated by the results of our study as well as by the research conducted by
+%% other researchers, we intend to extend \tool\ in the future by adding support
+%% for other \java\ APIs and also by adding more intelligence to the process of
+%% patch generation.
 
 \section{Acknowledgements}
 \label{sec:acks}
