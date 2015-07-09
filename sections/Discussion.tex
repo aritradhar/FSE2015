@@ -1,34 +1,41 @@
-\section{Discussion}
+\section{Discussion and Future Work}
 \label{sec:discussion}
 
-In this section we discuss the weaknesses of \tool\ and also propose
-remedies to overcome them.
+%% In this section we discuss the weaknesses of \tool\ and also propose remedies
+%% to overcome them.
 
-\myparagraph{Focus on String APIs} \tool\ is heavily directed towards repairing 
- \code{String} objects and handling API
-exceptions. While this may seem to be a limitation, we believe that \tool's
+\begin{mylist}
+ 
+ \item \myparagraph{Focus on String APIs} In its present form, \tool\ is
+primarily targeted towards repairing \code{String} objects and handling API
+exceptions. While this may seem to be a limitation, we believe that \tool{}'s
 strength lies in the fact that it mines contextual data about runtime exceptions
-related to \code{String} objects that helps development of intelligent patches.
-Moreover, \tool's technique is generic and can be ported to any other class of
-\java\ APIs. We leave this extension for the future.
+related to \code{String} objects, which helps development of intelligent
+patches. Further, \tool{}'s technique is generic and can be ported to other
+classes of \java\ APIs. We leave this extension for the future. \note{How can
+this be done. I think we need to give some intuition. -- md}
 
-\myparagraph{Lack of guarantee regarding patch correctness} \tool attempts to
-generate precise patches considering the program context which avoids
-cascading exceptions to a great extent producing the intended behavior in case
-of failures. However, it still cannot give guarantees about elimination of cascading
-exceptions, particularly when there are heavy object dependencies in the program.
-In the future, we plan to support \tool\ with program invariants that would ensure 
+ \item \myparagraph{Patch correctness} \tool\ attempts to generate precise
+patches considering the program context that avoids cascading exceptions to a
+great extent and producing the intended behavior in cases of failure. However,
+it sill cannot give guarantees about elimination of cascading exception,
+particularly when there are heavy object dependencies in the program. In the
+future, we plan to support \tool\ with program invariants that would ensure
 acceptable behavior. The invariants can be specified by a programmer or can be
-automatically generated with the help of training runs.
+automatically generated with the help of training runs. \note{This is not clear
+at all. -- md}
 
-\myparagraph{Handling of limited constraints} The constraint data store used by
-\tool\ is easy to build as it captures
-limited number of fairly simple \code{String} characteristics which are used to
-generate patching \code{String} objects. This approach may not be adequate particularly
-if the program contains a large number of complex constraints. The quality of
-\tool's patches would generally depend on the nature of its constraint solver,
-which is pluggable. \tool's current solver is simple and can efficiently
-handle a limited number of simple constraints. A more sophisticated off-the-shelf solver may improve
-the repair quality. However, the current evaluation of the tool
-on several library APIs described in~\xref{sec:results} indicates that the
-constraints that exist in practice are normally less complex and are limited in number.
+ \item \myparagraph{Handling of limited constraints} \tool{}'s constraint data
+store is easy to build as it captures limited number of fairly simple
+\code{String} characteristics, which are subsequently used to generate patches
+for \code{String} objects. This approach may not be adequate particularly if the
+program contains a large number of complex constraints. The quality of \tool{}'s
+patches would generally depend on the nature of its constraint solver, which is
+pluggable. \tool{}'s current solver is simple and can efficiently handle a
+limited number of simple constraints. A more sophisticated off-the-shelf solver
+may improve the repair quality. However, the current evaluation of the tool on
+several library APIs described in~\xref{sec:results} indicates that the
+constraints that exist in practice are normally less complex and are limited in
+number.
+
+\end{mylist}
