@@ -87,9 +87,13 @@ influenced by constraints on \code{String} objects alone. If \tool's patch has
 fewer constraints than the developer's fix, the PPI will be less than $1$. In
 contrast, PPI greater than $1$ indicates that \tool\ generates many more
 constraints than those in the developer's fix. Thus, a PPI closer to $1$ is
-desirable. PPI can be computed automatically, since \tool\ already generates a
-list of constraints (in the form of bytecodes), and static analysis of the
-developer's patch can provide the same.
+desirable. In our experiments, we see all the PPI value \textless $1$, the main
+reason for that is the bugged version contents lesser constrains than the
+developer's fix version. Which is the reason the runtime exceptions were
+thrown in the first place. Thus \tool\ analyzed less number of constrains in
+the bugged code than developer fix, and PPI \textless\ $1$.PPI can be computed
+automatically, since \tool\ already generates a list of constraints (in the form
+of bytecodes), and static analysis of the developer's patch can provide the same.
 %\note{Some grammatical issue. Please fix.}
 
 Table~\ref{tab:results} lists the PPI for the benchmarks in our set. We note
@@ -113,7 +117,7 @@ offending bytecodes, we observed that \tool\ generated constraints on
 \code{String} conditionals were very similar to the developer's fix, thereby
 confirming \tool's high precision in generating patches.
 
-\note{\todo{What is the PPI if we only compare \code{String} constraints?}}
+%\note{\todo{What is the PPI if we only compare \code{String} constraints?}}
 
 Note that the taint analysis works only when sources and sinks are defined.
 Since our library benchmarks have no notion of sources or sinks, \tool's
