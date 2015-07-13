@@ -91,7 +91,7 @@ desirable. In our experiments, we see all the PPI value \textless $1$, the main
 reason for that is the bugged version contents lesser constrains than the
 developer's fix version. Which is the reason the runtime exceptions were
 thrown in the first place. Thus \tool\ analyzed less number of constrains in
-the bugged code than developer fix, and PPI \textless\ $1$.PPI can be computed
+the bugged code than developer fix, and PPI \textless\ $1$. PPI can be computed
 automatically, since \tool\ already generates a list of constraints (in the form
 of bytecodes), and static analysis of the developer's patch can provide the same.
 %\note{Some grammatical issue. Please fix.}
@@ -106,16 +106,19 @@ comparable to an actual patch.\ignore{two things:
 high number of \code{String} operations, and (ii) \tool\ correctly matches and
 fixes errors in several of these \code{String} operations} PPI for the remainder
 of the benchmarks was observed to be lower, \ie\ \textless\ $0.7$. On manual
-investigation, we found that in couple of benchmarks the developers changed the code
-structure significantly in the patched version. Also they introduced a new set of
-constraints in the patched version which is why for some cases PPI was very low
-(\textless\ $0.7$).\ignore{ On manual inspection of the concerned bugs, we noted
+investigation, we found that for some benchmarks the developers significantly
+changed the code structure in the patched version. Additionally, they introduced
+several new sets of constraints in the patched version, thereby resulting in
+low PPI (\textless\ $0.7$) for some benchmarks.
+\ignore{ On manual inspection of the concerned bugs, we noted
 that the constraints in the specific conditional statement involved several
 other data types other than \code{String}. Since \tool\ operates only over
-\code{String} objects, the effective PPI reduces.} On manual inspection of the
-offending bytecodes, we observed that \tool\ generated constraints on
-\code{String} conditionals were very similar to the developer's fix, thereby
-confirming \tool's high precision in generating patches.
+\code{String} objects, the effective PPI reduces.}
+%% this is a repetition??
+%% On manual inspection of the offending bytecodes, we observed that \tool\
+%% generated constraints on \code{String} conditionals were very similar to the
+%% developer's fix, thereby confirming \tool's high precision in generating
+%% patches.
 
 %\note{\todo{What is the PPI if we only compare \code{String} constraints?}}
 
