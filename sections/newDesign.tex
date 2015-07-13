@@ -53,15 +53,15 @@ system, console, network, GUI, etc.
 \hline
 \multicolumn{1}{|c|}{\textbf{Class}} & \multicolumn{1}{c|}{\textbf{Source}}\\
 \hline
-\code{java.io.InputStream} & \code{read()}\\
-\code{java.io.BufferedReader} & \code{readLine()}\\
-\code{java.net.URL} & \code{openConnection()}\\
-\code{java.util.Scanner} & \code{next()}\\
-\code{javax.servlet.ServletRequest} & \code{getParameter()}\\
-\code{org.apache.http.HttpResponse} & \code{getEntity()}\\
-\code{org.apache.http.util.EntityUtils} & \code{toString()}\\
-\code{org.apache.http.util.EntityUtils} & \code{toByteArray()}\\
-\code{org.apache.http.util.EntityUtils} & \code{getContentCharSet()}\\
+\code{java.io.InputStream} & \code{read}\\
+\code{java.io.BufferedReader} & \code{readLine}\\
+\code{java.net.URL} & \code{openConnection}\\
+\code{java.util.Scanner} & \code{next}\\
+\code{javax.servlet.ServletRequest} & \code{getParameter}\\
+\code{org.apache.http.HttpResponse} & \code{getEntity}\\
+\code{org.apache.http.util.EntityUtils} & \code{toString}\\
+\code{org.apache.http.util.EntityUtils} & \code{toByteArray}\\
+\code{org.apache.http.util.EntityUtils} & \code{getContentCharSet}\\
 \hline
 \end{tabular}
 \label{table:TaintSources}
@@ -75,11 +75,11 @@ system, console, network, GUI, etc.
 \hline
 \multicolumn{1}{|c|}{\textbf{Class}} & \multicolumn{1}{c|}{\textbf{Sink}}\\
 \hline
-\code{java.io.FileOutputStream} & \code{write()}\\
-\code{java.io.OutputStream} & \code{write()}\\
-\code{java.io.PrintStream} & \code{printf()}\\
-\code{java.net.Socket} & \code{connect()}\\
-\code{java.io.Writer} & \code{write()}\\
+\code{java.io.FileOutputStream} & \code{write}\\
+\code{java.io.OutputStream} & \code{write}\\
+\code{java.io.PrintStream} & \code{printf}\\
+\code{java.net.Socket} & \code{connect}\\
+\code{java.io.Writer} & \code{write}\\
 \hline
 \end{tabular}
 \label{table:TaintSinks}
@@ -441,7 +441,7 @@ ConstraintStore.updatePrefix("<foo()>", st, "ab");
 st = GenerateStringStatic.init("<foo()>", st);
 ConstraintStore.updatePrefix("<foo()>", st, "abcd");
 st = GenerateStringStatic.init("<foo()>", st);
-if(st.startsWith("abcd")) {{/*do something*/}}
+if(st.startsWith("abcd")) {/*do something*/}
 String temp = Input();
 ConstraintStore.updateSet("<foo()>", st, temp);
 st = GenerateStringDynamic.init("<foo()>", st);
