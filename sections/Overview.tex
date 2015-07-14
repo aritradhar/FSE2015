@@ -76,7 +76,7 @@ method, which ensures that \code{beginIndex} cannot be greater than
 String temp = null;
 try {
   temp = filename.substring(/*@prefix, index + separatorAdd);@*/
-}catch(IndexOutOfBoundsException ex) {
+} catch(IndexOutOfBoundsException ex) {
    int length = filename.length;
    int t = index + separatorAdd;
    temp = filename.substring(
