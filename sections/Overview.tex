@@ -11,27 +11,6 @@ and unexpected failures may happen. These failures often result in applications
 throwing runtime exceptions, which if not handled correctly may crash the
 application.
 
-\ignore{ \begin{table}[t] \scriptsize \centering
-\begin{tabular}{|l|r|r|}
-\hline
-\multicolumn{1}{|c|}{\textbf{Runtime Exception Type}} &
-\multicolumn{1}{c|}{\textbf{Frequency}} & \multicolumn{1}{c|}{\textbf{\%}}\\
-% \scalebox{0.83}
-% {
-\hline
-\code{NullPointerException} & $34912$ & $54.94$ \\
-\code{ClassCastException} & $7504$ & $11.81$ \\
-\code{IndexOutOfBoundsException} & $6637$ & $10.44$ \\
-\code{SecurityException}  & $5818$ & $9.15$ \\
-\hline
-\end{tabular}
-\caption{Prominent runtime exceptions from
-\texttt{stackoverflow}~\cite{stackoverflow}.}
-\label{tab:stackoverlow}
-% }
-\end{table}
-}
-
 
 \lstset{language=Java, caption=Snippet from \code{fileUtils} class in Apache
 Commons library. , label = snippet:exampleRepairing2}
@@ -113,54 +92,7 @@ and \code{endIndex}. Method \code{substring} can now regenerate the substring
 ensuring that the method call will not fail. The actual patch provided by the
 developers is semantically similar to the one developed by \tool, and both
 versions of the program generate the exact the same output.
-% for the failed test case.
 
-\ignore{Similarly, the patch developed by \tool\ for the bug depicted in
-Code~\ref{snippet:exampleRepairing1} is semantically similar to the actual one
-provided by the developers and is presented in
-Code~\ref{snippet:exampleRepairing4}. Here the object referenced by the string
-variable \code{temp} is regenerated after adjusting the offset and ensuring that
-the constraint represented by the program condition \code{offset <= length}
-would never be violated.
-
-
-\lstset{language=java, caption=Patch for the Apache Log4j bug.,
-label = snippet:exampleRepairing4, firstnumber =4}
-\begin{figure}[t]
-\centering
-\begin{lstlisting}
-try {
-    temp = new String(chars, offset, length);
-} catch(StringIndexOutOfBoundsException ex) {
-    int i = chars.length;
-    temp = new String(chars,
-        IndexRepair.getStart(offset, length, i),
-            IndexRepair.getEnd(offset, length, i));
-}
-priorVariables.add(temp);
-\end{lstlisting}
-\end{figure}
-}
-
-\ignore{\note{\tool\ performs hybrid constraint analysis to produce high-quality
-patches.
-This analysis ensures that the generated \code{String} objects obeying constraints imposed on them
-by the program so as to exhibit a behavior that is close to the intended one. This ability of
-\tool\ is illustrated by an example in
-Code~\ref{snippet:constraintCollection}. Line numbers $3, 4, 5 $ and $7$ in
-Code~\ref{snippet:constraintCollection} contain conditions associated with
-\code{st}. The first three constraints can be collected and evaluated
-statically and the last one dynamically as \code{userInput()} will return a
-\code{String} object only at runtime. All of these constraints are stored in a
-data structure called \textit{constraint store} for evaluation which is shown in
-Figure~\ref{fig:constraint}. %\tool\ uses constraint store to evaluate
-%which is described in Algorithm~\ref{algo:constraint}. More detailed process is
-%discussed later in~\xref{sec:tool:stage2}.
-The process of evaluation is described in Algorithm~\ref{algo:constraint} and
-discussed in~\xref{sec:tool:stage2}. }
-\note{Aritra: Can't we provide a real example here? It need not be an
- example from our study. Any real example will do.}
-}
 
 \section{Problem Definition}
 \label{sec:definition}
@@ -219,15 +151,6 @@ equivalent to $\mathcal{B}_{\theta_n}$.
 % $\mathcal{B}_{\theta_n}$ is within limits acceptable to the programmer.
 % \end{mybullet}
 
-\ignore{the reviewers are not happy with the informal notion of "close to" or "acceptable".
-The changes I have made still do not address this issue convincingly. If we cannot
-come up with a good solution to this problem, we might say
-that formal definition of acceptance criteria and its enforcement is future work. Please
-comment on this. 
-}
-
-\ignore{\note{I removed the offending text. Does it read better? -- md. Made
-another minor change. - Rahul}}
 
 % \subsection{Goals}
 % \label{sec:tool:goals}
@@ -262,7 +185,3 @@ guaranteed to crash.
 incur no runtime overhead during normal program execution, and only negligible
 overhead in case of failures.
 
-% We next present in detail techniques and algorithms to produce patches under
-% more complex scenarios.
-% Our study presented in \xref{sec:results} suggests that majority of
-% the string generation scenarios in practice are less complex.

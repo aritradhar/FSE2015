@@ -1,8 +1,6 @@
 \section{Discussion and Future Work}
 \label{sec:discussion}
 
-%% In this section we discuss the weaknesses of \tool\ and also propose remedies
-%% to overcome them.
 
 \begin{mylist}
  
@@ -14,7 +12,6 @@ related to \code{String} objects, which helps development of intelligent
 patches. Further, \tool{}'s technique is generic and can be ported to other
 classes of \java\ APIs. This requires extensive study of the characteristics
 and constraints of other object types. We leave this extension for the future.
-%\note{How can this be done. I think we need to give some intuition. -- md}
 
  \item \myparagraph{Patch correctness} \tool\ attempts to generate precise
 patches considering the program context that avoids cascading exceptions to a
@@ -25,7 +22,6 @@ future, we plan to support \tool\ with program invariants that would ensure
 acceptable behavior. The invariants can be specified by a programmer or can be
 automatically generated with the help of training runs and later used as
 assertion at the time of execution to ensure certain conditions remain true.
-%\note{This is not clear at all. -- md}
 
  \item \myparagraph{Handling of limited constraints} \tool{}'s constraint data
 store is easy to build as it captures limited number of fairly simple
