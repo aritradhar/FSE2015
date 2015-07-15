@@ -17,7 +17,13 @@ model-checking~\cite{biere2014, wei-issta-2010}. Static techniques are effective
 in producing accurate patches. However, shutting down the system to produce and
 apply patches is not always a feasible or a desirable option. The motivation for
 our technique comes from the fact that for some applications fixing the bug
-after a program crash is not an option.
+after a program crash is not an option. Long and Rinard~\cite{SPR} propose a
+technique that takes as input a test suite consisting both, positive as well as negative test
+cases, and synthesizes program conditions which allows the program to pass all
+the test cases. The conditions are synthesized based on the values that related
+program variables hold during the execution of the test suite. In comparison,
+our technique deals with unexpected and undesirable situations that arise during
+a program execution, and hence, does not need a test suite.
 
 \myparagraph{String Generation} A key to effective program repairing is to
 reduce the problem by targeting a specific domain, or specific data structures
