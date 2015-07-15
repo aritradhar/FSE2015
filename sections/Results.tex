@@ -83,17 +83,20 @@ Specifically, PPI compares the similarities in constraints in \tool's patch
 against the developer's version, thereby considering the core logic to construct
 an effective patch. \tool\ analyzes and registers the constraints that are
 related to only \code{String} objects, thereby ensuring that PPI is also
-influenced by constraints on \code{String} objects alone. If \tool's patch has
-fewer constraints than the developer's fix, the PPI will be less than $1$. In
-contrast, PPI greater than $1$ indicates that \tool\ generates many more
-constraints than those in the developer's fix. Thus, a PPI closer to $1$ is
-desirable. In our experiments, we see all the PPI value \textless $1$, the main
-reason for that is the bugged version contents lesser constrains than the
-developer's fix version. Which is the reason the runtime exceptions were
-thrown in the first place. Thus \tool\ analyzed less number of constrains in
-the bugged code than developer fix, and PPI \textless\ $1$. PPI can be computed
-automatically, since \tool\ already generates a list of constraints (in the form
-of bytecodes), and static analysis of the developer's patch can provide the same.
+influenced by constraints on \code{String} objects alone.
+
+If \tool's patch has fewer constraints than the developer's fix, the PPI will be
+less than $1$. In contrast, PPI greater than $1$ indicates that \tool\ generates
+many more constraints than those in the developer's fix. Thus, a PPI closer to
+$1$ is desirable. However, for several benchmarks, we found the PPI value
+\textless $1$. This observation stems from the fact that the buggy version of
+the benchmark contains lesser constrains than the developer's fix version.
+% Which is the reason the runtime exceptions were thrown in the first place.
+Thus, \tool\ analyzed fewer number of constrains in the buggy benchmark than
+developer's fix, thereby causing PPI \textless\ $1$. PPI can also be computed
+automatically since \tool\ already generates a list of constraints (in the form
+of bytecodes), and static analysis of the developer's patch can provide the
+same.
 %\note{Some grammatical issue. Please fix.}
 
 Table~\ref{tab:results} lists the PPI for the benchmarks in our set. We note
@@ -107,9 +110,10 @@ high number of \code{String} operations, and (ii) \tool\ correctly matches and
 fixes errors in several of these \code{String} operations} PPI for the remainder
 of the benchmarks was observed to be lower, \ie\ \textless\ $0.7$. On manual
 investigation, we found that for some benchmarks the developers significantly
-changed the code structure in the patched version. Additionally, they introduced
-several new sets of constraints in the patched version, thereby resulting in
-low PPI (\textless\ $0.7$) for some benchmarks.
+changed the code structure and
+% in the patched version. Additionally, they
+introduced several new sets of constraints in the patched version, which
+resulted in low PPI (\textless\ $0.7$) for those benchmarks.
 \ignore{ On manual inspection of the concerned bugs, we noted
 that the constraints in the specific conditional statement involved several
 other data types other than \code{String}. Since \tool\ operates only over
@@ -195,13 +199,14 @@ Specifically, cascaded exceptions may arise if the patch generates \code{String}
 objects that represent a malformed string. Further, if we keep the optimization
 in \xref{subsubsec:minimizePatchInstrumentation}, then cascaded failures may
 occur even for subsequent \code{String} APIs handling the malformed
-string following the point of patching. If the optimization is turned
-off, \tool\ will automatically patch all relevant \code{String} APIs and thus
-handle all cascaded failures involving malformed \code{String} objects.
-We observe that two benchmarks throw cascaded exceptions even after being
-repaired. The cascading was one level deep and triggered exception in another
-non-\code{String} code (and thus unpatched), which caused the application to
-crash.
+string following the point of patching.
+
+If the above optimization is turned off, \tool\ will automatically patch all
+relevant \code{String} APIs and thus handle all cascaded failures involving
+malformed \code{String} objects. We observe that two benchmarks throw cascaded
+exceptions even after being repaired. The cascading was one level deep and
+triggered exception in another non-\code{String} code (and thus unpatched),
+which caused the application to crash.
 
 \end{mylist}
 
@@ -321,7 +326,6 @@ servlet operations. However, the \code{catch} block handled the generic
 \code{Exception}, which is the base class for all exceptions. Thus, both the
 servlet exceptions and the \code{IndexOutOfBoundException} from the
 \code{substring} call were handled in a generic fashion. \tool's patched library
-ensures that exceptions originating from the \code{substring} call are handled
-properly.
+ensures that exceptions originating from \code{substring} are handled properly.
 
 \end{mylist}

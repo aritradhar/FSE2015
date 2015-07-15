@@ -17,27 +17,31 @@ model-checking~\cite{biere2014, wei-issta-2010}. Static techniques are effective
 in producing accurate patches. However, shutting down the system to produce and
 apply patches is not always a feasible or a desirable option. The motivation for
 our technique comes from the fact that for some applications fixing the bug
-after a program crash is not an option. Long and Rinard~\cite{SPR} propose a
-technique that takes as input a test suite consisting both, positive as well as negative test
-cases, and synthesizes program conditions which allows the program to pass all
-the test cases. The conditions are synthesized based on the values that related
-program variables hold during the execution of the test suite. In comparison,
-our technique deals with unexpected and undesirable situations that arise during
-a program execution, and hence, does not need a test suite.
+after a program crash is not an option.
+
+In concurrent work, Long and Rinard~\cite{SPR} propose a technique that takes as
+input a test suite consisting both, positive as well as negative test cases, and
+synthesizes program conditions that allow the program to pass all the test
+cases. The conditions are synthesized based on the values that related program
+variables hold during the execution of the test suite. In comparison, our
+technique deals with unexpected and undesirable situations that arise during a
+program execution, and hence, does not need a test suite.
 
 \myparagraph{String Generation} A key to effective program repairing is to
 reduce the problem by targeting a specific domain, or specific data structures
 such as arrays, or data types such as strings, and then use specialized
 transformation and solving techniques for repairing that can exploit the
-constrained environment. Gulwani~\cite{Gulwani:2011} considered Microsoft Excel
-programs as the use case scenario and identified string transformation as the
-major class of programming problem. The author designed an algorithm for
-learning a string expression that is consistent with input-output examples. An
-input-output example is generated from a mapping that maps a set of strings to
-a string defining a operation such as concatenation. Singh and
-Gulwani~\cite{Singh:2012} deal with semantic transformation of a string that
-need to be interpreted as more than a sequence of characters. Their approach may
-complement our approach by improving our string generation process.
+constrained environment.
+
+Gulwani~\cite{Gulwani:2011} considered Microsoft Excel programs as the use case
+scenario and identified string transformation as the major class of programming
+problem. The author designed an algorithm for learning a string expression that
+is consistent with input-output examples. An input-output example is generated
+from a mapping that maps a set of strings to a string defining a operation such
+as concatenation. Singh and Gulwani~\cite{Singh:2012} deal with semantic
+transformation of a string that need to be interpreted as more than a sequence
+of characters. Their approach may complement our approach by improving our
+string generation process.
 
 Samimi et al. present a tool \textit{PHPQuickFix} based on the static analysis
 approach and that targets a special case of printing related bug in
@@ -95,8 +99,8 @@ The approach works by assigning zero at the time of divide-by-zero error, read
 zero and ignores write at the time of null-deference error. Their implementation
 is on $x86$ and $x86-64$ binaries. They also implement a dynamic taint analysis
 to see the effect of their patching until the program stabilizes that they
-called as \emph{error shepherding}. However, unlike our approach, this technique
-requires a special runtime support that is built into the operating system.
+called as \emph{error shepherding}. However, unlike \tool, this technique
+requires a special runtime that is built into the operating system.
 
 \myparagraph{Genetic Programming} The researchers have also tried genetic
 programming approach for repairing. Goues et al. use genetic programming
@@ -112,9 +116,9 @@ and completeness of test-suites. In contrast, our approach is completely
 independent of a test-suite.
 
 \myparagraph{Strings Related} Samimi et al. present a dynamic repairing
-technique for PHP applications~\cite{SamirniSAMTH12}. They present a tool
-\textit{PHPRepair} to repair auto-generated malformed HTML codes from the PHP
-scrips. Often the HTML codes do not have proper tags that are silently
+technique for PHP applications~\cite{SamirniSAMTH12}. They present
+\textit{PHPRepair}, a tool to repair auto-generated malformed HTML codes from
+the PHP scrips. Often the HTML codes do not have proper tags that are silently
 corrected by the browser but the result is different across browsers. The
 authors employ an efficient SAT solver using cost optimization to find an
 efficient repair.
@@ -124,8 +128,8 @@ efficient repair.
 source code~\cite{conf/sosp/PerkinsKLABCPSSSWZER09}. They use invariants
 analysis for that they use Daikon~\cite{DBLP:journals/scp/ErnstPGMPTX07}. They
 mostly patched security vulnerabilities by some candidate repair patches. Unlike
-our approach, their approach requires a test-suite to develop the knowledge
-about the invariants.
+\tool, \emph{Clear view} requires a test-suite to develop the knowledge about
+the invariants.
 
 \subsection{Main Contrasting Features of Our Approach}
 
@@ -136,9 +140,10 @@ to the expected behavior under the event of crashing. In addition, our approach
 is hybrid with a heavy static component that enables all the analysis including
 the side-effect analysis based on a taint analysis to perform dynamically. It
 incurs negligible overhead even in the event of crashing. Moreover, \tool\ works
-at the application level, and hence is easily portable. Many of these proposed
-repairing approaches have been found to be effective on various problems that
-are scoped appropriately. We believe that ours is the first generic approach
-that targets string objects and repairs program on-the-fly by generating precise
-patches using the properties of string objects and leveraging contextual
-information.
+at the application level, and hence is easily portable.
+
+Many of the repairing approaches as described above have been found to be
+effective on various problems that are scoped appropriately. We believe that
+ours is the first generic approach that targets string objects and repairs
+program on-the-fly by generating precise patches using the properties of string
+objects and leveraging contextual information.
