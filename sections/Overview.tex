@@ -1,12 +1,13 @@
 \section{Overview}
 \label{sec:overview}
 
-Ensuring program correctness statically is an undecidable problem. Thus there is
-always a tradeoff between precision and scalability that static program analysis
-must balance. Static analysis achieves high scalability by making sound
+There is always a tradeoff between precision and scalability that static program
+analysis must balance.
+% Ensuring program correctness statically is an undecidable problem.
+Static analysis achieves high scalability by making sound
 approximations, which typically leads to false positives. Complex programming
 logic and data coming from diverse sources make the already hard problem worse.
-As a result, successful execution of a real application can never be guaranteed,
+As a result, successful execution of an application can never be guaranteed,
 and unexpected failures may happen. These failures often result in applications
 throwing runtime exceptions, which if not handled correctly may crash the
 application.
@@ -37,7 +38,7 @@ private static String doGetPath
 
 Code~\ref{snippet:exampleRepairing2} corresponds to methods from
 \code{fileUtils} class in Apache Common IO library. The method
-\code{getPathNoEndSeparator()} throws a \code{StringIndexOutOfBounds} exception,
+\code{getPathNoEndSeparator} throws a \code{StringIndexOutOfBounds} exception,
 which originates from statement \code{return filename.substring(prefix, index +
 separatorAdd)} on line 13 when the method is called with parameter
 \code{"/foo.xml"}.  Here, the value of \code{prefix} as returned by the method
@@ -91,7 +92,7 @@ the help of the code on line 17, compute legally correct indexes required by
 and \code{endIndex}. Method \code{substring} can now regenerate the substring
 ensuring that the method call will not fail. The actual patch provided by the
 developers is semantically similar to the one developed by \tool, and both
-versions of the program generate the exact the same output.
+versions of the code generate the same output.
 
 
 \section{Problem Definition}
