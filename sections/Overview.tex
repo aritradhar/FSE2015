@@ -36,12 +36,18 @@ private static String doGetPath
 \end{lstlisting}
 \end{figure}
 
-Code~\ref{snippet:exampleRepairing2} corresponds to methods from
+Code~\ref{snippet:exampleRepairing2}
+% corresponds to methods
+shows a snippet
+from the
 \code{fileUtils} class in Apache Common IO library. The method
 \code{getPathNoEndSeparator} throws a \code{StringIndexOutOfBounds} exception,
-which originates from statement \code{return filename.substring(prefix, index +
-separatorAdd)} on line 13 when the method is called with parameter
-\code{"/foo.xml"}.  Here, the value of \code{prefix} as returned by the method
+which originates from the \code{return} statement
+% \code{return filename.substring(prefix, index + separatorAdd)}
+on line 13 when
+the method is called with parameter
+\code{"/foo.xml"}.  Here, the value of \code{prefix} as returned by
+% the method
 \code{getPrefixLength} is 1. It fails to satisfy the constraint implied by the
 program condition \code{prefix <= index + separatorAdd} for \code{substring}
 method, which ensures that \code{beginIndex} cannot be greater than

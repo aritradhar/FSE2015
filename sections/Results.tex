@@ -41,7 +41,7 @@ instrumentation.
 \subsection{Accuracy}
 \label{sub:accuracy}
 
-We evaluate the precision of the patch and the effectiveness of \tool\ as
+We evaluate the precision and effectiveness of \tool\ generated patch as
 described below.
 
 \begin{mylist}
@@ -67,20 +67,16 @@ $83\%$. With forced patching enabled,
 \tool\ successfully patches all but two benchmarks, thereby raising its
 effectiveness to over $93\%$. Note that even the force patched versions of
 \code{Commons CLI2.x} and \code{Eclipse AJ Weaver} fail test cases. We observed
-that in both benchmarks the offending test case throws a non-\code{String}
-related \textit{cascaded} exception that \tool\ could not patch, thereby
-resulting in failed test scenarios.
+that in both benchmarks the failed test case throws a non-\code{String}
+related \textit{cascaded} exception that \tool\ could not patch.
+% , thereby resulting in failed test scenarios.
 
 \item \textbf{Precision of the patch}: Precision of a patch is governed by the
 similarity between a \tool\ generated patch and the developer's fix for the same
 bug. We define \textbf{Patch Precision Index (PPI)} as a measure of the
-precision of the patch.
-%
-$$PPI = \frac{\#~Constraints_{\tool}}{\#~Constraints_{Developer}}$$
-% * \frac{\#~LOC_{Developer}}{\#~LOC_{\tool}} *
-% \frac{Output_{\tool}}{Output_{Developer}}$$
-% 
-Specifically, PPI compares the similarities in constraints in \tool's patch
+precision of the patch. $$PPI =
+\frac{\#~Constraints_{\tool}}{\#~Constraints_{Developer}}$$ Specifically, PPI
+compares the similarities in constraints in \tool's patch
 against the developer's version, thereby considering the core logic to construct
 an effective patch. \tool\ analyzes and registers the constraints that are
 related to only \code{String} objects, thereby ensuring that PPI is also
@@ -202,12 +198,12 @@ in \xref{subsubsec:minimizePatchInstrumentation}, then cascaded failures may
 occur even for subsequent \code{String} APIs handling the malformed
 string following the point of patching.
 
-If the above optimization is turned off, \tool\ will automatically patch all
-relevant \code{String} APIs and thus handle all cascaded failures involving
-malformed \code{String} objects. We observe that two benchmarks throw cascaded
-exceptions even after being repaired. The cascading was one level deep and
-triggered exception in another non-\code{String} code (and thus unpatched),
-which caused the application to crash.
+If the above optimization is turned off, \tool\ will automatically patch the
+relevant APIs and handle all cascaded failures involving
+malformed \code{String} objects. We observed that two benchmarks throw cascaded
+exceptions even after patching. The cascading was one level deep and
+triggered exception in non-\code{String} code (and thus unpatched),
+thereby causing the application to crash.
 
 \end{mylist}
 

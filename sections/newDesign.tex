@@ -34,16 +34,35 @@ required to repair. We list several techniques below that help \tool\ achieve
 precision.
 
 \myparagraph{(i) Taint analysis} The main purpose of taint analysis is to
-broadly identify which program statements can be patched (possibly even
-suboptimally) without affecting the program control flow, \ie\ affect only
+precisely identify which program statements can be patched (possibly even
+suboptimally) without affecting the program's control flow, \ie\ affect only
 objects that are generated and stay within the application throughout their
 lifetime. While this principle is not a binding constraint, it ensures that
 \tool's repairing mechanism does not adversely affect critical program behavior.
 We specify a generic set of sensitive sources and sinks for each input program,
 to identify critical program paths where repaired \code{String} objects
-(possibly suboptimal) must not flow. For example, \tool\ does not repair
-statements that lie along a control flow path leading to an I/O sink, like file
-system, console, network, GUI, etc.
+ (possibly suboptimal)
+must not flow. For example, \tool\ does not repair
+ statements that lie along a control flow path leading to an I/O sink, like file
+ system, console, network, GUI, etc.
+
+The taint analysis module takes as input the compiled byte code intended to be
+repaired, and generates a control flow graph identifying program statements that
+lie along paths from sensitive sources to sensitive sinks. Since, \tool\ targets
+\code{String} objects in particular, it must support taint propagation for all
+\java\ APIs that support string manipulation, including \code{StringBuffer} and
+\code{StringBuilder}.
+\tool\ makes a default, conservative assumption that all objects
+leaving the system have potential to trigger unintended behavior. Thus, all
+\code{String} objects (whether generated or assigned)
+that lie along the tainted path from a sensitive source to a sensitive sink are
+marked as \textit{unsafe} to patch. Subsequently, \tool\ does not repair such
+\code{String} objects.
+
+\tool's configuration further enables developers to specify their own sets of
+sensitive sources and sinks, and exclude specific tainted paths.
+Tables~\ref{table:TaintSources} and \ref{table:TaintSinks} list common
+sensitive sources and sinks for several classes in \java.
 
 \begin{table}[t]
 \centering
@@ -84,24 +103,6 @@ system, console, network, GUI, etc.
 \end{tabular}
 \label{table:TaintSinks}
 \end{table}
-
-The taint analysis module takes as input the compiled byte code intended to be
-repaired, and generates a control flow graph identifying program statements that
-lie along paths from sensitive sources to sensitive sinks. Since, \tool\ targets
-\code{String} objects in particular, it must support taint propagation for all
-\java\ APIs that support string manipulation, including \code{StringBuffer} and
-\code{StringBuilder}.
-\tool\ makes a default, conservative assumption that all objects
-leaving the system have potential to trigger unintended behavior. Thus, all
-\code{String} objects (whether generated or assigned)
-that lie along the tainted path from a sensitive source to a sensitive sink are
-marked as \textit{unsafe} to patch. Subsequently, \tool\ does not repair such
-\code{String} objects.
-
-\tool's configuration further enables developers to specify their own sets of
-sensitive sources and sinks, and exclude specific tainted paths.
-Tables~\ref{table:TaintSources} and \ref{table:TaintSinks} list common
-sensitive sources and sinks for several classes in \java.
 
 \myparagraph{(ii) Call graph analysis} \tool\ leverages call graph analysis to
 further improve the precision for finding instrumentation points. Although
@@ -348,12 +349,12 @@ program code} identifies and analyzes conditional statements involving string
 objects \ignore{of the form} such as \code{if (st.length() == $5$)}. It
 considers only those constraints that the object must satisfy to ensure control
 flows through one of the \textit{normal} branches of the conditional. A normal
-branch is one that does not represent erroneous control flow. For example, a
+branch is one that does not represent an erroneous control flow. For example, a
 branch that encounters a statement \code{System.err.print()} would represent an
 erroneous control flow. \ignore{In other words, \tool\ only considers the
 conditional expressions in the branches that do not involve any exceptions or
 error paths.}
-
+% 
 Code~\ref{snippet:constraintCollection} shows a string variable with several
 constraints as defined by the \code{if} statements on lines $2$-$5$. The first
 three constraints are static as all of them can be evaluated at the compilation
