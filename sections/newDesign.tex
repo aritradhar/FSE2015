@@ -4,7 +4,7 @@
 \begin{figure}[t]
 \centering
 \includegraphics[scale=.38]{images/NewDesignDiagram.pdf}
-\caption{\tool\ workflow.}
+\caption{\bf \tool\ workflow.}
 \label{fig:overallDesign}
 \end{figure}
 
@@ -66,7 +66,7 @@ sensitive sources and sinks for several classes in \java.
 
 \begin{table}[t]
 \centering
-\caption{Common sensitive sources in \java.}
+\caption{\bf Common sensitive sources in \java.}
 \scriptsize
 \begin{tabular}{|l|l|}
 \hline
@@ -88,7 +88,7 @@ sensitive sources and sinks for several classes in \java.
 
 \begin{table}[t]
 \centering
-\caption{Common sensitive sinks in \java.}
+\caption{\bf Common sensitive sinks in \java.}
 \scriptsize
 \begin{tabular}{|l|l|}
 \hline
@@ -147,7 +147,7 @@ patch generation mechanism in detail.
 
 \begin{table}[t]
 \centering
-\caption{Constraints involving \code{Strings}.}
+\caption{\bf Constraints involving \code{Strings}.}
 \scriptsize
 \setlength{\tabcolsep}{2.5pt}
 \begin{tabular}{|c|c|c|c|c|c|c|c|}
@@ -222,7 +222,7 @@ Algorithm~\ref{algo:constraint}$(CS_{str})$
   }
  }
 }
-\caption{Static patching strategy for \code{String} objects.}
+\caption{\bf Static patching strategy for \code{String} objects.}
 \label{algo:patchingStrategy}
 \end{algorithm}
 
@@ -267,7 +267,7 @@ Algorithm~\ref{algo:stringPatchParametr}$(S)$
  }
 }
 
-\caption{Dynamic patching strategy for \code{String} objects.}
+\caption{\bf Dynamic patching strategy for \code{String} objects.}
 \label{algo:patchingStrategyDynamic}
 \end{algorithm}
 
@@ -310,7 +310,7 @@ give an overview of this hybrid approach.
    }
   }
 }
-\caption{Constraint collection for \code{String} objects.}
+\caption{\bf Constraint collection for \code{String} objects.}
 \label{algo:constraintCollection}
 \end{algorithm}
 
@@ -335,7 +335,7 @@ void foo(){
 \begin{figure}[t]
 \centering
 \includegraphics[width=2.5in]{images/ConstraintExample.eps}
-\caption{Constraint store for Code~\ref{snippet:constraintCollection}}
+\caption{\bf Constraint store for Code~\ref{snippet:constraintCollection}}
 \label{fig:constraintExample}
 \end{figure}
 
@@ -400,7 +400,7 @@ Algorithm~\ref{algo:constraintCollection}).}
     }
     return $\textit{Str}$
 }
-\caption{\code{String} object constraint evaluation.}
+\caption{\bf \code{String} object constraint evaluation.}
 \label{algo:constraint}
 \end{algorithm}
 
@@ -427,7 +427,7 @@ void foo() {
 \end{figure}
 }
 
-\lstset{language=Java, caption=Dynamic constraint collection and evaluation
+\lstset{language=Java, caption=\bf Dynamic constraint collection and evaluation
 for code \ref{snippet:constraintCollection}., label =snippet:exCode2,
 firstnumber =1}
 \begin{figure}[!htb]
@@ -511,7 +511,7 @@ condition\\
         }\vspace{-1em}
     }
 }
-\caption{Parameter tweaking based \code{String} patching.}
+\caption{\bf Parameter tweaking based \code{String} patching.}
 \label{algo:stringPatchParametr}
 \end{algorithm}
 
@@ -592,7 +592,7 @@ transition and $safe \rightarrow error$ corresponds to the constraint violation.
 \begin{figure}[t]
 \centering
 \includegraphics[scale=.28]{images/automataString.pdf}
-\caption{Partial constraint representation model.}
+\caption{\bf Partial constraint representation model.}
 \label{fig:constraintautomata}
 \end{figure}
 
