@@ -1,3 +1,4 @@
+\vspace{-0.1cm}
 \section{Clotho}
 \label{sec:design}
 
@@ -41,10 +42,10 @@ lifetime. While this principle is not a binding constraint, it ensures that
 \tool's repairing mechanism does not adversely affect critical program behavior.
 We specify a generic set of sensitive sources and sinks for each input program,
 to identify critical program paths where repaired \code{String} objects
- (possibly suboptimal)
+% (possibly suboptimal)
 must not flow. For example, \tool\ does not repair
- statements that lie along a control flow path leading to an I/O sink, like file
- system, console, network, GUI, etc.
+ statements that lie along a control flow path leading to an I/O sink such as file
+ system, console, network, and GUI.
 
 The taint analysis module takes as input the compiled byte code intended to be
 repaired, and generates a control flow graph identifying program statements that
@@ -465,6 +466,7 @@ simplify them and then evaluates only the ones that are related to strings.
 
 \end{mylist}
 
+\vspace{-0.1cm} 
 \subsection{Code Generation}
 \label{sec:tool:stage2:generation}
 
@@ -544,7 +546,7 @@ try{
 \end{figure}
 \end{mylist}
 
-
+\vspace{-0.1cm} 
 \subsection{Instrumentation}
 \label{sec:tool:stage3}
 
