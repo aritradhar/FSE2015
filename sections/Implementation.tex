@@ -223,20 +223,15 @@ $14$ & $11$ & $3$ &  &  & $0.72$ & &$13$ & $2$ & \\
 instrumentation which directly contributes to improved precision and quality
 of the patches.
 
-\subsubsection{Minimize constraint analysis}
-\label{subsubsec:minimizeConstrintInstrumentation}
+\begin{mylist}
+\item \textbf{Minimize constraint analysis} \tool\ collects constraints only for
+string literals involved in a runtime exception. If a \code{String} object does
+not involve API methods that can throw runtime exception, then it is not
+required to collect and evaluate constraints on them. This significantly reduces
+the number of statements analyzed for instrumentation.
 
-\tool\ collects constraints only for string literals involved in a runtime
-exception. If a \code{String} object does not involve API methods that can throw
-runtime exception, then it is not required to collect and evaluate constraints
-on them. This significantly reduces the number of statements analyzed for
-instrumentation.
-
-\subsubsection{Minimize patch instrumentation}
-\label{subsubsec:minimizePatchInstrumentation}
-
-\tool\ makes a forward pass over all program points to determine if the
-\code{String} object under consideration is modified after it has been patched.
+\item \textbf{Minimize patch instrumentation} \tool\ makes a forward pass over
+all program points to determine if the \code{String} object under consideration is modified after it has been patched.
 The rationale behind this is that all constraints remain valid as long as the
 object has not changed between program points. Similarly, when the API usage is
 same and none of the method parameters have changed, then no further patching
@@ -247,3 +242,4 @@ Assume two statements \code{$S_1$:String x = st.subString(i,j)} and
 unchanged between $S_1$ and $S_2$ and the method invoked in these program points
 are identical along with their parameters, \tool\ will skip instrumenting $S_2$.This
 further reduces the total number of possible instrumentation points.
+\end{mylist}
